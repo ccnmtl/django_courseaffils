@@ -1,0 +1,12 @@
+import courseaffils.listener
+# we need to make sure that the registration code
+# gets imported, so we import it from models.py
+# which will definitely be imported if the app
+# is installed.
+
+from django.db import models
+
+class Course(models.Model):
+    group = models.ForeignKey(Group)
+    title = models.CharField(max_length=1024)
+

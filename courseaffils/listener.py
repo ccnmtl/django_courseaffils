@@ -1,0 +1,28 @@
+import django.dispatch
+#user_logged_in = django.dispatch.Signal(providing_args=[])
+
+from django.contrib.auth.models import Group
+from django.conf import settings
+
+auto_groups = getattr(settings, "COURSEAFFIL_AUTO_MAP_GROUPS", [])
+
+def auto_group_mapper(sender, **kwargs):
+    for group in auto_groups:
+        group = Group.objects.get_or_create(name=group)[0]
+        sender.groups.add(group)
+        sender.save()
+
+#user_logged_in.connect(auto_group_mapper)
+
+class AutoGroupWindMapper:
+    """
+    maps all wind-based users to a fixed set of groups on login
+    (autovivifying if necessary)
+    """
+
+    def map(self, user, affils):
+        for group in auto_groups:
+            group = Group.objects.get_or_create(name=group)[0]
+            user.groups.add(group)
+            user.save()
+            
