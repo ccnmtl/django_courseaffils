@@ -17,7 +17,11 @@ setup(name='django_courseaffils',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       include_package_data=True,
       zip_safe=False,
+      dependency_links=[
+        "http://svn.ccnmtl.columbia.edu/djangohelpers/trunk#egg=djangohelpers-dev",
+        ],
       install_requires=[
+        "djangohelpers==dev",
       ],
       entry_points="""
       """,
