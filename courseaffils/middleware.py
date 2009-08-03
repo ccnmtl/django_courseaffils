@@ -30,12 +30,14 @@ class CourseManagerMiddleware(object):
                 Course.objects.get(group__name=request.GET['set_course'])
             request.course = course.group
             request.coursename = course.title
+            request.actual_course_object = course
             return None
 
         if request.session.has_key(SESSION_KEY):
             course = request.session[SESSION_KEY]
             request.course = course.group
             request.coursename = course.title
+            request.actual_course_object = course
             return None
 
         available_courses = Course.objects.filter(group__user=request.user)
@@ -45,6 +47,7 @@ class CourseManagerMiddleware(object):
                 available_courses[0]
             request.course = course.group
             request.coursename = course.title
+            request.actual_course_object = course
             return None
 
         if len(available_courses) == 0:
