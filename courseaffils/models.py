@@ -5,6 +5,7 @@ import courseaffils.listener
 # is installed.
 
 from django.db import models
+from django.contrib.auth.models import Group
 
 class Course(models.Model):
     group = models.ForeignKey(Group)
