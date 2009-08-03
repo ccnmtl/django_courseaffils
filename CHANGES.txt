@@ -1,0 +1,4 @@
+0.2
+===
+
+Middleware now sets `request.actual_course_object` as well as `request.course` (which is, misleadingly, a Group)
