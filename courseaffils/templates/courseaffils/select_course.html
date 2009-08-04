@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+Hello, {{user}}!  Please select a course:
+
+<ul>
+{% for course in courses %}
+ <li>
+  <a href="?set_course={{course.group.name|urlencode}}">{{course.title}}</a>
+ </li>
+{% endfor %}
+</ul>
+{% endblock %}

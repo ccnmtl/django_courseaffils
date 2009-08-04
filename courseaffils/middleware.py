@@ -2,8 +2,7 @@ from django.shortcuts import render_to_response
 from django.utils.http import urlquote
 from django.conf import settings
 
-# XXX TODO: move the model to this app
-from projects.models import Course
+from courseaffils.models import Course
 
 SESSION_KEY = 'ccnmtl.courseaffils.course'
 
