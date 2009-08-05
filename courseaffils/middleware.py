@@ -9,10 +9,10 @@ import re
 SESSION_KEY = 'ccnmtl.courseaffils.course'
 
 def is_anonymous_path(current_path):
-    if not hasattr(settings,'ANONYMOUS_PATHS'):
+    if not hasattr(settings,'COURSEAFFILS_EXEMPT_PATHS'):
         return False
 
-    for exempt_path in settings.ANONYMOUS_PATHS:
+    for exempt_path in settings.COURSEAFFILS_EXEMPT_PATHS:
         try:
             if current_path.startswith(exempt_path):
                 return True
