@@ -4,18 +4,26 @@ from django.conf import settings
 
 from courseaffils.models import Course
 
+import re
+
 SESSION_KEY = 'ccnmtl.courseaffils.course'
+
+def is_anonymous_path(path):
+    if hasattr(settings,'ANONYMOUS_PATHS'):
+        for allowed_prefix in settings.ANONYMOUS_PATHS:
+            if hasattr(allowed_prefix,'match'):
+                if allowed_prefix.match(path):
+                    return True
+            elif path.startswith(allowed_prefix):
+                return True
+    return False
+    
 
 class CourseManagerMiddleware(object):
     def process_request(self, request):
-        path = urlquote(request.get_full_path())           
-        try:
-            for allowed_prefix in settings.ANONYMOUS_PATHS:
-                if path.startswith(allowed_prefix):
-                    return None
-        except AttributeError:
-            pass
-
+        path = urlquote(request.get_full_path())
+        if is_anonymous_path(path):
+            return None
 
         if not request.user.is_authenticated():
             return None
