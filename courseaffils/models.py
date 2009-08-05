@@ -13,7 +13,8 @@ class Course(models.Model):
 
     def __unicode__(self):
         return self.title
-    
+
+    @property
     def students(self):
         #currently broken, because faculty will
         #also be included
