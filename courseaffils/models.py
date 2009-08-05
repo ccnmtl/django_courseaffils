@@ -14,3 +14,8 @@ class Course(models.Model):
     def __unicode__(self):
         return self.title
     
+    def students(self):
+        #currently broken, because faculty will
+        #also be included
+        return self.group.user_set.all()
+    
