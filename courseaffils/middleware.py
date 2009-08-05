@@ -9,13 +9,17 @@ import re
 SESSION_KEY = 'ccnmtl.courseaffils.course'
 
 def is_anonymous_path(path):
-    if hasattr(settings,'ANONYMOUS_PATHS'):
-        for allowed_prefix in settings.ANONYMOUS_PATHS:
-            if hasattr(allowed_prefix,'match'):
-                if allowed_prefix.match(path):
-                    return True
-            elif path.startswith(allowed_prefix):
+    if not hasattr(settings,'ANONYMOUS_PATHS'):
+        return False
+
+    for allowed_prefix in settings.ANONYMOUS_PATHS:
+        try:
+            if path.startswith(allowed_prefix):
                 return True
+        except TypeError: # it wasn't a string object .. must be a regex
+            if allowed_prefix.match(path):
+                return True
+
     return False
     
 
