@@ -20,3 +20,6 @@ class Course(models.Model):
         #also be included
         return self.group.user_set.all()
     
+    @property
+    def user_set(self):
+        return self.group.user_set
