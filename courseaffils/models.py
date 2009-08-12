@@ -8,18 +8,36 @@ from django.db import models
 from django.contrib.auth.models import Group
 
 class Course(models.Model):
-    group = models.ForeignKey(Group)
+    group = models.OneToOneField(Group)
     title = models.CharField(max_length=1024)
+    faculty_group = models.ForeignKey(Group,
+                                      null=True,
+                                      blank=True,
+                                      related_name='faculty_of')
 
     def __unicode__(self):
         return self.title
 
     @property
-    def students(self):
-        #currently broken, because faculty will
-        #also be included
+    def members(self):
         return self.group.user_set.all()
-    
+
+    @property
+    def students(self):
+        members =  self.group.user_set.all()
+        if not self.faculty_group:
+            return members
+        else:
+            faculty = self.faculty_group.user_set.all()
+            return [m for m in members if m not in faculty]
+
+    @property
+    def faculty(self):
+        if self.faculty_group:
+            return self.faculty_group.user_set.all()
+        else:
+            return tuple()
+        
     @property
     def user_set(self):
         return self.group.user_set
