@@ -41,3 +41,12 @@ class Course(models.Model):
     @property
     def user_set(self):
         return self.group.user_set
+
+    @property
+    def faculty_filter(self):
+        return reduce(lambda x,y:x|y, #composable Q's
+                      [models.Q(author=f) for f in self.faculty],
+                      models.Q(author= -1)#impossible
+                      ) & models.Q(course=self)
+        
+        
