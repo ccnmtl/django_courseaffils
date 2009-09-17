@@ -50,3 +50,6 @@ class Course(models.Model):
                       ) & models.Q(course=self)
         
         
+    def is_faculty(self,user):
+        return (user.is_staff or user in self.faculty)
+    
