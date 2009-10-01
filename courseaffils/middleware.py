@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
 from django.utils.http import urlquote
 from django.conf import settings
@@ -42,6 +43,10 @@ class CourseManagerMiddleware(object):
             request.course = course
             request.coursename = course.title
             request.actual_course_object = course
+
+            if request.GET.has_key('next'):
+                return HttpResponseRedirect(request.GET['next'])
+            
             return None
 
         if request.session.has_key(SESSION_KEY):
@@ -67,11 +72,16 @@ class CourseManagerMiddleware(object):
                                        'user': request.user,
                                        })
 
+        next_redirect = ''
+        if request.META.has_key('QUERY_STRING'):
+            #just GET (until someone complains)
+            next_redirect = '&next=%s' % urlquote(request.get_full_path())
         return render_to_response('courseaffils/select_course.html',
                                   {
                 'courses':available_courses,
                 'user':request.user,
                 'request': request,
+                'next':next_redirect,
                 },
                                   )
 
