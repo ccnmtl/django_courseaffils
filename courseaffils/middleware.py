@@ -73,7 +73,8 @@ class CourseManagerMiddleware(object):
                                        })
 
         next_redirect = ''
-        if request.META.has_key('QUERY_STRING'):
+        if request.META.has_key('QUERY_STRING') \
+               and not request.GET.has_key('unset_course') :
             #just GET (until someone complains)
             next_redirect = '&next=%s' % urlquote(request.get_full_path())
         return render_to_response('courseaffils/select_course.html',
