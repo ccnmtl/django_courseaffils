@@ -6,7 +6,11 @@ class CourseAdminForm(forms.ModelForm):
     class Meta:
         model = Course
     
-    add_user = forms.CharField(required=False)
+    add_user = forms.CharField(
+        required=False,
+        widget=forms.Textarea,
+        label="Add users to group (one per line)"
+        )
 
     users_to_remove = forms.ModelMultipleChoiceField(
         required=False,
@@ -29,17 +33,19 @@ class CourseAdminForm(forms.ModelForm):
         return users
 
     def clean_add_user(self):
-        username = self.cleaned_data['add_user']
-        if not username:
+        usernames = self.cleaned_data['add_user']
+        if not usernames:
             return
 
-        try:
-            user = User.objects.get(username=username)
-        except User.DoesNotExist:
-            user = User(username=username)
-            user.save()
+        usernames = usernames.split('\n')
+        for username in usernames:
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                user = User(username=username)
+                user.save()
 
-        user.groups.add(self.instance.group)
+            user.groups.add(self.instance.group)
 
-        return user
+        return usernames
 
