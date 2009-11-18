@@ -53,3 +53,11 @@ class Course(models.Model):
     def is_faculty(self,user):
         return (user.is_staff or user in self.faculty)
     
+class CourseSettings(models.Model):
+    course = models.OneToOneField(Course, related_name='settings')
+    
+    custom_headers = models.TextField(blank=True, null=True,
+                                      help_text="""Replaces main.css link in header.  You need to add this as full HTML (<link rel="stylesheet" href="...." />) but the advantage is you can add custom javascript here, too.""")
+    
+    def __unicode__(self):
+        return u'Settings for %s' % self.course.title

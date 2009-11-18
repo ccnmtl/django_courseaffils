@@ -26,6 +26,8 @@ def is_anonymous_path(current_path):
 
 class CourseManagerMiddleware(object):
     def process_request(self, request):
+        request.course = None #must be present to be a caching key
+
         path = urlquote(request.get_full_path())
         if is_anonymous_path(path):
             return None
