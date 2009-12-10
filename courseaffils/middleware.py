@@ -4,6 +4,10 @@ from django.utils.http import urlquote
 from django.conf import settings
 
 from courseaffils.models import Course
+from django.db.models import get_model
+from django.contrib.contenttypes.models import ContentType
+
+Collaboration = get_model('structuredcollaboration','collaboration')
 
 import re
 
@@ -39,12 +43,25 @@ class CourseManagerMiddleware(object):
             if request.session.has_key(SESSION_KEY):
                 del request.session[SESSION_KEY]
 
+        def decorate_request(request,course):
+            request.course = course
+            request.coursename = course.title
+
+            if Collaboration: #if structuredcollaboration app is installed
+                request.collaboration_context,created = Collaboration.objects.get_or_create(
+                    content_type=ContentType.objects.get_for_model(Course),
+                    object_pk=str(course.pk),
+                    group=course.group,
+                    )
+                if created or request.collaboration_context.slug is None:
+                    request.collaboration_context.title = course.title
+                    request.collaboration_context.slug = course.slug
+                    request.collaboration_context.save()
+
         if request.GET.has_key('set_course'):
             request.session[SESSION_KEY] = course = \
                 Course.objects.get(group__name=request.GET['set_course'])
-            request.course = course
-            request.coursename = course.title
-            request.actual_course_object = course
+            decorate_request(request,course)
 
             if request.GET.has_key('next'):
                 return HttpResponseRedirect(request.GET['next'])
@@ -53,9 +70,7 @@ class CourseManagerMiddleware(object):
 
         if request.session.has_key(SESSION_KEY):
             course = request.session[SESSION_KEY]
-            request.course = course
-            request.coursename = course.title
-            request.actual_course_object = course
+            decorate_request(request,course)
             return None
 
         available_courses = Course.objects.filter(group__user=request.user)
@@ -63,9 +78,7 @@ class CourseManagerMiddleware(object):
         if len(available_courses) == 1:
             request.session[SESSION_KEY] = course = \
                 available_courses[0]
-            request.course = course
-            request.coursename = course.title
-            request.actual_course_object = course
+            decorate_request(request,course)
             return None
 
         if len(available_courses) == 0:

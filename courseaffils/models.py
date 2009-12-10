@@ -6,6 +6,7 @@ import courseaffils.listener
 
 from django.db import models
 from django.contrib.auth.models import Group
+import re
 
 class Course(models.Model):
     group = models.OneToOneField(Group)
@@ -53,6 +54,15 @@ class Course(models.Model):
     def is_faculty(self,user):
         return (user.is_staff or user in self.faculty)
     
+    @property
+    def slug(self):
+        course_string = re.match('t(\d).y(\d{4}).s(\d{3}).c(\w)(\d{4}).(\w{4})',self.group.name)
+        if course_string:
+            t,y,s,let,num,dept = course_string.groups()
+            return '%s%s%s' % ('CU',dept,num)
+        else:
+            return re.sub('\W','',re.sub(' ','_',self.title))
+
 class CourseSettings(models.Model):
     course = models.OneToOneField(Course, related_name='settings')
     
@@ -61,3 +71,6 @@ class CourseSettings(models.Model):
     
     def __unicode__(self):
         return u'Settings for %s' % self.course.title
+
+
+    
