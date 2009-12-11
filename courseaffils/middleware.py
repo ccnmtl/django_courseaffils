@@ -35,8 +35,8 @@ def is_anonymous_path(current_path):
             if exempt_path.match(current_path):
                 return True
 
-    #if whitelist, then default is to allow
-    return (not hasattr(settings,'COURSEAFFILS_PATHS'))
+    #if whitelist, then default is to anonymous path
+    return hasattr(settings,'COURSEAFFILS_PATHS')
     
 
 class CourseManagerMiddleware(object):
@@ -44,7 +44,7 @@ class CourseManagerMiddleware(object):
         request.course = None #must be present to be a caching key
 
         path = urlquote(request.get_full_path())
-        if is_anonymous_path(path):
+        if is_anonymous_path(request.path):
             return None
 
         if not request.user.is_authenticated():
