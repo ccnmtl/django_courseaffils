@@ -22,14 +22,17 @@ class CourseAdminForm(forms.ModelForm):
     def __init__(self, *args, **kw):
         forms.ModelForm.__init__(self, *args, **kw)
         field = self.fields['users_to_remove']
-        field.queryset = field._choices = self.instance.user_set.all()
+        if self.instance.user_set:
+            field.queryset = field._choices = self.instance.user_set.all()
+
         
     def clean_users_to_remove(self):
         users = self.cleaned_data['users_to_remove']
-        group = self.instance.group
+        if self.instance.group_id:
+            group = self.instance.group
 
-        for user in users:
-            user.groups.remove(group)
+            for user in users:
+                user.groups.remove(group)
         return users
 
     def clean_add_user(self):

@@ -41,7 +41,10 @@ class Course(models.Model):
         
     @property
     def user_set(self):
-        return self.group.user_set
+        if self.group_id:
+            return self.group.user_set
+        else:
+            return None
 
     @property
     def faculty_filter(self):
