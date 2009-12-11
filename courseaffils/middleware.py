@@ -14,6 +14,16 @@ import re
 SESSION_KEY = 'ccnmtl.courseaffils.course'
 
 def is_anonymous_path(current_path):
+    if hasattr(settings,'COURSEAFFILS_PATHS'):
+        for path in settings.COURSEAFFILS_PATHS:
+            if isinstance(path,str):
+                if current_path.startswith(path):
+                    return False
+            elif hasattr(path,'match'):
+                #regex
+                if path.match(current_path):
+                    return False
+
     if not hasattr(settings,'COURSEAFFILS_EXEMPT_PATHS'):
         return False
 
@@ -25,7 +35,8 @@ def is_anonymous_path(current_path):
             if exempt_path.match(current_path):
                 return True
 
-    return False
+    #if whitelist, then default is to allow
+    return (not hasattr(settings,'COURSEAFFILS_PATHS'))
     
 
 class CourseManagerMiddleware(object):
