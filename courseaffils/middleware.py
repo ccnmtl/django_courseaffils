@@ -4,6 +4,7 @@ from django.utils.http import urlquote
 from django.conf import settings
 
 from courseaffils.models import Course
+from courseaffils.views import select_course
 from django.db.models import get_model
 from django.contrib.contenttypes.models import ContentType
 
@@ -92,23 +93,5 @@ class CourseManagerMiddleware(object):
             decorate_request(request,course)
             return None
 
-        if len(available_courses) == 0:
-            return render_to_response('courseaffils/no_courses.html',
-                                      {'request': request,
-                                       'user': request.user,
-                                       })
-
-        next_redirect = ''
-        if request.META.has_key('QUERY_STRING') \
-               and not request.GET.has_key('unset_course') :
-            #just GET (until someone complains)
-            next_redirect = '&next=%s' % urlquote(request.get_full_path())
-        return render_to_response('courseaffils/select_course.html',
-                                  {
-                'courses':available_courses,
-                'user':request.user,
-                'request': request,
-                'next':next_redirect,
-                },
-                                  )
+        return select_course(request)
 

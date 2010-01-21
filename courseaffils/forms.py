@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group
 from courseaffils.models import Course
 
 class CourseAdminForm(forms.ModelForm):
@@ -15,7 +15,7 @@ class CourseAdminForm(forms.ModelForm):
     users_to_remove = forms.ModelMultipleChoiceField(
         required=False,
         widget=forms.CheckboxSelectMultiple,
-        queryset=User.objects.all(),
+        queryset=User.objects.none(),
         label="Remove users from group",
         )
 
@@ -40,15 +40,17 @@ class CourseAdminForm(forms.ModelForm):
         if not usernames:
             return
 
-        usernames = usernames.split('\n')
-        for username in usernames:
-            try:
-                user = User.objects.get(username=username)
-            except User.DoesNotExist:
-                user = User(username=username)
-                user.save()
+        #take it from here, in case instance is not yet created
+        group = self.cleaned_data['group']
 
-            user.groups.add(self.instance.group)
-
+        for line in usernames.split('\n'):
+            username = line.strip().rstrip()
+            if username:
+                try:
+                    user = User.objects.get(username=username)
+                except User.DoesNotExist:
+                    user = User(username=username)
+                    user.save()
+                user.groups.add(group)
         return usernames
 
