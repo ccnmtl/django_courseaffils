@@ -12,4 +12,11 @@
  </li>
 {% endfor %}
 </ul>
+
+{% if add_privilege %}
+<p>
+   <a href="{%url admin:courseaffils_course_add %}">Create a course</a>
+</p>
+{% endif %}
+
 {% endblock %}
