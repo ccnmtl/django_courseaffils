@@ -26,6 +26,8 @@ class CourseAdminForm(forms.ModelForm):
 
     def __init__(self, *args, **kw):
         forms.ModelForm.__init__(self, *args, **kw)
+        if hasattr(settings,'COURSEAFFILS_COURSESTRING_MAPPER'):
+            self.fields['group'].required = False
         if self.instance.user_set:
             ruf = self.fields['users_to_remove']
             ruf.queryset = ruf._choices = self.instance.user_set.all()
@@ -39,7 +41,18 @@ class CourseAdminForm(forms.ModelForm):
                 self.cleaned_data['faculty_group'] = fac_grp
             self.cleaned_data['group'] = stud_grp
             return self.cleaned_data
-        
+        elif not self.cleaned_data['group']:
+            msg = 'You must select a group'
+            if hasattr(settings,'COURSEAFFILS_COURSESTRING_MAPPER'):
+                msg = msg + ' or enter a course string'
+                self._errors['course_string'] = forms.util.ErrorList([msg])
+                del self.cleaned_data["course_string"]
+            self._errors['group'] = forms.util.ErrorList([msg])       
+            del self.cleaned_data["group"]
+
+        #run here, so the cleaned group from above can be used
+        self._clean_add_user() 
+
         return self.cleaned_data
 
     def clean_users_to_remove(self):
@@ -51,7 +64,10 @@ class CourseAdminForm(forms.ModelForm):
                 user.groups.remove(group)
         return users
 
-    def clean_add_user(self):
+    def _clean_add_user(self):
+        """run in clean() so we can process users after course is created 
+        from course-string
+        """
         usernames = self.cleaned_data['add_user']
         if not usernames:
             return
@@ -71,7 +87,7 @@ class CourseAdminForm(forms.ModelForm):
                     user = User(username=username)
                     user.save()
                 user.groups.add(group)
-                if also_faculty:
+                if also_faculty and self.cleaned_data['faculty_group']:
                     user.groups.add(self.cleaned_data['faculty_group'])
         return usernames
 
