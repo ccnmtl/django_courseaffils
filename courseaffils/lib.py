@@ -6,7 +6,7 @@ from django.http import Http404
 User = get_model('auth', 'User')
 
 def users_in_course(course):
-    return User.objects.filter(groups=course__group)
+    return User.objects.filter(groups=course.group)
 
 def in_course(user, course):
     return course.group in user.groups
