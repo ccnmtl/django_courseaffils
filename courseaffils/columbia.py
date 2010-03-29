@@ -58,7 +58,7 @@ class WindTemplate:
 
     @staticmethod
     def to_dict(wind_string):
-         wind_match = re.match('t(?P<term>\d).y(?P<year>\d{4}).s(?P<section>\d{3}).c(?P<letter>\w)(?P<number>\d{4}).(?P<dept>\w{4}).(?P<member>\w\w).course:columbia.edu',wind_string)
+         wind_match = re.match('t(?P<term>\d).y(?P<year>\d{4}).s(?P<section>\d{3}).c(?P<letter>\w)(?P<number>\d{4}).(?P<dept>[\w&]{4}).(?P<member>\w\w).course:columbia.edu',wind_string)
          if wind_match:
              return wind_match.groupdict()
 
@@ -67,7 +67,7 @@ class SectionkeyTemplate:
 
     @staticmethod
     def to_dict(sectionkey):
-        key_match = re.match('(?P<year>\d{4})(?P<term>\d)(?P<dept>\w{4})(?P<number>\d{4})(?P<letter>\w)(?P<section>\d{3})',sectionkey)
+        key_match = re.match('(?P<year>\d{4})(?P<term>\d)(?P<dept>[\w&]{4})(?P<number>\d{4})(?P<letter>\w)(?P<section>\d{3})',sectionkey)
         if key_match:
             return key_match.groupdict()
 
