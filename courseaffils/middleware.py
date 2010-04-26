@@ -40,6 +40,9 @@ def is_anonymous_path(current_path):
     return hasattr(settings,'COURSEAFFILS_PATHS')
     
 
+def already_selected_course(request):
+    return request.session.has_key(SESSION_KEY)
+
 class CourseManagerMiddleware(object):
     def process_request(self, request):
         request.course = None #must be present to be a caching key

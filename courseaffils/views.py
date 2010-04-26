@@ -29,3 +29,28 @@ def select_course(request):
 
     return render_to_response('courseaffils/select_course.html',
                               response_dict)
+
+from django.http import HttpResponse
+import simplejson
+SESSION_KEY = 'ccnmtl.courseaffils.course'
+
+def is_logged_in(request):
+    """This could be a privacy hole, but since it's just logged in status, 
+     it seems pretty harmless"""
+    logged_in = request.user.is_authenticated()
+    course_selected = request.session.has_key(SESSION_KEY)
+    data = {
+        "logged_in":logged_in,
+        "course_selected":course_selected,
+        "ready":(logged_in and course_selected),
+        }
+    jscript = """if (window.SherdBookmarklet) {
+                  window.SherdBookmarklet.user_status = %s;
+              }""" % simplejson.dumps(data)
+    return HttpResponse(jscript,
+                        mimetype='application/javascript')
+    
+
+
+def refresh_and_close_window(request):
+    pass
