@@ -2,7 +2,7 @@
 
 {% block content %}
 <p>
-  Hello, {{user}}!  Please select a course:
+  Hello, {{user.get_full_name|default:user}}!  Please select a course:
 </p>
 
 <ul>
