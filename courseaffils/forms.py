@@ -3,6 +3,7 @@ from django.contrib.auth.models import User,Group
 from django.conf import settings
 from courseaffils.models import Course
 
+
 class CourseAdminForm(forms.ModelForm):
     class Meta:
         model = Course
@@ -29,8 +30,15 @@ class CourseAdminForm(forms.ModelForm):
         if hasattr(settings,'COURSEAFFILS_COURSESTRING_MAPPER'):
             self.fields['group'].required = False
         if self.instance.user_set:
+            faculty = self.instance.faculty
             ruf = self.fields['users_to_remove']
-            ruf.queryset = ruf._choices = self.instance.user_set.all()
+            ruf.queryset = self.instance.user_set
+            ruf.choices = [(u.pk, '%s [%s] %s' % (u.get_full_name(), 
+                                               u.username,
+                                               '(instructor)' if u in faculty else ''
+                                               ) ) 
+                           for u in self.instance.user_set.all()
+                           ]
 
     def clean(self):
         if hasattr(settings,'COURSEAFFILS_COURSESTRING_MAPPER')  \
@@ -40,16 +48,17 @@ class CourseAdminForm(forms.ModelForm):
             if fac_grp:
                 self.cleaned_data['faculty_group'] = fac_grp
             self.cleaned_data['group'] = stud_grp
-            return self.cleaned_data
         elif not self.cleaned_data['group']:
             msg = 'You must select a group'
             if hasattr(settings,'COURSEAFFILS_COURSESTRING_MAPPER'):
                 msg = msg + ' or enter a course string'
                 self._errors['course_string'] = forms.util.ErrorList([msg])
-                del self.cleaned_data["course_string"]
-            self._errors['group'] = forms.util.ErrorList([msg])       
-            del self.cleaned_data["group"]
-
+                if self.cleaned_data.has_key('course_string'):
+                    del self.cleaned_data["course_string"]
+            self._errors['group'] = forms.util.ErrorList([msg])
+            if self.cleaned_data.has_key('group'):
+                self.cleaned_data["group"]
+            raise forms.ValidationError(msg)
         #run here, so the cleaned group from above can be used
         self._clean_add_user() 
 

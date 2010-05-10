@@ -5,7 +5,11 @@ from django.db.models import get_model
 from django.utils.http import urlquote
 
 def select_course(request):
-    available_courses = Course.objects.filter(group__user=request.user)
+    available_courses = None
+    if request.user.is_staff:
+        available_courses = Course.objects.all();
+    else:
+        available_courses = Course.objects.filter(group__user=request.user)
     response_dict = {'request': request,
                      'user': request.user,
                      'add_privilege':request.user.is_staff,
@@ -41,7 +45,7 @@ def is_logged_in(request):
     course_selected = request.session.has_key(SESSION_KEY)
     data = {
         "logged_in":logged_in,
-        "course_selected":course_selected,
+        "course_selected":course_selected, #just truth value
         "ready":(logged_in and course_selected),
         }
     jscript = """if (window.SherdBookmarklet) {
