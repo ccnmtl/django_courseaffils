@@ -5,16 +5,21 @@
   Hello, {{user.get_full_name|default:user}}!  Please select a course:
 </p>
 
-<ul>
+<ul class="course-choices">
 {% for course in courses %}
- <li>
-  <a href="?set_course={{course.group.name|urlencode}}{{next}}">{{course.title}}</a>
+ <li class="course-choice">
+  <a class="choose-course" href="?set_course={{course.group.name|urlencode}}{{next}}">{{course.title}}</a>
+  {% if add_privilege %}
+     <span class="manage-course">  
+       [<a href="{%url admin:courseaffils_course_change course.id %}">manage</a>]
+     </span>
+  {% endif %}
  </li>
 {% endfor %}
 </ul>
 
 {% if add_privilege %}
-<p>
+<p class="create-course">
    <a href="{%url admin:courseaffils_course_add %}">Create a course</a>
 </p>
 {% endif %}

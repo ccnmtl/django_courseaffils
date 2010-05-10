@@ -74,14 +74,15 @@ class CourseManagerMiddleware(object):
                     request.collaboration_context.save()
 
         if request.GET.has_key('set_course'):
-            request.session[SESSION_KEY] = course = \
-                Course.objects.get(group__name=request.GET['set_course'])
-            decorate_request(request,course)
+            course = Course.objects.get(group__name=request.GET['set_course'])
+            if request.user.is_staff or (request.user in course.members):
+                request.session[SESSION_KEY] = course
+                decorate_request(request,course)
 
-            if request.GET.has_key('next'):
-                return HttpResponseRedirect(request.GET['next'])
+                if request.GET.has_key('next'):
+                    return HttpResponseRedirect(request.GET['next'])
             
-            return None
+                return None
 
         if request.session.has_key(SESSION_KEY):
             course = request.session[SESSION_KEY]
