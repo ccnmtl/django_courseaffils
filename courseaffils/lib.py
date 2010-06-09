@@ -24,3 +24,20 @@ def in_course_or_404(user, group_or_course):
                 })
         response_body = template.render(context)
         raise Http404(response_body)
+
+
+# AUTO_COURSE_SELECT is a dictionary that can be populated by other
+# django apps in their views.py.  The KEY should be the view
+# and the VALUE should be a function that takes the same arguments
+# (except request) as the view, but returns the corresponding course
+# If no course is possible it should return None
+# SAMPLE VIEW CODE:
+# from courseaffils.lib import AUTO_COURSE_SELECT
+# def my_view(request, obj_id):
+#    ....
+# def my_view_courselookup(obj_id=None):
+#    if obj_id:
+#        return My.objects.get(pk=obj_id).course
+# AUTO_COURSE_SELECT[my_view] = my_view_courselookup
+#
+AUTO_COURSE_SELECT = {}

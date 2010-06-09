@@ -5,8 +5,10 @@ from django.conf import settings
 
 from courseaffils.models import Course
 from courseaffils.views import select_course
+from courseaffils.lib import AUTO_COURSE_SELECT
 from django.db.models import get_model
 from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import reverse,resolve        
 
 Collaboration = get_model('structuredcollaboration','collaboration')
 
@@ -90,11 +92,18 @@ class CourseManagerMiddleware(object):
             return None
 
         available_courses = Course.objects.filter(group__user=request.user)
+        chosen_course = None
+
+        requested_view,view_args,view_kwargs = resolve(request.get_full_path())
 
         if len(available_courses) == 1:
-            request.session[SESSION_KEY] = course = \
-                available_courses[0]
-            decorate_request(request,course)
+            chosen_course = available_courses[0]
+        elif AUTO_COURSE_SELECT.has_key(requested_view):
+            chosen_course = AUTO_COURSE_SELECT[requested_view](*view_args, **view_kwargs)
+
+        if chosen_course and chosen_course in available_courses:
+            request.session[SESSION_KEY] = chosen_course
+            decorate_request(request,chosen_course)
             return None
 
         return select_course(request)
