@@ -8,7 +8,7 @@ from courseaffils.views import select_course
 from courseaffils.lib import AUTO_COURSE_SELECT
 from django.db.models import get_model
 from django.contrib.contenttypes.models import ContentType
-from django.core.urlresolvers import reverse,resolve        
+from django.core.urlresolvers import reverse,resolve,Resolver404        
 
 Collaboration = get_model('structuredcollaboration','collaboration')
 
@@ -93,8 +93,10 @@ class CourseManagerMiddleware(object):
 
         available_courses = Course.objects.filter(group__user=request.user)
         chosen_course = None
-
-        requested_view,view_args,view_kwargs = resolve(request.get_full_path())
+        try:
+            requested_view,view_args,view_kwargs = resolve(request.get_full_path())
+        except Resolver404:
+            requested_view = None
 
         if len(available_courses) == 1:
             chosen_course = available_courses[0]
