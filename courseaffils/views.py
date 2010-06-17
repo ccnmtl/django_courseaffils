@@ -48,9 +48,17 @@ def is_logged_in(request):
         "course_selected":course_selected, #just truth value
         "ready":(logged_in and course_selected),
         }
-    jscript = """if (window.SherdBookmarklet) {
-                  window.SherdBookmarklet.user_status = %s;
-              }""" % simplejson.dumps(data)
+    jscript = """(function() { 
+                   var status = %s;
+                   if (window.SherdBookmarklet) {
+                       window.SherdBookmarklet.update_user_status(status);
+                   } else {
+                       if (!window.SherdBookmarkletOptions) 
+                          window.SherdBookmarkletOptions={};
+                       window.SherdBookmarkletOptions.user_status = status;
+                   }
+                  })();
+              """ % simplejson.dumps(data)
     return HttpResponse(jscript,
                         mimetype='application/javascript')
     
