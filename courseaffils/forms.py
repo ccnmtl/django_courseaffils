@@ -15,7 +15,7 @@ class CourseAdminForm(forms.ModelForm):
         required=False,
         widget=forms.Textarea,
         label="Add users to group (one per line)",
-        help_text="Put a [ * ] in front of the username to make them faculty.",
+        help_text="Put a [ * ] in front of the username to make them faculty.  If you add an optional <code>:&lt;password></code> after the username, the password on the account will also be set.  <br />Example: <code>*faculty1:this_is_insecure</code> creates an instructor account 'faculty1' with the password 'this_is_insecure' ",
         )
 
     users_to_remove = forms.ModelMultipleChoiceField(
@@ -84,7 +84,9 @@ class CourseAdminForm(forms.ModelForm):
         #take it from here, in case instance is not yet created
         group = self.cleaned_data['group']
         for line in usernames.split('\n'):
-            username = line.strip().rstrip()
+            clean_line = line.strip().rstrip().split(':')
+            username = clean_line[0]
+            password = clean_line[1] if len(clean_line) > 1 else False
             also_faculty = False
             if username.startswith('*'):
                 username = username[1:]
@@ -94,6 +96,8 @@ class CourseAdminForm(forms.ModelForm):
                     user = User.objects.get(username=username)
                 except User.DoesNotExist:
                     user = User(username=username)
+                    if password:
+                        user.set_password(password)
                     user.save()
                 user.groups.add(group)
                 if also_faculty and self.cleaned_data['faculty_group']:
