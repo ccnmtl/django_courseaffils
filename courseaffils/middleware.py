@@ -98,7 +98,8 @@ class CourseManagerMiddleware(object):
         except Resolver404:
             requested_view = None
 
-        if len(available_courses) == 1:
+        #staff should always get the opportunity to pick a course
+        if len(available_courses) == 1 and not request.user.is_staff:
             chosen_course = available_courses[0]
         elif AUTO_COURSE_SELECT.has_key(requested_view):
             chosen_course = AUTO_COURSE_SELECT[requested_view](*view_args, **view_kwargs)
