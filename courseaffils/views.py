@@ -26,7 +26,7 @@ def select_course(request):
         next_redirect = '&next=%s' % urlquote(request.get_full_path())
 
     response_dict.update({
-            'courses':available_courses,
+            'courses':available_courses.order_by('title'),
             'next':next_redirect,
             'add_privilege':request.user.is_staff,
             })
