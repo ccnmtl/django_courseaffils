@@ -21,7 +21,7 @@ class Course(models.Model):
 
     @property
     def members(self):
-        return self.group.user_set.all()
+        return self.group.user_set.all().order_by('first_name','last_name','username')
 
     @property
     def students(self):
