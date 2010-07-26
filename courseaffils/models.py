@@ -57,6 +57,9 @@ class Course(models.Model):
     def is_faculty(self,user):
         return (user.is_staff or user in self.faculty)
     
+    def is_member(self,user):
+        return (user.is_staff or user in self.members)
+    
     @property
     def slug(self):
         course_string = re.match('t(\d).y(\d{4}).s(\d{3}).c(\w)(\d{4}).(\w{4})',self.group.name)
@@ -75,5 +78,77 @@ class CourseSettings(models.Model):
     def __unicode__(self):
         return u'Settings for %s' % self.course.title
 
+# class CourseInfo(models.Model):
+#     """useful for storing info like 'semester', 'url' """
+#     course = models.ForeignKey(Course, related_name='info')
+#     name = models.CharField(max_length=64)
+#     value = models.CharField(max_length=1024)
+
+#     def __unicode__(self):
+#         return u'(%s) %s' % (self.course.title, self.name)
+
 
     
+#### Structured Collaboration Support ####
+try:
+    from structuredcollaboration.policies import CollaborationPolicy, CollaborationPolicies
+
+    class PrivateStudentAndFaculty(CollaborationPolicy):
+        def manage(self,coll,request):
+            return (coll.context == request.collaboration_context
+                    and request.course.is_faculty(request.user))
+
+        edit = manage
+        delete = manage
+
+        def read(self,coll,request):
+            return (coll.context == request.collaboration_context
+                    and (request.course.is_faculty(request.user)
+                         or coll.user == request.user #student
+                         ))
+
+        add_child = read
+
+    class CourseProtected(CollaborationPolicy):
+        def manage(self,coll,request):
+            return (coll.context == request.collaboration_context
+                    and (coll.user == request.user
+                         or (coll.group and request.user in coll.group.user_set.all())))
+
+        edit = manage
+        delete = manage
+        add_child = manage
+
+        def read(self,coll,request):
+            return (coll.context == request.collaboration_context
+                    and course.is_member(request.user))
+
+    class CourseCollaboration(CourseProtected):
+        edit = CourseProtected.read
+        add_child = CourseProtected.read
+
+    class CoursePublicCollaboration(CourseCollaboration):
+        read = lambda c,r:True
+
+        
+    CollaborationPolicies.register_policy(PrivateStudentAndFaculty,
+                                          'PrivateStudentAndFaculty',
+                                          'Private between faculty and student')
+
+    
+    CollaborationPolicies.register_policy(CourseProtected,
+                                          'CourseProtected',
+                                          'Protected to Course Members')
+
+    CollaborationPolicies.register_policy(CourseCollaboration,
+                                          'CourseCollaboration',
+                                          'Course Collaboration')
+
+    CollaborationPolicies.register_policy(CoursePublicCollaboration,
+                                          'CoursePublicCollaboration',
+                                          'Public Course Collaboration')
+
+
+
+except ImportError:
+    pass
