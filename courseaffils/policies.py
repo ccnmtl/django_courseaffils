@@ -5,6 +5,7 @@ try:
     class PrivateStudentAndFaculty(CollaborationPolicy):
         def manage(self,coll,request):
             return (coll.context == request.collaboration_context
+                    and request.course
                     and request.course.is_faculty(request.user))
 
         edit = manage
@@ -12,7 +13,7 @@ try:
 
         def read(self,coll,request):
             return (coll.context == request.collaboration_context
-                    and (request.course.is_faculty(request.user)
+                    and ((request.course and request.course.is_faculty(request.user))
                          or coll.user == request.user #student
                          ))
 
@@ -21,7 +22,7 @@ try:
     class InstructorManaged(CollaborationPolicy):
         def manage(self,coll,request):
             return (coll.context == request.collaboration_context
-                    and (request.course.is_faculty(request.user)
+                    and ((request.course and request.course.is_faculty(request.user))
                          or coll.user == request.user)
                     )
         edit = manage
