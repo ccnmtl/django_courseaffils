@@ -42,8 +42,9 @@ try:
         add_child = manage
 
         def read(self,coll,request):
-            return (coll.context == request.collaboration_context
-                    and course.is_member(request.user))
+            return (getattr(request,'course',None)
+                    and coll.context == getattr(request,'collaboration_context',None)
+                    and request.course.is_member(request.user))
 
     class CourseCollaboration(CourseProtected):
         edit = CourseProtected.read
