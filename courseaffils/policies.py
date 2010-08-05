@@ -1,6 +1,6 @@
 #### Structured Collaboration Support ####
 try:
-    from structuredcollaboration.policies import CollaborationPolicy, CollaborationPolicies
+    from structuredcollaboration.policies import CollaborationPolicy, CollaborationPolicies, PrivateEditorsAreOwners
 
     class PrivateStudentAndFaculty(CollaborationPolicy):
         def manage(self,coll,request):
@@ -8,16 +8,22 @@ try:
                     and request.course
                     and request.course.is_faculty(request.user))
 
-        edit = manage
         delete = manage
 
         def read(self,coll,request):
             return (coll.context == request.collaboration_context
                     and ((request.course and request.course.is_faculty(request.user))
-                         or coll.user == request.user #student
+                         or coll.user_id == request.user.id #student
+                         or (coll.group_id and request.user in coll.group.user_set.all())
                          ))
 
+        edit = read
         add_child = read
+
+    class InstructorShared(PrivateEditorsAreOwners):
+        def read(self,coll,request):
+            return (self.manage(coll,request)
+                    or request.course.is_faculty(request.user))
 
     class InstructorManaged(CollaborationPolicy):
         def manage(self,coll,request):
@@ -25,11 +31,12 @@ try:
                     and ((request.course and request.course.is_faculty(request.user))
                          or coll.user == request.user)
                     )
-        edit = manage
         delete = manage
 
         def read(self,coll,request):
             return (coll.context == request.collaboration_context)
+
+        edit = read
 
     class CourseProtected(CollaborationPolicy):
         def manage(self,coll,request):
@@ -57,6 +64,10 @@ try:
     CollaborationPolicies.register_policy(InstructorManaged,
                                           'InstructorManaged',
                                           'Instructors/Staff and user manage, Course members read')
+
+    CollaborationPolicies.register_policy(InstructorShared,
+                                          'InstructorShared',
+                                          'group/user manage/edit and instructors can view')
 
     CollaborationPolicies.register_policy(PrivateStudentAndFaculty,
                                           'PrivateStudentAndFaculty',
