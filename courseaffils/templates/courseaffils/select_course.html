@@ -1,27 +1,52 @@
 {% extends "base.html" %}
+{% load courseaffils %}
 
 {% block content %}
-<p>
-  Hello, {{user.get_full_name|default:user}}!  Please select a course:
-</p>
-
-<ul class="course-choices">
-{% for course in courses %}
- <li class="course-choice">
-  <a class="choose-course" href="?set_course={{course.group.name|urlencode}}{{next}}">{{course.title}}</a>
-  {% if add_privilege %}
-     <span class="manage-course">  
-       [<a href="{%url admin:courseaffils_course_change course.id %}">manage</a>]
-     </span>
-  {% endif %}
- </li>
-{% endfor %}
-</ul>
 
 {% if add_privilege %}
 <p class="create-course">
    <a href="{%url admin:courseaffils_course_add %}">Create a course</a>
 </p>
 {% endif %}
+
+<p>
+  Hello, {{user.get_full_name|default:user}}!  Please select a course:
+</p>
+
+<table class="course-choices">
+  <thead>
+    <tr>
+      <td>Course Titles
+        {% if not list_all_link %}
+          from this year (<a href="?list_all=true{{next}}">see all</a>)
+        {% else %}
+          (<a href="?{{next}}">filter for this year</a>)
+        {% endif %}
+      </td>
+      <td>Term</td>
+      <td>Instructor</td>
+      <td>Role</td> 
+      {% if add_privilege %} 
+        <td>Staff</td>
+      {% endif %}    
+    </tr>
+  </thead>
+  <tbody>
+{% for course in courses %}
+ <tr><td class="course-choice">
+  <a class="choose-course" href="?set_course={{course.group.name|urlencode}}{{next}}">{{course.title}}</a>
+  </td>
+  <td>{{course.info.termyear}}</td>
+  <td>{{course.details.instructor.value}}</td>
+  <td>{% course_role for request.user in course as foo %}{{foo}}</td>
+  {% if add_privilege %}
+     <td class="manage-course">  
+       <a href="{%url admin:courseaffils_course_change course.id %}">manage</a>
+     </td>
+  {% endif %}
+ </tr>
+{% endfor %}
+</tbody>
+</table>
 
 {% endblock %}

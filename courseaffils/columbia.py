@@ -1,5 +1,6 @@
 import re
-import urllib
+import urllib2
+from time import strptime,strftime
 
 class CourseStringMapper:
     @classmethod
@@ -37,8 +38,30 @@ class CourseStringMapper:
         course_dict = WindTemplate.to_dict(groupname)
         directory_link = DirectoryLinkTemplate.to_string(course_dict)
         
-        response = urllib.urlopen(directory_link).read()
+        response = urllib2.urlopen(directory_link).read()
         return DirectoryPageTemplate.to_dict(response)
+
+    @classmethod
+    def on_create(cls,course):
+        course_dict = WindTemplate.to_dict(course.group.name)
+        from courseaffils.models import CourseInfo
+
+        info,created = CourseInfo.objects.get_or_create(course=course)
+        info.year = int(course_dict['year'])
+        info.term = int(course_dict['term'])
+
+        info_from_web = cls.get_course_info(course.group.name)
+        for val in info_from_web:
+            if val=='days':
+                info.days = info_from_web[val]
+            elif val in ('starttime','endtime'):
+                tm = strptime(info_from_web[val],'%I:%M%p')
+                setattr(info,val,strftime('%H:%M',tm))
+            else:
+                course.coursedetails_set.get_or_create(name=val,
+                                                       value=info_from_web[val],
+                                                       course=course)
+        info.save()
 
 class WindTemplate:
     example = 't3.y2007.s001.cw3956.engl.fc.course:columbia.edu'
@@ -58,16 +81,16 @@ class WindTemplate:
 
     @staticmethod
     def to_dict(wind_string):
-         wind_match = re.match('t(?P<term>\d).y(?P<year>\d{4}).s(?P<section>\d{3}).c(?P<letter>\w)(?P<number>\d{4}).(?P<dept>[\w&]{4}).(?P<member>\w\w).course:columbia.edu',wind_string)
+         wind_match = re.match('t(?P<term>\d).y(?P<year>\d{4}).s(?P<section>\d{3}).c(?P<letter>\w)(?P<number>\w{4}).(?P<dept>[\w&]{4}).(?P<member>\w\w).course:columbia.edu',wind_string)
          if wind_match:
              return wind_match.groupdict()
 
 class SectionkeyTemplate:
-    example = '20101SCNC1000F001'
+    example = '20101SCNC1000F001' #and 20103MIMD036PN004
 
     @staticmethod
     def to_dict(sectionkey):
-        key_match = re.match('(?P<year>\d{4})(?P<term>\d)(?P<dept>[\w&]{4})(?P<number>\d{4})(?P<letter>\w)(?P<section>\d{3})',sectionkey)
+        key_match = re.match('(?P<year>\d{4})(?P<term>\d)(?P<dept>[\w&]{4})(?P<number>\w{4})(?P<letter>\w)(?P<section>\d{3})',sectionkey)
         if key_match:
             return key_match.groupdict()
 
@@ -92,8 +115,9 @@ class DirectoryPageTemplate:
         look_for = (
             'Call Number</td>[^>]*>(?P<call_number>\d*)</td>',
             'Location</td>[^>]*>(?P<times>[^<]*)<br>(?P<location>[^<]*)</td>',
-            'Points</td>[^>]*>(?P<points>[\d-.]*)</td>',
-            'Campus</td>[^>]*>(?P<campus>\w*)</td>',
+            'Points</td>[^>]*>(?P<points>[\d\-.]*)</td>',
+            'Campus</td>[^>]*>(?P<campus>[\w\s]*)</td>',
+            'Instructor</td>[^>]*>(?P<instructor>[^<]*)</td>',
             #'approvals_required','type','enrollment','max_enrollment','status',
             #'title','open_to','note','sectionkey',
             )
@@ -102,7 +126,7 @@ class DirectoryPageTemplate:
             if m: ret_val.update( m.groupdict() )
 
         if ret_val.has_key('times'):
-            m = re.match('(?P<days>\w*)\s*(?P<starttime>[\d:apm]*)-(?P<endttime>[\d:apm]*)', 
+            m = re.match('(?P<days>\w*)\s*(?P<starttime>[\d:apm]*)\-(?P<endtime>[\d:apm]*)', 
                          ret_val['times'])
             if m: ret_val.update( m.groupdict() )
 
