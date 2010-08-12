@@ -70,6 +70,8 @@ class Course(models.Model):
     def is_member(self,user):
         return (user.is_staff or user in self.members)
     
+    is_course = True
+
     @property
     def slug(self):
         course_string = re.match('t(\d).y(\d{4}).s(\d{3}).c(\w)(\d{4}).(\w{4})',self.group.name)
@@ -90,6 +92,8 @@ class CourseSettings(models.Model):
     
     def __unicode__(self):
         return u'Settings for %s' % self.course.title
+    class Meta:
+        verbose_name_plural = 'Course Settings'
 
 class CourseInfo(models.Model):
     term_choices = {1:'Spring',2:'Summer',3:'Fall'}
@@ -107,10 +111,18 @@ class CourseInfo(models.Model):
     def termyear(self):
         return '%s %d' % (self.term_choices[self.term], self.year)
 
+    def display(self):
+        return u'%s %s %s-%s' % (self.termyear(),
+                                      self.days,self.starttime,self.endtime)
+
     def __unicode__(self):
         return u'%s (%s) %s %s-%s' % (self.course.title,
                                       self.termyear(),
                                       self.days,self.starttime,self.endtime)
+
+    class Meta:
+        verbose_name_plural = 'Course Info'
+
 
 class CourseDetails(models.Model):
     """useful for storing info like 'semester', 'url' """
@@ -122,8 +134,7 @@ class CourseDetails(models.Model):
         return u'(%s) %s: %s' % (self.course.title, self.name, self.value)
 
     class Meta:
-        verbose_name_plural = 'Course Info'
-
+        verbose_name_plural = 'Course Details'
 
     
 #### Structured Collaboration Support ####
