@@ -96,13 +96,13 @@ class CourseInfo(models.Model):
 
     course = models.OneToOneField(Course, related_name='info')
 
-    year = models.IntegerField(null=True)
-    term = models.IntegerField(null=True, choices=term_choices.items() )
+    year = models.IntegerField(null=True, blank=True)
+    term = models.IntegerField(null=True, blank=True, choices=term_choices.items() )
 
     #for ability to query what courses are going on NOW
-    starttime = models.TimeField(null=True)
-    endtime = models.TimeField(null=True)
-    days = models.CharField(max_length=7,null=True) #e.g. 'MWF'
+    starttime = models.TimeField(null=True, blank=True)
+    endtime = models.TimeField(null=True, blank=True)
+    days = models.CharField(max_length=7,null=True, blank=True) #e.g. 'MWF'
 
     def termyear(self):
         return '%s %d' % (self.term_choices[self.term], self.year)
