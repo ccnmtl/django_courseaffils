@@ -57,11 +57,11 @@ def is_logged_in(request):
                    var status = %s;
                    if (window.SherdBookmarklet) {
                        window.SherdBookmarklet.update_user_status(status);
-                   } else {
-                       if (!window.SherdBookmarkletOptions) 
+                   } 
+                   if (!window.SherdBookmarkletOptions) {
                           window.SherdBookmarkletOptions={};
-                       window.SherdBookmarkletOptions.user_status = status;
                    }
+                   window.SherdBookmarkletOptions.user_status = status;
                   })();
               """ % simplejson.dumps(data)
     return HttpResponse(jscript,
