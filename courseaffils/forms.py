@@ -52,7 +52,9 @@ class CourseAdminForm(forms.ModelForm):
             msg = 'You must select a group'
             if hasattr(settings,'COURSEAFFILS_COURSESTRING_MAPPER'):
                 msg = msg + ' or enter a course string'
-                self._errors['course_string'] = forms.util.ErrorList([msg])
+                if not self._errors.has_key('course_string'):
+                    self._errors['course_string'] = forms.util.ErrorList()
+                self._errors['course_string'].append(msg)
                 if self.cleaned_data.has_key('course_string'):
                     del self.cleaned_data["course_string"]
             self._errors['group'] = forms.util.ErrorList([msg])

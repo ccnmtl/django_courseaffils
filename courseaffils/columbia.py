@@ -8,14 +8,26 @@ class CourseStringMapper:
         from django import forms
         w = forms.CharField(required=False,
                             widget=forms.TextInput,
-                            help_text="""Alternate to choosing a group. Enter the section key from the directory of courses.  e.g. 20101SCNC1000F001 (which is yyyytddddnnnnLsss where y=year, t=term, d=dept, n=course number, L=course letter, s=section) """
+                            help_text="""
+Alternate to choosing a group. 
+Enter the section key from the directory of courses.  
+e.g. 20101SCNC1000F001 (which is yyyytddddnnnnLsss where y=year, t=term (with "1" for Spring and "3" for Fall), d=dept, n=course number, 
+L=course letter, s=section).
+<br /><br />
+This will create a group that automatically ties registered students to the class upon login.
+<br /><br />
+If the course is not found in the <a href="http://www.columbia.edu/cu/bulletin/uwb/">Directory of Classes</a>, then it will still create a course.  
+If you accidentally, entered the wrong course string, blank out the groups (course and faculty) and type in the string
+again.
+"""
                             )
-        def clean(data):
-            if data:
-                if not SectionkeyTemplate.to_dict(data):
+        def clean(sectionkey):
+            if sectionkey:
+                class_info = SectionkeyTemplate.to_dict(sectionkey)
+                if not class_info:
                     raise forms.ValidationError('Invalid course string.')
                 else:
-                    return data
+                    return sectionkey
         w.clean = clean
         return w
 
@@ -34,8 +46,7 @@ class CourseStringMapper:
             return None,None
 
     @classmethod
-    def get_course_info(cls,groupname):
-        course_dict = WindTemplate.to_dict(groupname)
+    def get_course_info(cls,course_dict):
         directory_link = DirectoryLinkTemplate.to_string(course_dict)
         
         response = urllib2.urlopen(directory_link).read()
@@ -49,18 +60,21 @@ class CourseStringMapper:
         info,created = CourseInfo.objects.get_or_create(course=course)
         info.year = int(course_dict['year'])
         info.term = int(course_dict['term'])
+        try:
+            info_from_web = cls.get_course_info(WindTemplate.to_dict(course.group.name))
 
-        info_from_web = cls.get_course_info(course.group.name)
-        for val in info_from_web:
-            if val=='days':
-                info.days = info_from_web[val]
-            elif val in ('starttime','endtime'):
-                tm = strptime(info_from_web[val],'%I:%M%p')
-                setattr(info,val,strftime('%H:%M',tm))
-            else:
-                course.coursedetails_set.get_or_create(name=val,
-                                                       value=info_from_web[val],
-                                                       course=course)
+            for val in info_from_web:
+                if val=='days':
+                    info.days = info_from_web[val]
+                elif val in ('starttime','endtime'):
+                    tm = strptime(info_from_web[val],'%I:%M%p')
+                    setattr(info,val,strftime('%H:%M',tm))
+                else:
+                    course.coursedetails_set.get_or_create(name=val,
+                                                           value=info_from_web[val],
+                                                           course=course)
+        except urllib2.HTTPError:
+            pass #oh well, couldn't get extra data.  maybe because it's a fake course string
         info.save()
 
 class WindTemplate:
