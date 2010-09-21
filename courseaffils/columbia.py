@@ -77,6 +77,20 @@ again.
             pass #oh well, couldn't get extra data.  maybe because it's a fake course string
         info.save()
 
+    @classmethod
+    def course_slug(cls,course,attempt=0):
+        "returns a slug for the course, with higher resolution for attempt > 0"
+        class_info = WindTemplate.to_dict(course.group.name)
+        if class_info and class_info.has_key('number'):
+            attempts = {
+                0:"CU%s%s" % (class_info['dept'],class_info['number'],),
+                1:"CU%s%s_%s" % (class_info['dept'],class_info['number'],class_info['section'],),
+                }
+            return attempts[attempt]
+        else:
+            return re.sub('\W','',re.sub(' ','_',course.title))
+            
+
 class WindTemplate:
     example = 't3.y2007.s001.cw3956.engl.fc.course:columbia.edu'
 

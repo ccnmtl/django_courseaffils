@@ -72,7 +72,11 @@ class CourseManagerMiddleware(object):
                     )
                 if created or request.collaboration_context.slug is None:
                     request.collaboration_context.title = course.title
-                    request.collaboration_context.slug = course.slug
+                    for i in range(2):
+                        slug_try = course.slug(attempt=i)
+                        if Collaboration.objects.filter(slug=slug_try).count()==0:
+                            request.collaboration_context.slug = slug_try
+                            break
                     request.collaboration_context.save()
 
         if request.GET.has_key('set_course'):

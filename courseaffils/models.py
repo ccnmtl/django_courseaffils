@@ -72,14 +72,15 @@ class Course(models.Model):
     
     is_course = True
 
-    @property
-    def slug(self):
-        course_string = re.match('t(\d).y(\d{4}).s(\d{3}).c(\w)(\d{4}).(\w{4})',self.group.name)
-        if course_string:
-            t,y,s,let,num,dept = course_string.groups()
-            return '%s%s%s' % ('CU',dept,num)
-        else:
-            return re.sub('\W','',re.sub(' ','_',self.title))
+    def default_slug(self):
+        return re.sub('\W','',re.sub(' ','_',self.title))
+
+    def slug(self,**kw):
+        if hasattr(settings,'COURSEAFFILS_COURSESTRING_MAPPER'):
+            if hasattr(settings.COURSEAFFILS_COURSESTRING_MAPPER,'course_slug'):
+                return settings.COURSEAFFILS_COURSESTRING_MAPPER.course_slug(self,**kw)
+
+        return self.default_slug(**kw)
 
     def details(self):
         return dict([(i.name,i) for i in CourseDetails.objects.filter(course=self)])
