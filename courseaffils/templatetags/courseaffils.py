@@ -23,6 +23,8 @@ class CourseRole(TemplateTagNode):
         TemplateTagNode.__init__(self, varname, user=user, course=course)
 
     def execute_query(self, user, course):
+        if not course:
+            return "no-course"
         if not user in course.members:
             return "non-member"
         elif user in course.faculty:
