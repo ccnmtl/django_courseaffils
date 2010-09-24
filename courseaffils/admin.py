@@ -4,6 +4,9 @@ from courseaffils.forms import CourseAdminForm
         
 class CourseAdmin(admin.ModelAdmin):
     form = CourseAdminForm
+    
+    change_form_template="courseaffils/admin_change_form.html"
+
 
 admin.site.register(Course, CourseAdmin)
 admin.site.register(CourseSettings)
