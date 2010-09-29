@@ -63,6 +63,10 @@ class CourseManagerMiddleware(object):
         def decorate_request(request,course):
             request.course = course
             request.coursename = course.title
+            
+            #these will show up in Error emails as part of WSGI object
+            request.environ['django_username'] = request.user.username
+            request.environ['django_course'] = course.title
 
             if Collaboration: #if structuredcollaboration app is installed
                 request.collaboration_context,created = Collaboration.objects.get_or_create(
