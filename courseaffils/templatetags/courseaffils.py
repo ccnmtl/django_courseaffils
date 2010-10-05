@@ -35,3 +35,9 @@ class CourseRole(TemplateTagNode):
 
 
 register.tag('course_role', CourseRole.process_tag)
+
+if not hasattr(template.defaulttags,'csrf_token'):
+    ### for Django1.1.2- compatibility
+    @register.tag(name="csrf_token")
+    def csrf_token(parser,token):
+        return template.Node()
