@@ -4,9 +4,11 @@ from courseaffils.forms import CourseAdminForm
         
 class CourseAdmin(admin.ModelAdmin):
     form = CourseAdminForm
-    
-    change_form_template="courseaffils/admin_change_form.html"
 
+    search_fields = ('title','group__name','faculty_group__user__last_name')
+    list_display = ('title','id',)
+    change_form_template="courseaffils/admin_change_form.html"
+    
 
 admin.site.register(Course, CourseAdmin)
 admin.site.register(CourseSettings)

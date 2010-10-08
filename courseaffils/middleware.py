@@ -71,11 +71,11 @@ class CourseManagerMiddleware(object):
             if Collaboration: #if structuredcollaboration app is installed
                 request.collaboration_context,created = Collaboration.objects.get_or_create(
                     content_type=ContentType.objects.get_for_model(Course),
-                    object_pk=str(course.pk),
-                    group=course.group,
-                    )
+                    object_pk=str(course.pk))
                 if created or request.collaboration_context.slug is None:
                     request.collaboration_context.title = course.title
+                    request.collaboration_context.group=course.group
+                    
                     for i in range(2):
                         slug_try = course.slug(attempt=i)
                         if Collaboration.objects.filter(slug=slug_try).count()==0:
