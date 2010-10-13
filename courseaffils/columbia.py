@@ -16,7 +16,8 @@ L=course letter, s=section).
 <br /><br />
 This will create a group that automatically ties registered students to the class upon login.
 <br /><br />
-If the course is not found in the <a href="http://www.columbia.edu/cu/bulletin/uwb/">Directory of Classes</a>, then it will still create a course.  
+If the course is not found in the <a href="http://www.columbia.edu/cu/bulletin/uwb/">Directory of Classes</a>, then it will still create a course.  This is a GOOD WAY to create a course that is not associated with a directory.  Alternatively, click the (+) signs next to "Group" and "Faculty group" fields and create groups manually, before clicking save.
+<br />
 If you accidentally, entered the wrong course string, blank out the groups (course and faculty) and type in the string
 again.
 """

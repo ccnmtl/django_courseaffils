@@ -61,6 +61,12 @@ class CourseAdminForm(forms.ModelForm):
             if self.cleaned_data.has_key('group'):
                 self.cleaned_data["group"]
             raise forms.ValidationError(msg)
+
+        if Course.objects.filter(group=self.cleaned_data['group']):
+            msg = """The group you selected is already associated with a course."""
+            self._errors['group'] = forms.util.ErrorList([msg])
+            raise forms.ValidationError(msg)
+
         #run here, so the cleaned group from above can be used
         self._clean_add_user() 
 
