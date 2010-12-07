@@ -72,7 +72,7 @@ class Course(models.Model):
     
     is_course = True
 
-    def default_slug(self):
+    def default_slug(self, **kw):
         return re.sub('\W','',re.sub(' ','_',self.title))
 
     def slug(self,**kw):
@@ -110,7 +110,7 @@ class CourseInfo(models.Model):
     days = models.CharField(max_length=7,null=True, blank=True) #e.g. 'MWF'
 
     def termyear(self):
-        return '%s %d' % (self.term_choices[self.term], self.year)
+        return '%s %d' % (self.term_choices.get(self.term,''), self.year)
 
     def display(self):
         return u'%s %s %s-%s' % (self.termyear(),

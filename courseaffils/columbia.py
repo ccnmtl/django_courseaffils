@@ -59,8 +59,9 @@ again.
         from courseaffils.models import CourseInfo
 
         info,created = CourseInfo.objects.get_or_create(course=course)
-        info.year = int(course_dict['year'])
-        info.term = int(course_dict['term'])
+        if course_dict:
+            info.year = int(course_dict['year'])
+            info.term = int(course_dict['term'])
         try:
             info_from_web = cls.get_course_info(WindTemplate.to_dict(course.group.name))
 
@@ -74,8 +75,8 @@ again.
                     course.coursedetails_set.get_or_create(name=val,
                                                            value=info_from_web[val],
                                                            course=course)
-        except urllib2.HTTPError:
-            pass #oh well, couldn't get extra data.  maybe because it's a fake course string
+        except:
+            pass #oh well, couldn't get extra data.  maybe because it's a fake course string or not a proper course
         info.save()
 
     @classmethod
