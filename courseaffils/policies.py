@@ -60,6 +60,19 @@ try:
     class CoursePublicCollaboration(CourseCollaboration):
         read = lambda c,r:True
 
+    class Assignment(CollaborationPolicy):
+        def manage(self, coll, request):
+            return (coll.context == request.collaboration_context
+                    and ((request.course and request.course.is_faculty(request.user))
+                         or coll.user == request.user)
+                    )
+        delete = manage
+        edit = manage
+
+        def read(self,coll,request):
+            return (coll.context == request.collaboration_context)
+
+        add_child = read
         
     CollaborationPolicies.register_policy(InstructorManaged,
                                           'InstructorManaged',
@@ -86,7 +99,10 @@ try:
                                           'CoursePublicCollaboration',
                                           'Public Course Collaboration')
 
-
+    CollaborationPolicies.register_policy(Assignment, 
+                                          'Assignment',
+                                          'Course assignment (instructors can manage/edit, '
+                                          'course members can read/respond)')
 
 except ImportError:
     pass
