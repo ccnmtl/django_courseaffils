@@ -18,7 +18,6 @@ try:
                          ))
 
         edit = read
-        add_child = read
 
     class InstructorShared(PrivateEditorsAreOwners):
         def read(self,coll,request):
@@ -46,7 +45,6 @@ try:
 
         edit = manage
         delete = manage
-        add_child = manage
 
         def read(self,coll,request):
             return (getattr(request,'course',None)
@@ -55,7 +53,6 @@ try:
 
     class CourseCollaboration(CourseProtected):
         edit = CourseProtected.read
-        add_child = CourseProtected.read
 
     class CoursePublicCollaboration(CourseCollaboration):
         read = lambda c,r:True
