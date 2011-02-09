@@ -46,6 +46,15 @@
   {% endif %}
  </tr>
 {% endfor %}
+
+{% if not list_all_link %}
+<tr class="course-choices-other-years">
+  <td colspan="5">
+      <a href="?list_all=true{{next_redirect}}">See your courses from previous years</a>
+  </td>
+</tr>
+{% endif %}
+
 </tbody>
 </table>
 
