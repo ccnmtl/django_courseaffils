@@ -12,14 +12,13 @@ class CourseStringMapper:
 Alternate to choosing a group. 
 Enter the section key from the directory of courses.  
 e.g. 20101SCNC1000F001 (which is yyyytddddnnnnLsss where y=year, t=term (with "1" for Spring and "3" for Fall), d=dept, n=course number, 
-L=course letter, s=section).
+L=course letter, s=section).  You can also enter the course-string in the format the group names appear for another course (e.g. "t1.y2010.s001.cf1000.scnc.st.course:columbia.edu" ).
 <br /><br />
 This will create a group that automatically ties registered students to the class upon login.
 <br /><br />
 If the course is not found in the <a href="http://www.columbia.edu/cu/bulletin/uwb/">Directory of Classes</a>, then it will still create a course.  This is a GOOD WAY to create a course that is not associated with a directory.  Alternatively, click the (+) signs next to "Group" and "Faculty group" fields and create groups manually, before clicking save.
 <br />
-If you accidentally, entered the wrong course string, blank out the groups (course and faculty) and type in the string
-again.
+If you accidentally, entered the wrong course string, blank out the groups (course and faculty) and type in the string again.
 """
                             )
         def clean(sectionkey):
@@ -33,9 +32,12 @@ again.
         return w
 
     @classmethod
-    def get_groups(cls,section_key):
+    def get_groups(cls,sectionkey):
         from django.contrib.auth.models import Group
-        section_dict = SectionkeyTemplate.to_dict(section_key)
+        section_dict = SectionkeyTemplate.to_dict(sectionkey)
+        if not section_dict:
+            section_dict = WindTemplate.to_dict(sectionkey)
+
         if section_dict:
             stud_grp_name = WindTemplate.to_string(section_dict)
             fac_grp_name = WindTemplate.to_string(dict(section_dict, member='fc'))
