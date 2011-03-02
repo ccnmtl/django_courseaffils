@@ -150,3 +150,16 @@ try:
     import policies
 except ImportError:
     pass
+
+
+#### server2server admin access support ####
+class CourseAccess:
+    @classmethod
+    def allowed(cls, request):
+        return ( request.REQUEST.get('secret') 
+                 in getattr(settings, 'SERVER_ADMIN_SECRETKEYS',{}).values() 
+                 )
+
+    @classmethod
+    def respond(cls,message):
+        pass

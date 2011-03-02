@@ -1,18 +1,27 @@
 from django.conf import settings
-from django.shortcuts import render_to_response
-from courseaffils.models import Course
+from django.shortcuts import render_to_response,get_object_or_404
+from courseaffils.models import Course, CourseAccess
 from django.db.models import get_model,Q
 from django.utils.http import urlquote
-import datetime
+import simplejson
+from django.http import HttpResponseForbidden,HttpResponse
 
-def select_course(request):
+from django.contrib.auth.models import User
+
+
+import datetime
+def available_courses_query(user):
     available_courses = None
-    if request.user.is_staff:
+    if user.is_staff:
         available_courses = Course.objects.all()
     else:
-        available_courses = Course.objects.filter(group__user=request.user)
+        available_courses = Course.objects.filter(group__user=user)
 
-    available_courses = available_courses.order_by('-info__year','-info__term','title')
+    return available_courses.order_by('-info__year','-info__term','title')
+    
+
+def select_course(request):
+    available_courses = available_courses_query(request.user)
 
     list_all_link = True
     if not request.GET.has_key('list_all'):
@@ -68,6 +77,17 @@ def is_logged_in(request):
                         mimetype='application/javascript')
     
 
+def course_list_query(request):
+    if not CourseAccess.allowed(request):
+        return HttpResponseForbidden('{"error":"server not whitelisted"}')
+    user = get_object_or_404(User, username=request.REQUEST.get('user','none'))
+    courses = available_courses_query(user)
+    data = {'courses':dict(
+                [(c.group.name,{'title':c.title,}) 
+                 for c in courses]
+                )}
+    return HttpResponse(simplejson.dumps(data, indent=2),
+                        mimetype='application/json')
 
 def refresh_and_close_window(request):
     pass
