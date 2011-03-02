@@ -5,7 +5,7 @@ import courseaffils.listener
 # is installed.
 
 from django.db import models
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group,User
 import re
 from django.conf import settings
 
@@ -70,6 +70,13 @@ class Course(models.Model):
     def is_member(self,user):
         return (user.is_staff or user in self.members)
     
+    def is_true_member(self,user):
+        try:
+            self.group.user_set.get(id=user.id)
+            return True
+        except User.DoesNotExist:
+            return False
+
     is_course = True
 
     def default_slug(self, **kw):
