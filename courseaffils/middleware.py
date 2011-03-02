@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response
 from django.utils.http import urlquote
 from django.conf import settings
 
-from courseaffils.models import Course
+from courseaffils.models import Course, CourseAccess
 from courseaffils.views import select_course
 from courseaffils.lib import AUTO_COURSE_SELECT
 from django.db.models import get_model
@@ -53,7 +53,7 @@ class CourseManagerMiddleware(object):
         if is_anonymous_path(request.path):
             return None
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated() and not CourseAccess.allowed(request):
             return None
 
         if request.GET.has_key('unset_course'):
@@ -83,9 +83,9 @@ class CourseManagerMiddleware(object):
                             break
                     request.collaboration_context.save()
 
-        if request.GET.has_key('set_course'):
-            course = Course.objects.get(group__name=request.GET['set_course'])
-            if request.user.is_staff or (request.user in course.members):
+        if request.REQUEST.has_key('set_course'):
+            course = Course.objects.get(group__name=request.REQUEST['set_course'])
+            if request.user.is_staff or CourseAccess.allowed(request) or (request.user in course.members):
                 request.session[SESSION_KEY] = course
                 decorate_request(request,course)
 
