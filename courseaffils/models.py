@@ -135,8 +135,10 @@ class CourseInfo(models.Model):
 class CourseDetails(models.Model):
     """useful for storing info like 'semester', 'url' """
     course = models.ForeignKey(Course)
-    name = models.CharField(max_length=64)
-    value = models.CharField(max_length=1024)
+    name = models.CharField(max_length=64, 
+                            help_text="""type of data. Useful ones are 'instructor','semester', 'url', 'campus', 'times', 'call_number'""")
+    value = models.CharField(max_length=1024, 
+                             help_text="""The name's value for the course.""")
 
     def __unicode__(self):
         return u'(%s) %s: %s' % (self.course.title, self.name, self.value)

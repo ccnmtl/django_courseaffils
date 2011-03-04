@@ -85,14 +85,16 @@ If you accidentally, entered the wrong course string, blank out the groups (cour
     def course_slug(cls,course,attempt=0):
         "returns a slug for the course, with higher resolution for attempt > 0"
         class_info = WindTemplate.to_dict(course.group.name)
+        slug = None
         if class_info and class_info.has_key('number'):
             attempts = {
                 0:"CU%s%s" % (class_info['dept'],class_info['number'],),
                 1:"CU%s%s_%s" % (class_info['dept'],class_info['number'],class_info['section'],),
                 }
-            return attempts[attempt]
+            slug = attempts[attempt]
         else:
-            return re.sub('\W','',re.sub(' ','_',course.title))
+            slug = re.sub(' ','_',course.title)
+        return re.sub('\W','',slug)
             
 
 class WindTemplate:
