@@ -141,6 +141,14 @@ class DirectoryLinkTemplate:
             cdict['term'],
             cdict['section'],
             )
+
+class AffilTemplate:
+    example = 'CUcourse_SDEVW2300_001_2011_1'
+    @staticmethod
+    def to_dict(affil_string):
+        affil_match = re.match('CUcourse_(?P<dept>[\w&]{4})(?P<letter>\w)(?P<number>\w{4})_(?P<section>\d{3})_(?P<year>\d{4})_(?P<term>\d)', affil_string)
+        if affil_match:
+            return affil_match.groupdict()
         
 class DirectoryPageTemplate:
     @staticmethod
