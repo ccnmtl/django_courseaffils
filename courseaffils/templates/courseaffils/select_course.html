@@ -57,5 +57,21 @@
 
 </tbody>
 </table>
+{% if user.is_staff %}
+<p>To demo a class you can (mostly) anonymize the class, by setting this cookie:
+</p>
+<ul>
+  <li id="anonymize_status"></li>
+  <li><a href="#anonymize" onclick="document.cookie='ANONYMIZE=on; path=/';anonymizeStatus();">Enable</a></li>
+  <li><a href="#anonymize" onclick="document.cookie='ANONYMIZE=OFF; expires='+new Date().toGMTString()+'; path=/';anonymizeStatus();">Disable</a></li>
+</ul>
+<script type="text/javascript">
+  function anonymizeStatus() {
+  document.getElementById('anonymize_status').innerHTML = 'Anonymizing Status: '
+  + ((document.cookie.match(/ANONYMIZE/)) ? 'ON' : 'OFF');
+  }
+  anonymizeStatus();
+</script>
 
+{% endif %}
 {% endblock %}

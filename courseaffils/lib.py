@@ -30,6 +30,8 @@ ANONYMIZE_KEY = 'ccnmtl.courseaffils.anonymize'
 def handle_public_name(user, request):
     """guarantees no double-quotes so also json-friendly"""
     if request.COOKIES.has_key('ANONYMIZE'):
+        request.__dict__.setdefault('scrub_names',{})
+        request.scrub_names[user] = user.id
         return 'User Name_%d' % user.id
     else:
         return (user.get_full_name() or user.username).replace('"',"'")
