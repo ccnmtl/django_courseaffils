@@ -50,7 +50,7 @@ class CourseManagerMiddleware(object):
         if request.COOKIES.has_key('ANONYMIZE'):
             for user,uid in getattr(request,'scrub_names',{}).items():
                 if len(user.last_name) > 3: 
-                    response.content = unicode(response.content, errors='replace').replace(user.get_full_name(),u'User Name_%d' % uid)
+                    response.content = unicode(response.content, errors='ignore').replace(user.get_full_name(),u'User Name_%d' % uid)
         return response
 
 
