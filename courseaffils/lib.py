@@ -25,6 +25,21 @@ def in_course_or_404(user, group_or_course):
         response_body = template.render(context)
         raise Http404(response_body)
 
+ANONYMIZE_KEY = 'ccnmtl.courseaffils.anonymize'
+
+def handle_public_name(user, request):
+    """guarantees no double-quotes so also json-friendly"""
+    if request.COOKIES.has_key('ANONYMIZE'):
+        return 'User Name_%d' % user.id
+    else:
+        return (user.get_full_name() or user.username).replace('"',"'")
+
+def get_public_name(user_s, request):
+    if hasattr(user_s, 'is_anonymous'):
+        return handle_public_name(user_s, request)
+    else:
+        #for attribution lists, and such
+        return ', '.join([handle_public_name(u, request) for u in user_s])
 
 # AUTO_COURSE_SELECT is a dictionary that can be populated by other
 # django apps in their views.py.  The KEY should be the view
