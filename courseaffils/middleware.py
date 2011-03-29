@@ -115,12 +115,12 @@ class CourseManagerMiddleware(object):
             requested_view = None
 
         #staff should always get the opportunity to pick a course
-        if len(available_courses) == 1 and not request.user.is_staff:
-            chosen_course = available_courses[0]
-        elif AUTO_COURSE_SELECT.has_key(requested_view):
+        if AUTO_COURSE_SELECT.has_key(requested_view):
             chosen_course = AUTO_COURSE_SELECT[requested_view](*view_args, **view_kwargs)
+        elif len(available_courses) == 1 and not request.user.is_staff:
+            chosen_course = available_courses[0]
 
-        if chosen_course and chosen_course in available_courses:
+        if chosen_course and (chosen_course in available_courses or request.user.is_staff):
             request.session[SESSION_KEY] = chosen_course
             decorate_request(request,chosen_course)
             return None
