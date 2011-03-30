@@ -67,9 +67,15 @@ try:
         edit = manage
 
         def read(self,coll,request):
-            return (coll.context == request.collaboration_context)
+            return (request.course and coll.context == request.collaboration_context)
 
         add_child = read
+        
+    class PublicAssignment(Assignment):
+        def read(self,coll,request):
+            return (coll.context == request.collaboration_context)
+
+
         
     CollaborationPolicies.register_policy(InstructorManaged,
                                           'InstructorManaged',
@@ -100,6 +106,11 @@ try:
                                           'Assignment',
                                           'Course assignment (instructors can manage/edit, '
                                           'course members can read/respond)')
+
+    CollaborationPolicies.register_policy(PublicAssignment, 
+                                          'PublicAssignment',
+                                          'Public Assignment (instructors can manage/edit, '
+                                          'course members can respond, world can see)')
 
 except ImportError:
     pass
