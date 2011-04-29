@@ -8,6 +8,25 @@
    <a href="{%url admin:courseaffils_course_add %}">Create a course</a>
 </p>
 {% endif %}
+{% if user.is_staff %}
+<p>Staff: To demo a class you can (mostly) anonymize the class, by setting this cookie:
+</p>
+<ul>
+  <li>
+    <span id="anonymize_status"></span>
+    <a href="#anonymize" onclick="document.cookie='ANONYMIZE=on; path=/';anonymizeStatus();">Enable</a>
+    <a href="#anonymize" onclick="document.cookie='ANONYMIZE=OFF; expires='+new Date().toGMTString()+'; path=/';anonymizeStatus();">Disable</a>
+  </li>
+</ul>
+<script type="text/javascript">
+  function anonymizeStatus() {
+  document.getElementById('anonymize_status').innerHTML = 'Anonymizing Status: '
+  + ((document.cookie.match(/ANONYMIZE/)) ? 'ON' : 'OFF');
+  }
+  anonymizeStatus();
+</script>
+
+{% endif %}
 
 <p>
   Hello, {{user.get_full_name|default:user}}!  Please select a course:
@@ -43,6 +62,7 @@
      <td class="manage-course">  
        <a href="{%url admin:courseaffils_course_change course.id %}">manage</a>
      </td>
+     <td>{{course.info.time}}</td>  
   {% endif %}
  </tr>
 {% endfor %}
@@ -57,21 +77,4 @@
 
 </tbody>
 </table>
-{% if user.is_staff %}
-<p>To demo a class you can (mostly) anonymize the class, by setting this cookie:
-</p>
-<ul>
-  <li id="anonymize_status"></li>
-  <li><a href="#anonymize" onclick="document.cookie='ANONYMIZE=on; path=/';anonymizeStatus();">Enable</a></li>
-  <li><a href="#anonymize" onclick="document.cookie='ANONYMIZE=OFF; expires='+new Date().toGMTString()+'; path=/';anonymizeStatus();">Disable</a></li>
-</ul>
-<script type="text/javascript">
-  function anonymizeStatus() {
-  document.getElementById('anonymize_status').innerHTML = 'Anonymizing Status: '
-  + ((document.cookie.match(/ANONYMIZE/)) ? 'ON' : 'OFF');
-  }
-  anonymizeStatus();
-</script>
-
-{% endif %}
 {% endblock %}

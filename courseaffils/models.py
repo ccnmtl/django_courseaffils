@@ -116,6 +116,14 @@ class CourseInfo(models.Model):
     endtime = models.TimeField(null=True, blank=True)
     days = models.CharField(max_length=7,null=True, blank=True) #e.g. 'MWF'
 
+    def time(self):
+        return u'%s%s' % (
+            self.days if self.days else '',
+            ' %s-%s' % (self.starttime.strftime('%H:%M'),
+                        self.endtime.strftime('%H:%M')
+                        ) if self.starttime else ''
+            )
+
     def termyear(self):
         return '%s %d' % (self.term_choices.get(self.term,''), self.year)
 
