@@ -39,11 +39,13 @@ def select_course(request):
     if len(available_courses) == 0 and not request.user.is_staff:
         return render_to_response('courseaffils/no_courses.html',
                                   response_dict)
-
+    
+    response_dict['next_redirect'] = ''
     if request.META.has_key('QUERY_STRING') \
             and not request.GET.has_key('unset_course') :
             #just GET (until someone complains)
-        response_dict['next_redirect']='&next=%s'%urlquote(request.get_full_path())
+        response_dict['next_redirect'] = '&next=%s' % (
+            urlquote(request.get_full_path()))
 
     return render_to_response('courseaffils/select_course.html',
                               response_dict)
