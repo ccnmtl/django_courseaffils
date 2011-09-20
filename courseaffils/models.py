@@ -125,7 +125,11 @@ class CourseInfo(models.Model):
             )
 
     def termyear(self):
-        return '%s %d' % (self.term_choices.get(self.term,''), self.year)
+        term = self.term_choices.get(self.term,'')
+        if self.year:
+            term = term + (' %d' % self.year)
+        
+        return term
 
     def display(self):
         return u'%s %s %s-%s' % (self.termyear(),
