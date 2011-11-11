@@ -17,6 +17,12 @@ import re
 SESSION_KEY = 'ccnmtl.courseaffils.course'
 
 def is_anonymous_path(current_path):
+    if hasattr(settings, "ANONYMOUS_PATHS"):
+        for path in settings.ANONYMOUS_PATHS:
+            if isinstance(path,str):
+                if current_path.startswith(path):
+                    return True
+            
     if hasattr(settings,'COURSEAFFILS_PATHS'):
         for path in settings.COURSEAFFILS_PATHS:
             if isinstance(path,str):
