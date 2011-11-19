@@ -92,6 +92,20 @@ class Course(models.Model):
     def details(self):
         return dict([(i.name,i) for i in CourseDetails.objects.filter(course=self)])
 
+    def get_detail(self, name, default):
+        try:
+            return CourseDetails.objects.get(course=self, name=name).value
+        except CourseDetails.DoesNotExist:
+            return default
+        
+    def add_detail(self, name, value):
+        try:
+            detail = CourseDetails.objects.get(course=self, name=name)
+            detail.value = value
+            detail.save()
+        except CourseDetails.DoesNotExist:
+            detail = CourseDetails.objects.create(course=self, name=name, value=value)
+
 class CourseSettings(models.Model):
     course = models.OneToOneField(Course, related_name='settings')
     
