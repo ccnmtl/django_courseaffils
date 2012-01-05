@@ -3,50 +3,45 @@
 
 {% block content %}
 
+<div id="course-list" class="top-archive">
+{% with "help_choose_course" as help_id %}
+{% with show_help as default_help_state %}
+
+<h2>Select a Course {% include "help/help_button.html" %}</h2>
+
+{% include "help/help_contentarea.html" %}
+
+
+<!--<p>
+  Hello, {{user.get_full_name|default:user}}!  Please select a course:
+</p>-->
+
+<div id="coursefilter">
+Viewing courses for 
+        {% if not list_all_link %}
+          this year. <a href="?list_all=true{{next_redirect}}">View previous years.</a>
+        {% else %}
+          all years. <a href="?{{next_redirect}}">View this year only.</a>
+        {% endif %}
+        </div>
+
 {% if add_privilege %}
 <p class="create-course">
-   <a href="{%url admin:courseaffils_course_add %}">Create a course</a>
+   <a class="project" href="{%url admin:courseaffils_course_add %}">Create new course</a>
 </p>
 {% endif %}
-{% if user.is_staff %}
-<p>Staff: To demo a class you can (mostly) anonymize the class, by setting this cookie:
-</p>
-<ul>
-  <li>
-    <span id="anonymize_status"></span>
-    <a href="#anonymize" onclick="document.cookie='ANONYMIZE=on; path=/';anonymizeStatus();">Enable</a>
-    <a href="#anonymize" onclick="document.cookie='ANONYMIZE=OFF; expires='+new Date().toGMTString()+'; path=/';anonymizeStatus();">Disable</a>
-  </li>
-</ul>
-<script type="text/javascript">
-  function anonymizeStatus() {
-  document.getElementById('anonymize_status').innerHTML = 'Anonymizing Status: '
-  + ((document.cookie.match(/ANONYMIZE/)) ? 'ON' : 'OFF');
-  }
-  anonymizeStatus();
-</script>
-
-{% endif %}
-
-<p>
-  Hello, {{user.get_full_name|default:user}}!  Please select a course:
-</p>
 
 <table class="course-choices">
   <thead>
     <tr>
       <td>Course Titles
-        {% if not list_all_link %}
-          from this year (<a href="?list_all=true{{next_redirect}}">see courses from previous years</a>)
-        {% else %}
-          (<a href="?{{next_redirect}}">filter courses for this year</a>)
-        {% endif %}
       </td>
       <td>Term</td>
       <td>Instructor</td>
       <td>Role</td> 
       {% if add_privilege %} 
-        <td>Staff</td>
+        <td>Actions</td>
+
       {% endif %}    
     </tr>
   </thead>
@@ -60,21 +55,24 @@
   <td>{% course_role for request.user in course as foo %}{{foo}}</td>
   {% if add_privilege %}
      <td class="manage-course">  
-       <a href="{%url admin:courseaffils_course_change course.id %}">manage</a>
+       <a class="project" href="{%url admin:courseaffils_course_change course.id %}">manage</a>
      </td>
-     <td>{{course.info.time}}</td>  
+
   {% endif %}
  </tr>
 {% endfor %}
 
-{% if not list_all_link %}
+<!--{% if not list_all_link %}
 <tr class="course-choices-other-years">
   <td colspan="5">
       <a href="?list_all=true{{next_redirect}}">See your courses from previous years</a>
   </td>
 </tr>
-{% endif %}
+{% endif %}-->
 
 </tbody>
 </table>
+{% endwith %}
+{% endwith %}
+</div>
 {% endblock %}
