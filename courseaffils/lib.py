@@ -8,8 +8,12 @@ User = get_model('auth', 'User')
 def users_in_course(course):
     return User.objects.filter(groups=course.group)
 
-def in_course(user, course):
-    return course.group in user.groups
+def in_course(user, group_or_course):
+    group = getattr(group_or_course,'group', group_or_course)
+    try:
+        return group.user_set.get(username=user)
+    except:
+        return False
 
 def in_course_or_404(user, group_or_course):
     "Supports either the course-group or course as second arg"
