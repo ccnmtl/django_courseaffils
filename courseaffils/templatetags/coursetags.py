@@ -4,6 +4,7 @@ from courseaffils.lib import get_public_name
 
 register = template.Library()
 
+
 class GetCourses(TemplateTagNode):
     noun_for = {"for": "user"}
 
@@ -16,6 +17,7 @@ class GetCourses(TemplateTagNode):
         return Course.objects.filter(group__in=user.groups.all())
 
 register.tag('get_courses', GetCourses.process_tag)
+
 
 class CourseRole(TemplateTagNode):
     noun_for = {"for": "user", "in": "course"}
@@ -35,8 +37,9 @@ class CourseRole(TemplateTagNode):
 
 register.tag('course_role', CourseRole.process_tag)
 
+
 class PublicName(TemplateTagNode):
-    noun_for = {"for": "user"} #unnecessary, but here for documentation
+    noun_for = {"for": "user"}  # unnecessary, but here for documentation
 
     def __init__(self, varname, user, truncate=None):
         self.truncate = truncate
@@ -58,8 +61,8 @@ class PublicName(TemplateTagNode):
             return cls(words[2], user=words[2], truncate=int(words[4]))
 register.tag('public_name', PublicName.process_tag)
 
-if not hasattr(template.defaulttags,'csrf_token'):
+if not hasattr(template.defaulttags, 'csrf_token'):
     ### for Django1.1.2- compatibility
     @register.tag(name="csrf_token")
-    def csrf_token(parser,token):
+    def csrf_token(parser, token):
         return template.Node()

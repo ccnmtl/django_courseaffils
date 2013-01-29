@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User,Group
+from django.contrib.auth.models import User, Group
 from django.conf import settings
 from courseaffils.models import Course
 
@@ -8,49 +8,60 @@ class CourseAdminForm(forms.ModelForm):
     class Meta:
         model = Course
 
-    if hasattr(settings,'COURSEAFFILS_COURSESTRING_MAPPER'):
-         course_string = settings.COURSEAFFILS_COURSESTRING_MAPPER.widget()
+    if hasattr(settings, 'COURSEAFFILS_COURSESTRING_MAPPER'):
+        course_string = settings.COURSEAFFILS_COURSESTRING_MAPPER.widget()
 
     add_user = forms.CharField(
         required=False,
         widget=forms.Textarea,
         label="Add users to group (one per line)",
-        help_text="Put a [ * ] in front of the username to make them faculty.  If you add an optional <code>:&lt;password></code> after the username, the password on the account will also be set.  <br />Example: <code>*faculty1:this_is_insecure</code> creates an instructor account 'faculty1' with the password 'this_is_insecure' ",
-        )
+        help_text=(
+            "Put a [ * ] in front of the username to make "
+            "them faculty.  If you add an optional <code>:"
+            "&lt;password></code> after the username, the "
+            "password on the account will also be set.  <br />"
+            "Example: <code>*faculty1:this_is_insecure</code> "
+            "creates an instructor account 'faculty1' with the "
+            "password 'this_is_insecure' "),
+    )
 
     users_to_remove = forms.ModelMultipleChoiceField(
         required=False,
         widget=forms.CheckboxSelectMultiple,
         queryset=User.objects.none(),
         label="Remove users from group",
-        )
+    )
 
     def __init__(self, *args, **kw):
         forms.ModelForm.__init__(self, *args, **kw)
-        if hasattr(settings,'COURSEAFFILS_COURSESTRING_MAPPER'):
+        if hasattr(settings, 'COURSEAFFILS_COURSESTRING_MAPPER'):
             self.fields['group'].required = False
         if self.instance.user_set:
             faculty = self.instance.faculty
             ruf = self.fields['users_to_remove']
             ruf.queryset = self.instance.user_set
-            ruf.choices = [(u.pk, '%s [%s] %s' % (u.get_full_name(), 
-                                               u.username,
-                                               '(instructor)' if u in faculty else ''
-                                               ) ) 
-                           for u in self.instance.user_set.all()
-                           ]
+            ruf.choices = [
+                (u.pk,
+                 '%s [%s] %s' % (u.get_full_name(),
+                                 u.username,
+                                 '(instructor)' if u in faculty else ''
+                                 )
+                 )
+                for u in self.instance.user_set.all()
+            ]
 
     def clean(self):
-        if hasattr(settings,'COURSEAFFILS_COURSESTRING_MAPPER')  \
-                and self.cleaned_data.get('course_string',False):
+        if hasattr(settings, 'COURSEAFFILS_COURSESTRING_MAPPER')  \
+                and self.cleaned_data.get('course_string', False):
             m = settings.COURSEAFFILS_COURSESTRING_MAPPER
-            stud_grp,fac_grp = m.get_groups(self.cleaned_data['course_string'])
+            stud_grp, fac_grp = m.get_groups(
+                self.cleaned_data['course_string'])
             if fac_grp:
                 self.cleaned_data['faculty_group'] = fac_grp
             self.cleaned_data['group'] = stud_grp
         elif not self.cleaned_data['group']:
             msg = 'You must select a group'
-            if hasattr(settings,'COURSEAFFILS_COURSESTRING_MAPPER'):
+            if hasattr(settings, 'COURSEAFFILS_COURSESTRING_MAPPER'):
                 msg = msg + ' or enter a course string'
                 if not self._errors.has_key('course_string'):
                     self._errors['course_string'] = forms.util.ErrorList()
@@ -62,13 +73,14 @@ class CourseAdminForm(forms.ModelForm):
                 self.cleaned_data["group"]
             raise forms.ValidationError(msg)
 
-        if Course.objects.filter(group=self.cleaned_data['group']).exclude(pk=self.instance.pk):
-            msg = """The group you selected is already associated with a course."""
+        if Course.objects.filter(
+                group=self.cleaned_data['group']).exclude(pk=self.instance.pk):
+            msg = "The group you selected is already associated with a course."
             self._errors['group'] = forms.util.ErrorList([msg])
             raise forms.ValidationError(msg)
 
         #run here, so the cleaned group from above can be used
-        self._clean_add_user() 
+        self._clean_add_user()
 
         return self.cleaned_data
 
@@ -82,7 +94,7 @@ class CourseAdminForm(forms.ModelForm):
         return users
 
     def _clean_add_user(self):
-        """run in clean() so we can process users after course is created 
+        """run in clean() so we can process users after course is created
         from course-string
         """
         usernames = self.cleaned_data['add_user']
@@ -111,4 +123,3 @@ class CourseAdminForm(forms.ModelForm):
                 if also_faculty and self.cleaned_data['faculty_group']:
                     user.groups.add(self.cleaned_data['faculty_group'])
         return usernames
-
