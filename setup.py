@@ -2,14 +2,13 @@ from setuptools import setup, find_packages
 
 version = '0.3.1'
 
-setup(name='django_courseaffils',
+setup(name='django-courseaffils',
       version=version,
       description="course affiliations",
-      long_description="""\
-""",
+      long_description="",
       classifiers=[],
       keywords='',
-      author='',
+      author='CCNMTL',
       author_email='',
       url='',
       license='',

@@ -1,4 +1,3 @@
-import courseaffils.listener
 # we need to make sure that the registration code
 # gets imported, so we import it from models.py
 # which will definitely be imported if the app
