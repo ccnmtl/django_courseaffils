@@ -1,3 +1,11 @@
+0.3.1
+=====
+
+* switch to semantic versioning (0.3.1 vs 0.3dev)
+* change package name from django_courseaffils to django-courseaffils
+* add unit tests for the models
+* some flake8 cleanup
+
 0.2
 ===
 
