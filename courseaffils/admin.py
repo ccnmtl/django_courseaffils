@@ -1,6 +1,6 @@
 from django.contrib import admin
 from courseaffils.models import Course, CourseSettings
-from courseaffils.modesl import CourseInfo, CourseDetails
+from courseaffils.models import CourseInfo, CourseDetails
 from courseaffils.forms import CourseAdminForm
 
 
