@@ -1,16 +1,14 @@
 from setuptools import setup, find_packages
-import sys, os
 
-version = '0.3dev'
+version = '0.3.1'
 
-setup(name='django_courseaffils',
+setup(name='django-courseaffils',
       version=version,
       description="course affiliations",
-      long_description="""\
-""",
-      classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+      long_description="",
+      classifiers=[],
       keywords='',
-      author='',
+      author='CCNMTL',
       author_email='',
       url='',
       license='',

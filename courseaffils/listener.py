@@ -6,13 +6,13 @@ from django.conf import settings
 
 auto_groups = getattr(settings, "COURSEAFFIL_AUTO_MAP_GROUPS", [])
 
+
 def auto_group_mapper(sender, **kwargs):
     for group in auto_groups:
         group = Group.objects.get_or_create(name=group)[0]
         sender.groups.add(group)
         sender.save()
 
-#user_logged_in.connect(auto_group_mapper)
 
 class AutoGroupWindMapper:
     """
@@ -25,4 +25,3 @@ class AutoGroupWindMapper:
             group = Group.objects.get_or_create(name=group)[0]
             user.groups.add(group)
             user.save()
-            
