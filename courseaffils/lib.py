@@ -18,7 +18,6 @@ def in_course(user, group_or_course):
         return False
 
 
-
 def in_course_or_404(user, group_or_course):
     "Supports either the course-group or course as second arg"
     group = getattr(group_or_course, 'group', group_or_course)

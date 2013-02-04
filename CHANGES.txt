@@ -1,3 +1,9 @@
+0.4.2
+=====
+
+* merged with the version that was on github, which had gotten
+  slightly out of sync
+
 0.4.1
 =====
 
