@@ -7,7 +7,8 @@ part of session state.
 
 The selected course is available in request.course .
 
-Several settings are available to be added to a django project's `settings.py`:
+Several settings are available to be added to a django project's
+`settings.py`:
 
 `COURSEAFFILS_EXEMPT_PATHS`
 
@@ -51,7 +52,7 @@ Example:
 
 
 
-TEMPLATE TAGS
+Template Tags
 -------------
 
 When developers include `{% load coursetags %}` into their template,
@@ -72,7 +73,7 @@ is in
 
 `{% course_role for user in course as course_role %}`
 
-sets the variable 'course_role' to one of:
+sets the variable `course_role` to one of:
 
 * `no-course`
 * `non-member`
