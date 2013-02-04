@@ -112,7 +112,7 @@ If you accidentally, entered the wrong course string, blank out """
         "returns a slug for the course, with higher resolution for attempt > 0"
         class_info = WindTemplate.to_dict(course.group.name)
         slug = None
-        if class_info and class_info.has_key('number'):
+        if class_info and 'number' in class_info:
             attempts = {
                 0: "CU%s%s" % (class_info['dept'],
                                class_info['number'], ),
@@ -216,7 +216,7 @@ class DirectoryPageTemplate:
             if m:
                 ret_val.update(m.groupdict())
 
-        if ret_val.has_key('times'):
+        if 'times' in ret_val:
             m = re.match(
                 ('(?P<days>\w*)\s*(?P<starttime>[\d:apm]*)\-'
                  '(?P<endtime>[\d:apm]*)'),

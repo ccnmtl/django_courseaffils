@@ -2,8 +2,7 @@ from django.test import TestCase
 from courseaffils.lib import users_in_course, in_course
 from courseaffils.lib import in_course_or_404
 from courseaffils.lib import handle_public_name, get_public_name
-from courseaffils.models import Course, CourseSettings
-from courseaffils.models import CourseInfo, CourseAccess
+from courseaffils.models import Course
 from django.contrib.auth.models import Group, User
 
 
@@ -23,7 +22,6 @@ class SimpleTest(TestCase):
             group=self.student_group,
             title="test course",
             faculty_group=self.faculty_group)
-
 
     def tearDown(self):
         self.c.delete()
@@ -60,4 +58,4 @@ class SimpleTest(TestCase):
         r = DummyRequest()
         assert get_public_name(self.student, r) == "student"
 
-        assert get_public_name([self.student,], r) == "student"
+        assert get_public_name([self.student, ], r) == "student"
