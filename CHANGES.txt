@@ -1,3 +1,10 @@
+0.4.3
+=====
+
+* test harness
+* more test coverage
+* flake8 cleaning
+
 0.4.2
 =====
 
