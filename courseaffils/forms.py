@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.conf import settings
 from courseaffils.models import Course
 
@@ -63,13 +63,13 @@ class CourseAdminForm(forms.ModelForm):
             msg = 'You must select a group'
             if hasattr(settings, 'COURSEAFFILS_COURSESTRING_MAPPER'):
                 msg = msg + ' or enter a course string'
-                if not self._errors.has_key('course_string'):
+                if not 'course_string' not in self._errors:
                     self._errors['course_string'] = forms.util.ErrorList()
                 self._errors['course_string'].append(msg)
-                if self.cleaned_data.has_key('course_string'):
+                if 'course_string' in self.cleaned_data:
                     del self.cleaned_data["course_string"]
             self._errors['group'] = forms.util.ErrorList([msg])
-            if self.cleaned_data.has_key('group'):
+            if 'group' in self.cleaned_data:
                 self.cleaned_data["group"]
             raise forms.ValidationError(msg)
 

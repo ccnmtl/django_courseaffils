@@ -20,8 +20,8 @@ class SimpleTest(TestCase):
 
 
     def test_init(self):
-        c = CourseAdminForm()
-        c2 = CourseAdminForm(instance=self.c)
+        CourseAdminForm()
+        CourseAdminForm(instance=self.c)
 
     def test_clean(self):
         s2 = Group.objects.create(name="studentgroup2")
