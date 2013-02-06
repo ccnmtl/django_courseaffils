@@ -11,7 +11,7 @@ def users_in_course(course):
 
 
 def in_course(user, group_or_course):
-    group = getattr(group_or_course,'group', group_or_course)
+    group = getattr(group_or_course, 'group', group_or_course)
     try:
         return group.user_set.get(username=user)
     except:

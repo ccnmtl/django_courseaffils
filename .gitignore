@@ -6,3 +6,4 @@ deploy_specific
 .svn
 \#*
 dist
+.coverage
