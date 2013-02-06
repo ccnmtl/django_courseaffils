@@ -2,16 +2,29 @@ from django.test import TestCase
 from courseaffils.middleware import is_anonymous_path
 from courseaffils.middleware import already_selected_course
 from courseaffils.middleware import CourseManagerMiddleware
+from django.contrib.auth.models import Group, User
+from courseaffils.models import Course
 
 
 class StubRequest(object):
     COOKIES = dict()
+    GET = dict()
+    REQUEST = dict()
+    environ = dict()
 
-    def __init__(self, v):
-        if v:
-            self.session = {'ccnmtl.courseaffils.course': 1}
+    def __init__(self, c):
+        self.path = "/foo/bar"
+        if c:
+            self.session = {'ccnmtl.courseaffils.course': c}
         else:
             self.session = dict()
+
+    def get_full_path(self):
+        return self.path
+
+
+class StubResponse(object):
+    content = ""
 
 
 class SimpleTest(TestCase):
@@ -27,6 +40,18 @@ class SimpleTest(TestCase):
     test harness for courseaffils, it will
     still be messy.
     """
+    def setUp(self):
+        self.student_group = Group.objects.create(name="studentgroup")
+        self.faculty_group = Group.objects.create(name="facultygroup")
+        self.student = User.objects.create(username="student",
+                                           last_name="long enough")
+        self.faculty = User.objects.create(username="faculty")
+        self.student.groups.add(self.student_group)
+        self.faculty.groups.add(self.faculty_group)
+        self.c = Course.objects.create(
+            group=self.student_group,
+            title="test course",
+            faculty_group=self.faculty_group)
 
     def test_is_anonymous_path(self):
         assert is_anonymous_path("/favicon.ico")
@@ -37,6 +62,43 @@ class SimpleTest(TestCase):
         assert already_selected_course(StubRequest(True))
         assert not already_selected_course(StubRequest(False))
 
-    def test_coursemanagermiddleware_process_response(self):
+    def test_cmm_process_response(self):
         c = CourseManagerMiddleware()
         assert c.process_response(StubRequest(True), "foo") == "foo"
+
+    def test_cmm_process_response_anon(self):
+        c = CourseManagerMiddleware()
+        r = StubRequest(self.c)
+        r.user = self.student
+        r.COOKIES['ANONYMIZE'] = True
+        r.scrub_names = {self.student: 1}
+        resp = StubResponse()
+        resp.content = str(self.student.get_full_name())
+        assert "User Name" in c.process_response(r, resp).content
+        resp.content = str(self.student.get_full_name())
+        assert "long enough" not in c.process_response(r, resp).content
+
+    def test_cmm_process_request(self):
+        c = CourseManagerMiddleware()
+        r = StubRequest(self.c)
+        r.user = self.student
+        assert c.process_request(r) is None
+
+        r.path = "/favicon.ico"
+        assert c.process_request(r) is None
+
+        r = StubRequest(self.c)
+        r.user = self.student
+        r.GET['unset_course'] = True
+        assert c.process_request(r) is None
+
+        r = StubRequest(self.c)
+        r.user = self.student
+        r.REQUEST['set_course'] = 'studentgroup'
+        assert c.process_request(r) is None
+
+        r = StubRequest(self.c)
+        r.user = self.student
+        r.REQUEST['set_course'] = 'studentgroup'
+        r.GET['next'] = "/foo"
+        assert c.process_request(r) is not None

@@ -31,6 +31,7 @@ def main():
             '/smoketest/',
             ),
         COURSEAFFILS_COURSESTRING_MAPPER = CourseStringMapper,
+        ROOT_URLCONF = [],
 
         # Django replaces this, but it still wants it. *shrugs*
         DATABASES = {
