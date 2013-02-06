@@ -100,7 +100,7 @@ class CourseManagerMiddleware(object):
                             break
                     request.collaboration_context.save()
 
-        if request.REQUEST.has_key('set_course'):
+        if 'set_course' in request.REQUEST:
             course = Course.objects.get(
                 group__name=request.REQUEST['set_course'])
             if (request.user.is_staff
@@ -109,12 +109,12 @@ class CourseManagerMiddleware(object):
                 request.session[SESSION_KEY] = course
                 decorate_request(request, course)
 
-                if request.GET.has_key('next'):
+                if 'next' in request.GET:
                     return HttpResponseRedirect(request.GET['next'])
 
                 return None
 
-        if request.session.has_key(SESSION_KEY):
+        if SESSION_KEY in request.session:
             course = request.session[SESSION_KEY]
             decorate_request(request, course)
             return None
@@ -128,7 +128,7 @@ class CourseManagerMiddleware(object):
             requested_view = None
 
         #staff should always get the opportunity to pick a course
-        if AUTO_COURSE_SELECT.has_key(requested_view):
+        if requested_view in AUTO_COURSE_SELECT:
             chosen_course = AUTO_COURSE_SELECT[requested_view](
                 *view_args, **view_kwargs)
         elif len(available_courses) == 1 and not request.user.is_staff:
