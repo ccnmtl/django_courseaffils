@@ -53,7 +53,6 @@ class SimpleTest(TestCase):
             title="test course",
             faculty_group=self.faculty_group)
 
-
     def test_is_anonymous_path(self):
         assert is_anonymous_path("/favicon.ico")
         assert not is_anonymous_path("/game")
@@ -72,7 +71,7 @@ class SimpleTest(TestCase):
         r = StubRequest(self.c)
         r.user = self.student
         r.COOKIES['ANONYMIZE'] = True
-        r.scrub_names = {self.student:1}
+        r.scrub_names = {self.student: 1}
         resp = StubResponse()
         resp.content = str(self.student.get_full_name())
         assert "User Name" in c.process_response(r, resp).content
