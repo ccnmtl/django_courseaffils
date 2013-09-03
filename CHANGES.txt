@@ -1,3 +1,10 @@
+0.4.4
+=====
+
+* test harness now uses jenkins for coverage reporting
+* the TemplateTagNode class from djangohelpers has been included so
+  we can drop the djangohelpers dependency.
+
 0.4.3
 =====
 
