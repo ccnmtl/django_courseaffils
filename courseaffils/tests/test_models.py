@@ -4,7 +4,7 @@ from courseaffils.models import CourseInfo, CourseAccess
 from django.contrib.auth.models import Group, User
 
 
-class SimpleTest(TestCase):
+class ModelsSimpleTest(TestCase):
     """ test some basic happy paths through the models """
     def setUp(self):
         self.student_group = Group.objects.create(name="studentgroup")

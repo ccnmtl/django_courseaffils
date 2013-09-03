@@ -10,7 +10,7 @@ class DummyRequest(object):
     COOKIES = dict()
 
 
-class SimpleTest(TestCase):
+class LibsSimpleTest(TestCase):
     def setUp(self):
         self.student_group = Group.objects.create(name="studentgroup")
         self.faculty_group = Group.objects.create(name="facultygroup")

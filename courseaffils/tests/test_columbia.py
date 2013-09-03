@@ -11,7 +11,7 @@ class DummyRequest(object):
     COOKIES = dict()
 
 
-class SimpleTest(TestCase):
+class ColumbiaSimpleTest(TestCase):
 
     def test_hashtagtemplate(self):
         self.assertEquals(

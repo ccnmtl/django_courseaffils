@@ -12,13 +12,22 @@ def main():
             'django.contrib.sessions',
             'courseaffils',
             'django_nose',
+            'django_jenkins',
         ),
         TEST_RUNNER = 'django_nose.NoseTestSuiteRunner',
 
         NOSE_ARGS = [
             '--with-coverage',
             '--cover-package=courseaffils',
-            ],
+        ],
+        JENKINS_TASKS = (
+            'django_jenkins.tasks.with_coverage',
+            'django_jenkins.tasks.django_tests',
+        ),
+        PROJECT_APPS = [
+            'courseaffils',
+        ],
+        COVERAGE_EXCLUDES_FOLDERS = ['migrations'],
 
         COURSEAFFILS_EXEMPT_PATHS = (
             '/accounts/',
@@ -47,7 +56,7 @@ def main():
     )
 
     # Fire off the tests
-    call_command('test', 'courseaffils')
+    call_command('jenkins')
 
 if __name__ == '__main__':
     main()

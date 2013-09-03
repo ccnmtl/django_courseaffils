@@ -27,7 +27,7 @@ class StubResponse(object):
     content = ""
 
 
-class SimpleTest(TestCase):
+class MiddlewareSimpleTest(TestCase):
     """
     These are really bad. courseaffils.middleware
     does a bunch of inspecting the settings

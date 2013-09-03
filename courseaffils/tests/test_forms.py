@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group, User
 from courseaffils.models import Course
 
 
-class SimpleTest(TestCase):
+class FormsSimpleTest(TestCase):
     def setUp(self):
         self.student_group = Group.objects.create(name="studentgroup")
         self.faculty_group = Group.objects.create(name="facultygroup")
