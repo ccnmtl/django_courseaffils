@@ -1,5 +1,4 @@
 from django.http import HttpResponseRedirect
-from django.utils.http import urlquote
 from django.conf import settings
 
 from courseaffils.models import Course, CourseAccess
@@ -63,7 +62,6 @@ class CourseManagerMiddleware(object):
     def process_request(self, request):
         request.course = None  # must be present to be a caching key
 
-        path = urlquote(request.get_full_path())
         if is_anonymous_path(request.path):
             return None
 

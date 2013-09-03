@@ -187,13 +187,6 @@ class CourseDetails(models.Model):
         verbose_name_plural = 'Course Details'
 
 
-#### Structured Collaboration Support ####
-try:
-    import policies
-except ImportError:
-    pass
-
-
 #### server2server admin access support ####
 class CourseAccess:
     @classmethod

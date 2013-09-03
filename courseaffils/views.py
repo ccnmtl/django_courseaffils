@@ -1,7 +1,5 @@
-from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
 from courseaffils.models import Course, CourseAccess
-from django.db.models import get_model, Q
 from django.utils.http import urlquote
 from django.http import HttpResponseForbidden, HttpResponse
 from django.contrib.auth.models import User
@@ -23,7 +21,7 @@ def select_course(request):
     available_courses = available_courses_query(request.user)
 
     list_all_link = True
-    if not request.GET.has_key('list_all'):
+    if 'list_all' not in request.GET:
         current_year = datetime.datetime.now().year
         available_courses = available_courses.exclude(
             info__year__lt=current_year)
@@ -41,8 +39,8 @@ def select_course(request):
                                   response_dict)
 
     response_dict['next_redirect'] = ''
-    if request.META.has_key('QUERY_STRING') \
-            and not request.GET.has_key('unset_course'):
+    if 'QUERY_STRING' in request.META \
+            and 'unset_course' not in request.GET:
             #just GET (until someone complains)
         response_dict['next_redirect'] = '&next=%s' % (
             urlquote(request.get_full_path()))
@@ -57,7 +55,7 @@ def is_logged_in(request):
     """This could be a privacy hole, but since it's just logged in status,
      it seems pretty harmless"""
     logged_in = request.user.is_authenticated()
-    course_selected = request.session.has_key(SESSION_KEY)
+    course_selected = SESSION_KEY in request.session
     data = {
         "logged_in": logged_in,
         "course_selected": course_selected,  # just truth value

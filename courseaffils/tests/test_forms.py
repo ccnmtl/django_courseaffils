@@ -18,7 +18,6 @@ class FormsSimpleTest(TestCase):
             title="test course",
             faculty_group=self.faculty_group)
 
-
     def test_init(self):
         CourseAdminForm()
         CourseAdminForm(instance=self.c)
