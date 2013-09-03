@@ -20,7 +20,6 @@ setup(name='django-courseaffils',
         ],
       install_requires=[
         "Django",
-        "djangohelpers",
         "simplejson",
       ],
       entry_points="""
