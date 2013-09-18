@@ -1,3 +1,11 @@
+0.4.5
+=====
+
+* bugfix for password hashers bug (courseaffils admin forms were
+  creating users with '' as unusable password rather than '!'), which
+  triggers a 500 error when that user attempts to login locally
+  instead of just a failed login.
+
 0.4.4
 =====
 
