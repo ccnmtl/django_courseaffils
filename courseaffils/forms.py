@@ -118,6 +118,8 @@ class CourseAdminForm(forms.ModelForm):
                     user = User(username=username)
                     if password:
                         user.set_password(password)
+                    else:
+                        user.set_unusable_password()
                     user.save()
                 user.groups.add(group)
                 if also_faculty and self.cleaned_data['faculty_group']:
