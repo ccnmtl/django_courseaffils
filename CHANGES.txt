@@ -1,3 +1,8 @@
+0.4.7
+=====
+
+* {% url %} tag fixes for django 1.5
+
 0.4.6
 =====
 
