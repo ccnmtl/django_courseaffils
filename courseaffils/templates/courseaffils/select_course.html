@@ -28,7 +28,7 @@ Viewing courses for
 
 {% if add_privilege %}
 <p class="create-course">
-   <a class="project" href="{%url admin:courseaffils_course_add %}">Create new course</a>
+   <a class="project" href="{%url 'admin:courseaffils_course_add' %}">Create new course</a>
 </p>
 {% endif %}
 
@@ -56,7 +56,7 @@ Viewing courses for
   <td>{% course_role for request.user in course as foo %}{{foo}}</td>
   {% if add_privilege %}
      <td class="manage-course">  
-       <a class="project" href="{%url admin:courseaffils_course_change course.id %}">manage</a>
+       <a class="project" href="{%url 'admin:courseaffils_course_change' course.id %}">manage</a>
      </td>
 
   {% endif %}
