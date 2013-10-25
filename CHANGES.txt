@@ -1,3 +1,8 @@
+0.4.6
+=====
+
+* remove adminmedia templatetag, since it's gone in django 1.5.4
+
 0.4.5
 =====
 
