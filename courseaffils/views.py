@@ -58,10 +58,12 @@ def is_logged_in(request):
      it seems pretty harmless"""
     logged_in = request.user.is_authenticated()
     course_selected = SESSION_KEY in request.session
+    current = request.GET.get('version', None) == '1'  # has correct version
     data = {
         "logged_in": logged_in,
+        "current": current,
         "course_selected": course_selected,  # just truth value
-        "ready": (logged_in and course_selected),
+        "ready": (logged_in and course_selected and current),
     }
     jscript = """(function() {
                    var status = %s;

@@ -8,3 +8,5 @@ deploy_specific
 dist
 .coverage
 reports/
+.project
+.pydevproject
