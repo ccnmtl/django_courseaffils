@@ -5,6 +5,7 @@ from django.http import HttpResponseForbidden, HttpResponse
 from django.contrib.auth.models import User
 import datetime
 import simplejson
+from django.template import RequestContext
 
 
 def available_courses_query(user):
@@ -46,7 +47,8 @@ def select_course(request):
             urlquote(request.get_full_path()))
 
     return render_to_response('courseaffils/select_course.html',
-                              response_dict)
+                              response_dict,
+                              context_instance=RequestContext(request))
 
 SESSION_KEY = 'ccnmtl.courseaffils.course'
 
