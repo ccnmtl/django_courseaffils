@@ -22,7 +22,6 @@ def main():
         ],
         JENKINS_TASKS = (
             'django_jenkins.tasks.with_coverage',
-            'django_jenkins.tasks.django_tests',
         ),
         PROJECT_APPS = [
             'courseaffils',
