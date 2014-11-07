@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '0.4.9'
+version = '0.4.10'
 
 
 setup(name='django-courseaffils',
@@ -20,7 +20,6 @@ setup(name='django-courseaffils',
         ],
       install_requires=[
         "Django",
-        "simplejson",
       ],
       entry_points="""
       """,

@@ -4,7 +4,7 @@ from django.utils.http import urlquote
 from django.http import HttpResponseForbidden, HttpResponse
 from django.contrib.auth.models import User
 import datetime
-import simplejson
+import json
 from django.template import RequestContext
 
 
@@ -75,9 +75,9 @@ def is_logged_in(request):
                    }
                    window.SherdBookmarkletOptions.user_status = status;
                   })();
-              """ % simplejson.dumps(data)
+              """ % json.dumps(data)
     return HttpResponse(jscript,
-                        mimetype='application/javascript')
+                        content_type='application/javascript')
 
 
 def course_list_query(request):
@@ -91,8 +91,8 @@ def course_list_query(request):
              for c in courses]
             )}
     return HttpResponse(
-        simplejson.dumps(data, indent=2),
-        mimetype='application/json')
+        json.dumps(data, indent=2),
+        content_type='application/json')
 
 
 def refresh_and_close_window(request):
