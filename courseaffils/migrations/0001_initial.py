@@ -1,119 +1,68 @@
 # flake8: noqa
-# encoding: utf-8
-import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
-class Migration(SchemaMigration):
-
-    def forwards(self, orm):
-        
-        # Adding model 'Course'
-        db.create_table('courseaffils_course', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('group', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.Group'], unique=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=1024)),
-            ('faculty_group', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='faculty_of', null=True, to=orm['auth.Group'])),
-        ))
-        db.send_create_signal('courseaffils', ['Course'])
-
-        # Adding model 'CourseSettings'
-        db.create_table('courseaffils_coursesettings', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('course', self.gf('django.db.models.fields.related.OneToOneField')(related_name='settings', unique=True, to=orm['courseaffils.Course'])),
-            ('custom_headers', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-        ))
-        db.send_create_signal('courseaffils', ['CourseSettings'])
-
-        # Adding model 'CourseInfo'
-        db.create_table('courseaffils_courseinfo', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('course', self.gf('django.db.models.fields.related.OneToOneField')(related_name='info', unique=True, to=orm['courseaffils.Course'])),
-            ('year', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('term', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('starttime', self.gf('django.db.models.fields.TimeField')(null=True, blank=True)),
-            ('endtime', self.gf('django.db.models.fields.TimeField')(null=True, blank=True)),
-            ('days', self.gf('django.db.models.fields.CharField')(max_length=7, null=True, blank=True)),
-        ))
-        db.send_create_signal('courseaffils', ['CourseInfo'])
-
-        # Adding model 'CourseDetails'
-        db.create_table('courseaffils_coursedetails', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('course', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['courseaffils.Course'])),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('value', self.gf('django.db.models.fields.CharField')(max_length=1024)),
-        ))
-        db.send_create_signal('courseaffils', ['CourseDetails'])
+from django.db import models, migrations
 
 
-    def backwards(self, orm):
-        
-        # Deleting model 'Course'
-        db.delete_table('courseaffils_course')
+class Migration(migrations.Migration):
 
-        # Deleting model 'CourseSettings'
-        db.delete_table('courseaffils_coursesettings')
+    dependencies = [
+        ('auth', '0001_initial'),
+    ]
 
-        # Deleting model 'CourseInfo'
-        db.delete_table('courseaffils_courseinfo')
-
-        # Deleting model 'CourseDetails'
-        db.delete_table('courseaffils_coursedetails')
-
-
-    models = {
-        'auth.group': {
-            'Meta': {'object_name': 'Group'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
-        },
-        'auth.permission': {
-            'Meta': {'ordering': "('content_type__app_label', 'content_type__model', 'codename')", 'unique_together': "(('content_type', 'codename'),)", 'object_name': 'Permission'},
-            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        'contenttypes.contenttype': {
-            'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        'courseaffils.course': {
-            'Meta': {'object_name': 'Course'},
-            'faculty_group': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'faculty_of'", 'null': 'True', 'to': "orm['auth.Group']"}),
-            'group': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.Group']", 'unique': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '1024'})
-        },
-        'courseaffils.coursedetails': {
-            'Meta': {'object_name': 'CourseDetails'},
-            'course': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['courseaffils.Course']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
-            'value': ('django.db.models.fields.CharField', [], {'max_length': '1024'})
-        },
-        'courseaffils.courseinfo': {
-            'Meta': {'object_name': 'CourseInfo'},
-            'course': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'info'", 'unique': 'True', 'to': "orm['courseaffils.Course']"}),
-            'days': ('django.db.models.fields.CharField', [], {'max_length': '7', 'null': 'True', 'blank': 'True'}),
-            'endtime': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'starttime': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
-            'term': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'year': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
-        },
-        'courseaffils.coursesettings': {
-            'Meta': {'object_name': 'CourseSettings'},
-            'course': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'settings'", 'unique': 'True', 'to': "orm['courseaffils.Course']"}),
-            'custom_headers': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
-        }
-    }
-
-    complete_apps = ['courseaffils']
+    operations = [
+        migrations.CreateModel(
+            name='Course',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('title', models.CharField(max_length=1024)),
+                ('faculty_group', models.ForeignKey(related_name='faculty_of', blank=True, to='auth.Group', null=True)),
+                ('group', models.OneToOneField(to='auth.Group')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='CourseDetails',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(help_text=b"type of data. Useful ones are 'instructor', 'semester', 'url', 'campus', 'times', 'call_number'", max_length=64)),
+                ('value', models.CharField(help_text=b"The name's value for the course.", max_length=1024)),
+                ('course', models.ForeignKey(to='courseaffils.Course')),
+            ],
+            options={
+                'verbose_name_plural': 'Course Details',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='CourseInfo',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('year', models.IntegerField(null=True, blank=True)),
+                ('term', models.IntegerField(blank=True, null=True, choices=[(1, b'Spring'), (2, b'Summer'), (3, b'Fall')])),
+                ('starttime', models.TimeField(null=True, blank=True)),
+                ('endtime', models.TimeField(null=True, blank=True)),
+                ('days', models.CharField(max_length=7, null=True, blank=True)),
+                ('course', models.OneToOneField(related_name='info', to='courseaffils.Course')),
+            ],
+            options={
+                'verbose_name_plural': 'Course Info',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='CourseSettings',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('custom_headers', models.TextField(help_text=b'Replaces main.css link in header.  You need to add this as full HTML (&lt;link rel="stylesheet" href="...." />) but the advantage is you can add custom javascript here, too.', null=True, blank=True)),
+                ('course', models.OneToOneField(related_name='settings', to='courseaffils.Course')),
+            ],
+            options={
+                'verbose_name_plural': 'Course Settings',
+            },
+            bases=(models.Model,),
+        ),
+    ]

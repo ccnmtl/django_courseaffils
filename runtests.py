@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.management import call_command
 from courseaffils.columbia import CourseStringMapper
+import django
 
 def main():
     # Dynamically configure the Django settings with the minimum necessary to
@@ -15,7 +16,7 @@ def main():
             'django_jenkins',
         ),
         TEST_RUNNER = 'django_nose.NoseTestSuiteRunner',
-
+        MIDDLEWARE_CLASSES = [],
         NOSE_ARGS = [
             '--with-coverage',
             '--cover-package=courseaffils',
@@ -54,6 +55,7 @@ def main():
             }
     )
 
+    django.setup()
     # Fire off the tests
     call_command('jenkins')
 

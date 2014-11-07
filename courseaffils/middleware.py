@@ -4,11 +4,16 @@ from django.conf import settings
 from courseaffils.models import Course, CourseAccess
 from courseaffils.views import select_course
 from courseaffils.lib import AUTO_COURSE_SELECT
-from django.db.models import get_model
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import resolve, Resolver404
 
-Collaboration = get_model('structuredcollaboration', 'collaboration')
+STRUCTURED_COLLABORATION_AVAILABLE = False
+try:
+    from structuredcollaboration.models import Collaboration
+    STRUCTURED_COLLABORATION_AVAILABLE = True
+except ImportError:
+    pass
+
 SESSION_KEY = 'ccnmtl.courseaffils.course'
 
 
@@ -81,7 +86,7 @@ class CourseManagerMiddleware(object):
             request.environ['django_username'] = request.user.username
             request.environ['django_course'] = course.title
 
-            if Collaboration:  # if structuredcollaboration app is installed
+            if STRUCTURED_COLLABORATION_AVAILABLE:
                 (request.collaboration_context,
                     created) = Collaboration.objects.get_or_create(
                         content_type=ContentType.objects.get_for_model(Course),

@@ -7,6 +7,7 @@ from courseaffils.models import Course
 class CourseAdminForm(forms.ModelForm):
     class Meta:
         model = Course
+        exclude = []
 
     if hasattr(settings, 'COURSEAFFILS_COURSESTRING_MAPPER'):
         course_string = settings.COURSEAFFILS_COURSESTRING_MAPPER.widget()
