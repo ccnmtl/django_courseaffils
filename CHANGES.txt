@@ -1,3 +1,8 @@
+1.0.1
+=====
+* remove Mediathread only policies file.
+
+
 0.4.8
 =====
 * select_course -- adding RequestContext to render_to_response call to ensure STATIC_URL is populated
