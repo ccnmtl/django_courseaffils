@@ -10,3 +10,4 @@ dist
 reports/
 .project
 .pydevproject
+build
