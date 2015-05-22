@@ -30,7 +30,7 @@ def is_anonymous_path(current_path):
                 if current_path.startswith(path):
                     return False
             elif hasattr(path, 'match'):
-                #regex
+                # regex
                 if path.match(current_path):
                     return False
 
@@ -70,8 +70,8 @@ class CourseManagerMiddleware(object):
         if is_anonymous_path(request.path):
             return None
 
-        if (not request.user.is_authenticated()
-                and not CourseAccess.allowed(request)):
+        if (not request.user.is_authenticated() and
+                not CourseAccess.allowed(request)):
             return None
 
         if 'unset_course' in request.GET:
@@ -130,16 +130,15 @@ class CourseManagerMiddleware(object):
         except Resolver404:
             requested_view = None
 
-        #staff should always get the opportunity to pick a course
+        # staff should always get the opportunity to pick a course
         if requested_view in AUTO_COURSE_SELECT:
             chosen_course = AUTO_COURSE_SELECT[requested_view](
                 *view_args, **view_kwargs)
         elif len(available_courses) == 1 and not request.user.is_staff:
             chosen_course = available_courses[0]
 
-        if (chosen_course
-                and (chosen_course in available_courses
-                     or request.user.is_staff)):
+        if (chosen_course and
+                (chosen_course in available_courses or request.user.is_staff)):
             request.session[SESSION_KEY] = chosen_course
             decorate_request(request, chosen_course)
             return None

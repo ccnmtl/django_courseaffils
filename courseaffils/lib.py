@@ -50,7 +50,7 @@ def get_public_name(user_s, request):
     if hasattr(user_s, 'is_anonymous'):
         return handle_public_name(user_s, request)
     else:
-        #for attribution lists, and such
+        # for attribution lists, and such
         return ', '.join([handle_public_name(u, request) for u in user_s])
 
 # AUTO_COURSE_SELECT is a dictionary that can be populated by other

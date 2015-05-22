@@ -1,3 +1,8 @@
+2.0.1
+=====
+* remove Mediathread only logged-in.js injector view
+* flake8
+
 2.0.0
 =====
 * remove Mediathread only policies file.

@@ -33,8 +33,8 @@ class CourseAdminForm(forms.ModelForm):
         label="Remove users from group",
     )
 
-    def __init__(self, *args, **kw):
-        forms.ModelForm.__init__(self, *args, **kw)
+    def __init__(self, *args, **kwargs):
+        super(forms.ModelForm, self).__init__(*args, **kwargs)
         if hasattr(settings, 'COURSEAFFILS_COURSESTRING_MAPPER'):
             self.fields['group'].required = False
         if self.instance.user_set:
@@ -43,10 +43,8 @@ class CourseAdminForm(forms.ModelForm):
             ruf.queryset = self.instance.user_set
             ruf.choices = [
                 (u.pk,
-                 '%s [%s] %s' % (u.get_full_name(),
-                                 u.username,
-                                 '(instructor)' if u in faculty else ''
-                                 )
+                 '%s [%s] %s' % (u.get_full_name(), u.username,
+                                 '(instructor)' if u in faculty else '')
                  )
                 for u in self.instance.user_set.all()
             ]
@@ -80,7 +78,7 @@ class CourseAdminForm(forms.ModelForm):
             self._errors['group'] = forms.util.ErrorList([msg])
             raise forms.ValidationError(msg)
 
-        #run here, so the cleaned group from above can be used
+        # run here, so the cleaned group from above can be used
         self._clean_add_user()
 
         return self.cleaned_data
@@ -102,7 +100,7 @@ class CourseAdminForm(forms.ModelForm):
         if not usernames:
             return
 
-        #take it from here, in case instance is not yet created
+        # take it from here, in case instance is not yet created
         group = self.cleaned_data['group']
         for line in usernames.split('\n'):
             clean_line = line.strip().rstrip().split(':')
