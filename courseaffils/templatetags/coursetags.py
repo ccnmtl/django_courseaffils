@@ -84,7 +84,7 @@ class GetCourses(TemplateTagNode):
         TemplateTagNode.__init__(self, varname, user=user)
 
     def execute_query(self, user):
-        #import here, because it doesn't work above
+        # import here, because it doesn't work above
         from courseaffils.models import Course
         return Course.objects.filter(group__in=user.groups.all())
 
@@ -100,7 +100,7 @@ class CourseRole(TemplateTagNode):
     def execute_query(self, user, course):
         if not course:
             return "no-course"
-        if not user in course.members:
+        if user not in course.members:
             return "non-member"
         elif user in course.faculty:
             return "instructor"
@@ -132,9 +132,3 @@ class PublicName(TemplateTagNode):
         else:
             return cls(words[2], user=words[2], truncate=int(words[4]))
 register.tag('public_name', PublicName.process_tag)
-
-if not hasattr(template.defaulttags, 'csrf_token'):
-    ### for Django1.1.2- compatibility
-    @register.tag(name="csrf_token")
-    def csrf_token(parser, token):
-        return template.Node()

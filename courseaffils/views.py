@@ -42,7 +42,7 @@ def select_course(request):
     response_dict['next_redirect'] = ''
     if 'QUERY_STRING' in request.META \
             and 'unset_course' not in request.GET:
-            #just GET (until someone complains)
+            # just GET (until someone complains)
         response_dict['next_redirect'] = '&next=%s' % (
             urlquote(request.get_full_path()))
 
@@ -51,33 +51,6 @@ def select_course(request):
                               context_instance=RequestContext(request))
 
 SESSION_KEY = 'ccnmtl.courseaffils.course'
-
-
-def is_logged_in(request):
-    """This could be a privacy hole, but since it's just logged in status,
-     it seems pretty harmless"""
-    logged_in = request.user.is_authenticated()
-    course_selected = SESSION_KEY in request.session
-    current = request.GET.get('version', None) == '1'  # has correct version
-    data = {
-        "logged_in": logged_in,
-        "current": current,
-        "course_selected": course_selected,  # just truth value
-        "ready": (logged_in and course_selected and current),
-    }
-    jscript = """(function() {
-                   var status = %s;
-                   if (window.SherdBookmarklet) {
-                       window.SherdBookmarklet.update_user_status(status);
-                   }
-                   if (!window.SherdBookmarkletOptions) {
-                          window.SherdBookmarkletOptions={};
-                   }
-                   window.SherdBookmarkletOptions.user_status = status;
-                  })();
-              """ % json.dumps(data)
-    return HttpResponse(jscript,
-                        content_type='application/javascript')
 
 
 def course_list_query(request):
@@ -93,7 +66,3 @@ def course_list_query(request):
     return HttpResponse(
         json.dumps(data, indent=2),
         content_type='application/json')
-
-
-def refresh_and_close_window(request):
-    pass

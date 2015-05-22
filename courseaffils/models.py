@@ -137,7 +137,7 @@ class CourseInfo(models.Model):
     term = models.IntegerField(
         null=True, blank=True, choices=term_choices.items())
 
-    #for ability to query what courses are going on NOW
+    # for ability to query what courses are going on NOW
     starttime = models.TimeField(null=True, blank=True)
     endtime = models.TimeField(null=True, blank=True)
     days = models.CharField(max_length=7, null=True, blank=True)  # e.g. 'MWF'
@@ -187,7 +187,7 @@ class CourseDetails(models.Model):
         verbose_name_plural = 'Course Details'
 
 
-#### server2server admin access support ####
+# server2server admin access support
 class CourseAccess:
     @classmethod
     def allowed(cls, request):
