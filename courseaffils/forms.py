@@ -87,9 +87,12 @@ class CourseAdminForm(forms.ModelForm):
         users = self.cleaned_data['users_to_remove']
         if self.instance.group_id:
             group = self.instance.group
+            fgroup = self.instance.faculty_group
 
             for user in users:
                 user.groups.remove(group)
+                user.groups.remove(fgroup)
+                
         return users
 
     def _clean_add_user(self):

@@ -1,3 +1,7 @@
+2.0.2
+=====
+* Remove user from course - remove from both the student group and faculty group
+
 2.0.1
 =====
 * remove Mediathread only logged-in.js injector view
