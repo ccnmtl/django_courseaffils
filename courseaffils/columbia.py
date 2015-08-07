@@ -145,7 +145,7 @@ class WindTemplate:
     @staticmethod
     def to_dict(wind_string):
         wind_match = re.match(
-            ('t(?P<term>\d).y(?P<year>\d{4}).s(?P<section>\d{3})'
+            ('t(?P<term>\d).y(?P<year>\d{4}).s(?P<section>\w{3})'
              '.c(?P<letter>\w)(?P<number>\w{4})'
              '.(?P<dept>[\w&]{4}).(?P<member>\w\w).course:columbia.edu'),
             wind_string)
