@@ -100,7 +100,7 @@ class CourseRole(TemplateTagNode):
     def execute_query(self, user, course):
         if not course:
             return "no-course"
-        elif course.is_faculty(user):
+        elif course.is_true_faculty(user):
             return "instructor"
         elif course.is_member(user):
             return "student"

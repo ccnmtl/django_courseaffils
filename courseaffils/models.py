@@ -74,6 +74,9 @@ class Course(models.Model):
     def is_true_member(self, user):
         return self.group.user_set.filter(id=user.id).count() > 0
 
+    def is_true_faculty(self, user):
+        return self.faculty_group.user_set.filter(id=user.id).count() > 0
+
     is_course = True
 
     def default_slug(self, **kw):
