@@ -1,3 +1,10 @@
+""" run tests for coursaffils
+
+$ virtualenv ve
+$ ./ve/bin/pip install -r test_reqs.txt
+$ ./ve/bin/python runtests.py
+"""
+
 from django.conf import settings
 from django.core.management import call_command
 from courseaffils.columbia import CourseStringMapper
