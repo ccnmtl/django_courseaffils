@@ -102,7 +102,7 @@ class CourseRole(TemplateTagNode):
             return "no-course"
         elif course.is_true_faculty(user):
             return "instructor"
-        elif course.is_member(user):
+        elif course.is_true_member(user):
             return "student"
         else:
             return "non-member"
