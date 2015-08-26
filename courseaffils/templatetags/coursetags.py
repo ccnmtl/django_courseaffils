@@ -100,12 +100,13 @@ class CourseRole(TemplateTagNode):
     def execute_query(self, user, course):
         if not course:
             return "no-course"
-        if user not in course.members:
-            return "non-member"
-        elif user in course.faculty:
+        elif course.is_faculty(user):
             return "instructor"
-        else:
+        elif course.is_member(user):
             return "student"
+        else:
+            return "non-member"
+
 
 register.tag('course_role', CourseRole.process_tag)
 

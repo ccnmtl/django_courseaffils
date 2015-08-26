@@ -10,24 +10,24 @@ def users_in_course(course):
     return User.objects.filter(groups=course.group)
 
 
-def in_course(user, group_or_course):
+def in_course(username, group_or_course):
     group = getattr(group_or_course, 'group', group_or_course)
     try:
-        return group.user_set.get(username=user)
-    except:
+        return group.user_set.get(username=username)
+    except User.DoesNotExist:
         return False
 
 
-def in_course_or_404(user, group_or_course):
+def in_course_or_404(username, group_or_course):
     "Supports either the course-group or course as second arg"
     group = getattr(group_or_course, 'group', group_or_course)
     try:
-        return group.user_set.get(username=user)
-    except:
+        return group.user_set.get(username=username)
+    except User.DoesNotExist:
         template = get_template('not_in_course.html')
         context = Context(
             {
-                'user': user,
+                'user': username,
                 'course': group,
             })
         response_body = template.render(context)
