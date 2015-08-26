@@ -1,4 +1,4 @@
-""" run tests for pagetree
+""" run tests for coursaffils
 
 $ virtualenv ve
 $ ./ve/bin/pip install -r test_reqs.txt
