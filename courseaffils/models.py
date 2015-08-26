@@ -4,7 +4,7 @@
 # is installed.
 
 from django.db import models
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import Group
 import re
 from django.conf import settings
 
@@ -39,13 +39,13 @@ class Course(models.Model):
         if not self.faculty_group:
             return members
         else:
-            faculty = self.faculty_group.user_set.all()
-            return [m for m in members if m not in faculty]
+            ids = self.faculty_group.user_set.values_list('id', flat=True)
+            return members.exclude(id__in=ids)
 
     @property
     def faculty(self):
         if self.faculty_group:
-            return self.faculty_group.user_set.all()
+            return self.faculty_group.user_set.all().select_related('user')
         else:
             return tuple()
 
@@ -64,17 +64,15 @@ class Course(models.Model):
                       ) & models.Q(course=self)
 
     def is_faculty(self, user):
-        return (user.is_staff or user in self.faculty)
+        return (user.is_staff or
+                self.faculty_group.user_set.filter(id=user.id).count() > 0)
 
     def is_member(self, user):
-        return (user.is_staff or user in self.members)
+        return (user.is_staff or
+                self.group.user_set.filter(id=user.id).count() > 0)
 
     def is_true_member(self, user):
-        try:
-            self.group.user_set.get(id=user.id)
-            return True
-        except User.DoesNotExist:
-            return False
+        return self.group.user_set.filter(id=user.id).count() > 0
 
     is_course = True
 

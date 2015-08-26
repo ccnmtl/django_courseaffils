@@ -134,8 +134,8 @@ class CourseManagerMiddleware(object):
         if requested_view in AUTO_COURSE_SELECT:
             chosen_course = AUTO_COURSE_SELECT[requested_view](
                 *view_args, **view_kwargs)
-        elif len(available_courses) == 1 and not request.user.is_staff:
-            chosen_course = available_courses[0]
+        elif available_courses.count() == 1 and not request.user.is_staff:
+            chosen_course = available_courses.first()
 
         if (chosen_course and
                 (chosen_course in available_courses or request.user.is_staff)):
