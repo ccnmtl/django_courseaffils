@@ -160,7 +160,7 @@ class SectionkeyTemplate:
     def to_dict(sectionkey):
         key_match = re.match(
             ('(?P<year>\d{4})(?P<term>\d)(?P<dept>[\w&]{4})'
-             '(?P<number>\w{4})(?P<letter>\w)(?P<section>\d{3})'),
+             '(?P<number>\w{4})(?P<letter>\w)(?P<section>\w{3})'),
             sectionkey)
         if key_match:
             return key_match.groupdict()

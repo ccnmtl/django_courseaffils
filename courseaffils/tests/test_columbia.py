@@ -83,6 +83,12 @@ class ColumbiaSimpleTest(TestCase):
             WindTemplate.to_string(WindTemplate.to_dict(example)),
             example)
 
+        example = 't3.y2007.sd21.cw3956.engl.fc.course:columbia.edu'
+        # round-trip it
+        self.assertEquals(
+            WindTemplate.to_string(WindTemplate.to_dict(example)),
+            example)
+
     def test_csmapper_course_slug(self):
         class StubGroup(object):
             name = 't3.y2007.s001.cw3956.engl.fc.course:columbia.edu'
