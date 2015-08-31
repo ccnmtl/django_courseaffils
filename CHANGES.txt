@@ -1,3 +1,7 @@
+2.0.3
+=====
+* Minor optimizations
+
 2.0.2
 =====
 * Remove user from course - remove from both the student group and faculty group
