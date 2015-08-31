@@ -63,11 +63,11 @@ class CourseAdminForm(forms.ModelForm):
             if hasattr(settings, 'COURSEAFFILS_COURSESTRING_MAPPER'):
                 msg = msg + ' or enter a course string'
                 if not 'course_string' not in self._errors:
-                    self._errors['course_string'] = forms.util.ErrorList()
+                    self._errors['course_string'] = forms.utils.ErrorList()
                 self._errors['course_string'].append(msg)
                 if 'course_string' in self.cleaned_data:
                     del self.cleaned_data["course_string"]
-            self._errors['group'] = forms.util.ErrorList([msg])
+            self._errors['group'] = forms.utils.ErrorList([msg])
             if 'group' in self.cleaned_data:
                 self.cleaned_data["group"]
             raise forms.ValidationError(msg)
@@ -75,7 +75,7 @@ class CourseAdminForm(forms.ModelForm):
         if Course.objects.filter(
                 group=self.cleaned_data['group']).exclude(pk=self.instance.pk):
             msg = "The group you selected is already associated with a course."
-            self._errors['group'] = forms.util.ErrorList([msg])
+            self._errors['group'] = forms.utils.ErrorList([msg])
             raise forms.ValidationError(msg)
 
         # run here, so the cleaned group from above can be used
