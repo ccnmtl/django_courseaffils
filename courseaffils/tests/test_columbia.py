@@ -53,9 +53,9 @@ class ColumbiaSimpleTest(TestCase):
         pass
 
     def test_sectionkeytemplate(self):
-        example = '20101SCNC1000F001'  # and 20103MIMD036PN004
+        example1 = '20101SCNC1000F001'  # and 20103MIMD036PN004
         self.assertEquals(
-            SectionkeyTemplate.to_dict(example),
+            SectionkeyTemplate.to_dict(example1),
             dict(
                 year="2010",
                 term="1",
@@ -64,8 +64,26 @@ class ColumbiaSimpleTest(TestCase):
                 letter="F",
                 section="001",))
 
+        # a newstyle sw section key, w/ a leading letter for the section                                                       
+        example2 = '20153SOCW0006TD21'
+        self.assertEquals(
+            SectionkeyTemplate.to_dict(example2),
+            dict(
+                year="2015",
+                term="3",
+                dept="SOCW",
+                number="0006",
+                letter="T",
+                section="D21",))
+
     def test_windtemplate(self):
         example = 't3.y2007.s001.cw3956.engl.fc.course:columbia.edu'
+        # round-trip it
+        self.assertEquals(
+            WindTemplate.to_string(WindTemplate.to_dict(example)),
+            example)
+
+        example = 't3.y2007.sd21.cw3956.engl.fc.course:columbia.edu'
         # round-trip it
         self.assertEquals(
             WindTemplate.to_string(WindTemplate.to_dict(example)),
