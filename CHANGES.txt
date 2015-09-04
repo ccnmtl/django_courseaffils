@@ -1,3 +1,7 @@
+2.0.5
+=====
+Django 1.8 compatability
+
 2.0.4
 =====
 * Fix deprecated reference to form.util.

@@ -45,7 +45,7 @@ class Course(models.Model):
     @property
     def faculty(self):
         if self.faculty_group:
-            return self.faculty_group.user_set.all().select_related('user')
+            return self.faculty_group.user_set.all()
         else:
             return tuple()
 

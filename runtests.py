@@ -19,15 +19,11 @@ def main():
             'django.contrib.contenttypes',
             'django.contrib.sessions',
             'courseaffils',
-            'django_nose',
+            'django_markwhat',
             'django_jenkins',
         ),
-        TEST_RUNNER = 'django_nose.NoseTestSuiteRunner',
+        TEST_RUNNER = 'django.test.runner.DiscoverRunner',
         MIDDLEWARE_CLASSES = [],
-        NOSE_ARGS = [
-            '--with-coverage',
-            '--cover-package=courseaffils',
-        ],
         JENKINS_TASKS = (
             'django_jenkins.tasks.with_coverage',
         ),
