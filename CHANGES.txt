@@ -1,3 +1,8 @@
+2.0.6
+=====
+Remove extraneous search criteria from admin course list view. The
+extra (and never used or displayed) search fields results in duplicates.
+
 2.0.5
 =====
 Django 1.8 compatability

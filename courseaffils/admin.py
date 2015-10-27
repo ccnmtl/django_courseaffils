@@ -7,8 +7,7 @@ from courseaffils.forms import CourseAdminForm
 class CourseAdmin(admin.ModelAdmin):
     form = CourseAdminForm
 
-    search_fields = ('title', 'group__name',
-                     'faculty_group__user__last_name')
+    search_fields = ('title',)
     list_display = ('title', 'id',)
     change_form_template = "courseaffils/admin_change_form.html"
 
