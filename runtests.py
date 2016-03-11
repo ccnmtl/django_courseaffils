@@ -10,6 +10,7 @@ from django.core.management import call_command
 from courseaffils.columbia import CourseStringMapper
 import django
 
+
 def main():
     # Dynamically configure the Django settings with the minimum necessary to
     # get Django running tests
@@ -22,17 +23,17 @@ def main():
             'django_markwhat',
             'django_jenkins',
         ),
-        TEST_RUNNER = 'django.test.runner.DiscoverRunner',
-        MIDDLEWARE_CLASSES = [],
-        JENKINS_TASKS = (
+        TEST_RUNNER='django.test.runner.DiscoverRunner',
+        MIDDLEWARE_CLASSES=[],
+        JENKINS_TASKS=(
             'django_jenkins.tasks.with_coverage',
         ),
-        PROJECT_APPS = [
+        PROJECT_APPS=[
             'courseaffils',
         ],
-        COVERAGE_EXCLUDES_FOLDERS = ['migrations'],
+        COVERAGE_EXCLUDES_FOLDERS=['migrations'],
 
-        COURSEAFFILS_EXEMPT_PATHS = (
+        COURSEAFFILS_EXEMPT_PATHS=(
             '/accounts/',
             '/static/',
             '/site_media/',
@@ -42,11 +43,11 @@ def main():
             '/favicon.ico',
             '/smoketest/',
             ),
-        COURSEAFFILS_COURSESTRING_MAPPER = CourseStringMapper,
-        ROOT_URLCONF = [],
+        COURSEAFFILS_COURSESTRING_MAPPER=CourseStringMapper,
+        ROOT_URLCONF=[],
 
         # Django replaces this, but it still wants it. *shrugs*
-        DATABASES = {
+        DATABASES={
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
                 'NAME': ':memory:',

@@ -106,9 +106,9 @@ class CourseManagerMiddleware(object):
         if 'set_course' in request.REQUEST:
             course = Course.objects.get(
                 group__name=request.REQUEST['set_course'])
-            if (request.user.is_staff
-                    or CourseAccess.allowed(request)
-                    or (request.user in course.members)):
+            if request.user.is_staff or \
+               CourseAccess.allowed(request) or \
+               (request.user in course.members):
                 request.session[SESSION_KEY] = course
                 decorate_request(request, course)
 

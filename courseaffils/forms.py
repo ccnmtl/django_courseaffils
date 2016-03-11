@@ -92,7 +92,7 @@ class CourseAdminForm(forms.ModelForm):
             for user in users:
                 user.groups.remove(group)
                 user.groups.remove(fgroup)
-                
+
         return users
 
     def _clean_add_user(self):
