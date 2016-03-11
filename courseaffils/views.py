@@ -1,4 +1,5 @@
 from django.shortcuts import render_to_response, get_object_or_404
+from courseaffils.lib import get_current_term, get_current_year
 from courseaffils.models import Course, CourseAccess
 from django.utils.http import urlquote
 from django.http import HttpResponseForbidden, HttpResponse
@@ -12,10 +13,22 @@ def available_courses_query(user):
     available_courses = None
     if user.is_staff:
         available_courses = Course.objects.all()
-    else:
+    elif not user.is_anonymous():
         available_courses = Course.objects.filter(group__user=user)
+    else:
+        available_courses = Course.objects.none()
 
     return available_courses.order_by('-info__year', '-info__term', 'title')
+
+
+def get_current_courses(all_courses):
+    term = get_current_term()
+    year = get_current_year()
+    current_courses = []
+    for course in all_courses:
+        if course.info.year == year and course.info.term == term:
+            current_courses.append(course)
+    return current_courses
 
 
 def select_course(request):
@@ -28,12 +41,16 @@ def select_course(request):
             info__year__lt=current_year)
         list_all_link = False
 
-    response_dict = {'request': request,
-                     'user': request.user,
-                     'add_privilege': request.user.is_staff,
-                     'courses': available_courses,
-                     'list_all_link': list_all_link,
-                     }
+    current_courses = get_current_courses(available_courses)
+
+    response_dict = {
+        'request': request,
+        'user': request.user,
+        'add_privilege': request.user.is_staff,
+        'current_courses': current_courses,
+        'courses': available_courses,
+        'list_all_link': list_all_link,
+    }
 
     if len(available_courses) == 0 and not request.user.is_staff:
         return render_to_response('courseaffils/no_courses.html',

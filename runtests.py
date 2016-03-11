@@ -15,6 +15,11 @@ def main():
     # Dynamically configure the Django settings with the minimum necessary to
     # get Django running tests
     settings.configure(
+        MIDDLEWARE_CLASSES=[
+            'django.contrib.sessions.middleware.SessionMiddleware',
+            'django.contrib.auth.middleware.AuthenticationMiddleware',
+            'django.contrib.messages.middleware.MessageMiddleware',
+        ],
         INSTALLED_APPS=(
             'django.contrib.auth',
             'django.contrib.contenttypes',
@@ -24,10 +29,7 @@ def main():
             'django_jenkins',
         ),
         TEST_RUNNER='django.test.runner.DiscoverRunner',
-        MIDDLEWARE_CLASSES=[],
-        JENKINS_TASKS=(
-            'django_jenkins.tasks.with_coverage',
-        ),
+
         PROJECT_APPS=[
             'courseaffils',
         ],
@@ -44,7 +46,7 @@ def main():
             '/smoketest/',
             ),
         COURSEAFFILS_COURSESTRING_MAPPER=CourseStringMapper,
-        ROOT_URLCONF=[],
+        ROOT_URLCONF='courseaffils.tests.urls',
 
         # Django replaces this, but it still wants it. *shrugs*
         DATABASES={

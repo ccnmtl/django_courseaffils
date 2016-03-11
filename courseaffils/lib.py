@@ -2,6 +2,13 @@ from django.db.models.loading import get_model
 from django.template.loader import get_template
 from django.template import Context
 from django.http import Http404
+from django.utils import timezone
+
+
+SPRING = 1
+SUMMER = 2
+FALL = 3
+
 
 User = get_model('auth', 'User')
 
@@ -68,3 +75,27 @@ def get_public_name(user_s, request):
 # AUTO_COURSE_SELECT[my_view] = my_view_courselookup
 #
 AUTO_COURSE_SELECT = {}
+
+
+def get_current_term():
+    """Find out what semester we're currently in.
+
+    Return values are:
+    1 - Spring
+    2 - Summer
+    3 - Fall
+    """
+    today = timezone.now().date()
+
+    # Assume that schools start summer semester in the second half
+    # of May or later.
+    if today.month <= 5 and today.day <= 15:
+        return SPRING
+    elif today.month <= 8:
+        return SUMMER
+    else:
+        return FALL
+
+
+def get_current_year():
+    return timezone.now().date().year
