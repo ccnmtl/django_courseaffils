@@ -64,7 +64,8 @@ class ColumbiaSimpleTest(TestCase):
                 letter="F",
                 section="001",))
 
-        # a newstyle sw section key, w/ a leading letter for the section                                                       
+        # a newstyle sw section key, w/ a leading letter for the section
+
         example2 = '20153SOCW0006TD21'
         self.assertEquals(
             SectionkeyTemplate.to_dict(example2),

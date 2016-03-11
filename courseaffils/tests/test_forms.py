@@ -12,12 +12,12 @@ class FormsSimpleTest(TestCase):
         self.student = User.objects.create(username="student",
                                            last_name="long enough")
         self.student.groups.add(self.student_group)
-        
+
         # faculty are part of both student & faculty groups
         self.faculty = User.objects.create(username="faculty")
         self.faculty.groups.add(self.student_group)
         self.faculty.groups.add(self.faculty_group)
-        
+
         self.c = Course.objects.create(
             group=self.student_group,
             title="test course",
@@ -38,15 +38,15 @@ class FormsSimpleTest(TestCase):
         f.save(commit=False)
         f.clean()
         f.clean_users_to_remove()
-        
+
         self.assertTrue(s2 in self.student.groups.all())
         self.assertFalse(self.faculty_group in self.student.groups.all())
-        
+
         user = User.objects.filter(username='nonexistant').first()
         self.assertIsNotNone(user)
         self.assertTrue(s2 in user.groups.all())
         self.assertTrue(self.faculty_group in user.groups.all())
-        
+
     def test_clean_remove(self):
         f = CourseAdminForm(instance=self.c)
         f.cleaned_data = dict(pk=self.c.id,
@@ -59,8 +59,8 @@ class FormsSimpleTest(TestCase):
         f.save(commit=False)
         f.clean()
         f.clean_users_to_remove()
-        
+
         self.assertFalse(self.student_group in self.student.groups.all())
-        
+
         self.assertFalse(self.student_group in self.faculty.groups.all())
         self.assertFalse(self.faculty_group in self.faculty.groups.all())
