@@ -1,9 +1,9 @@
-from django.db.models.loading import get_model
+from django.apps import apps
 from django.template.loader import get_template
 from django.template import Context
 from django.http import Http404
 
-User = get_model('auth', 'User')
+User = apps.get_model('auth', 'User')
 
 
 def users_in_course(course):
