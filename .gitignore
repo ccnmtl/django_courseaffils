@@ -12,3 +12,4 @@ reports/
 .pydevproject
 build
 .settings
+*.egg-info/
