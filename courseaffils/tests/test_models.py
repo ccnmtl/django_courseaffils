@@ -1,7 +1,24 @@
 from django.test import TestCase
 from courseaffils.models import Course, CourseSettings
 from courseaffils.models import CourseInfo, CourseAccess
+from courseaffils.tests.factories import CourseFactory, UserFactory
 from django.contrib.auth.models import Group, User
+
+
+class UserTests(TestCase):
+    def setUp(self):
+        self.u = UserFactory()
+
+    def test_is_valid_from_factory(self):
+        self.u.full_clean()
+
+
+class CourseTests(TestCase):
+    def setUp(self):
+        self.c = CourseFactory()
+
+    def test_is_valid_from_factory(self):
+        self.c.full_clean()
 
 
 class ModelsSimpleTest(TestCase):
