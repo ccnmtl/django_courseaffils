@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from courseaffils.lib import get_current_term, get_current_year
-from courseaffils.models import Course, CourseAccess
+from courseaffils.models import Course, CourseAccess, CourseInfo
 from django.utils.http import urlquote
 from django.http import HttpResponseForbidden, HttpResponse
 from django.contrib.auth.models import User
@@ -26,7 +26,11 @@ def get_current_courses(all_courses):
     year = get_current_year()
     current_courses = []
     for course in all_courses:
-        if course.info.year == year and course.info.term == term:
+        try:
+            info = course.info
+        except CourseInfo.DoesNotExist:
+            continue
+        if info.year == year and info.term == term:
             current_courses.append(course)
     return current_courses
 
