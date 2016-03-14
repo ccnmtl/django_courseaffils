@@ -1,4 +1,4 @@
-from django.db.models.loading import get_model
+from django.contrib.auth.models import User
 from django.template.loader import get_template
 from django.template import Context
 from django.http import Http404
@@ -8,9 +8,6 @@ from django.utils import timezone
 SPRING = 1
 SUMMER = 2
 FALL = 3
-
-
-User = get_model('auth', 'User')
 
 
 def users_in_course(course):
