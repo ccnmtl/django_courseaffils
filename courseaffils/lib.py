@@ -92,7 +92,3 @@ def get_current_term():
         return SUMMER
     else:
         return FALL
-
-
-def get_current_year():
-    return timezone.now().date().year

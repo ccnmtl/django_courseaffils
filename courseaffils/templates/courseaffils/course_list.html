@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load coursetags %}
+
+{% block content %}
+
+    <div id="course-list" class="top-archive">
+        {% with "help_choose_course" as help_id %}
+            {% with show_help as default_help_state %}
+
+                <h2>Select a Course {% include "help/help_button.html" %}</h2>
+
+                {% include "help/help_contentarea.html" %}
+
+                <div id="coursefilter">
+                    <h5>View courses for:</h5>
+
+                    <div class="btn-group" role="group" aria-label="select year">
+                        <a id="pastsemesters"
+                           href="?semester_view=past"
+                           class="btn btn-default {% if semester_view == 'past' %}active{% endif %}"
+                        >Past Semesters</a>
+                        <a id="currentsemester"
+                           href="?semester_view=current"
+                           class="btn btn-default {% if semester_view == 'current' %}active{% endif %}"
+                        >Current Semester</a>
+                        <a id="future_semesters"
+                           href="?semester_view=future"
+                           class="btn btn-default {% if semester_view == 'future' %}active{% endif %}"
+                        >Future Semesters</a>
+                    </div>
+                </div>
+
+                {% if add_privilege %}
+                    <p class="create-course">
+                        <a class="project" href="{%url 'admin:courseaffils_course_add' %}">Create new course</a>
+                    </p>
+                {% endif %}
+
+                <table class="course-choices">
+                    <thead>
+                        <tr>
+                            <td>Course Titles
+                            </td>
+                            <td>Term</td>
+                            <td>Instructor</td>
+                            <td>Role</td>
+                            {% if add_privilege %}
+                                <td>Actions</td>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in object_list %}
+                            {% include 'courseaffils/course_row.html' %}
+                        {% empty %}
+                            You don't seem to be enrolled in any courses.  Please ask an administrator if you think you should be.
+                            <a href="?semester_view=past">See your courses from previous years.</a>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {% if infoless_courses %}
+                    <h1>Test Courses</h1>
+                    <table class="table course-choices tablesorter">
+                        <thead>
+                            <tr>
+                                <th>Course Titles</th>
+                                <th>Term</th>
+                                <th>Instructor</th>
+                                <th>Role</th>
+                                {% if add_privilege %}
+                                    <th class="nosort">Actions</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for course in infoless_courses %}
+                                {% include 'courseaffils/course_row.html' %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+
+            {% endwith %}
+        {% endwith %}
+    </div>
+{% endblock %}

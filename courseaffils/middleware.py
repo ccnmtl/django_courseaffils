@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.conf import settings
 
 from courseaffils.models import Course, CourseAccess
-from courseaffils.views import select_course
+from courseaffils.views import CourseListView
 from courseaffils.lib import AUTO_COURSE_SELECT
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import resolve, Resolver404
@@ -143,4 +143,4 @@ class CourseManagerMiddleware(object):
             decorate_request(request, chosen_course)
             return None
 
-        return select_course(request)
+        return CourseListView.as_view()(request)
