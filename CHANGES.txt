@@ -1,3 +1,7 @@
+2.0.8
+=====
+* Added next_redirect to CourseListView
+
 2.0.7
 =====
 * There is a new view - CourseListView, which is a re-organization of

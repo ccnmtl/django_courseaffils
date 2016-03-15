@@ -87,10 +87,18 @@ class CourseListView(ListView):
                 Q(info=None) | Q(info__term=None) | Q(info__year=None)
             ).order_by('title')
 
+        next_redirect = ''
+        if 'QUERY_STRING' in self.request.META \
+           and 'unset_course' not in self.request.GET:
+            # just GET (until someone complains)
+            escaped_path = urlquote(self.request.get_full_path())
+            next_redirect = '&next=' + escaped_path
+
         context.update({
             'add_privilege': self.request.user.is_staff,
             'semester_view': semester_view,
             'infoless_courses': infoless_courses,
+            'next_redirect': next_redirect,
         })
         return context
 
