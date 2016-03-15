@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.test import TestCase
 from courseaffils.columbia import HashTagTemplate
 from courseaffils.columbia import DirectoryPageTemplate
@@ -14,18 +16,18 @@ class DummyRequest(object):
 class ColumbiaSimpleTest(TestCase):
 
     def test_hashtagtemplate(self):
-        self.assertEquals(
+        self.assertEqual(
             HashTagTemplate.to_string(dict(dept="FOO", number="five")),
             "#CUfoofive")
 
     def test_directorytagtemplate(self):
         # searching an empty page should return an empty dict
-        assert DirectoryPageTemplate.to_dict("") == dict()
+        self.assertEqual(DirectoryPageTemplate.to_dict(""), dict())
 
-        assert DirectoryPageTemplate.to_dict(
-            """Points</td><td>5</td>""") == dict(points="5")
+        self.assertEqual(DirectoryPageTemplate.to_dict(
+            """Points</td><td>5</td>"""), dict(points="5"))
 
-        self.assertEquals(
+        self.assertEqual(
             DirectoryPageTemplate.to_dict(
                 'Location</td><td>MW 9am-10<br>Lewisohn 123</td>'
             ),
@@ -54,7 +56,7 @@ class ColumbiaSimpleTest(TestCase):
 
     def test_sectionkeytemplate(self):
         example1 = '20101SCNC1000F001'  # and 20103MIMD036PN004
-        self.assertEquals(
+        self.assertEqual(
             SectionkeyTemplate.to_dict(example1),
             dict(
                 year="2010",
@@ -67,7 +69,7 @@ class ColumbiaSimpleTest(TestCase):
         # a newstyle sw section key, w/ a leading letter for the section
 
         example2 = '20153SOCW0006TD21'
-        self.assertEquals(
+        self.assertEqual(
             SectionkeyTemplate.to_dict(example2),
             dict(
                 year="2015",
@@ -80,13 +82,13 @@ class ColumbiaSimpleTest(TestCase):
     def test_windtemplate(self):
         example = 't3.y2007.s001.cw3956.engl.fc.course:columbia.edu'
         # round-trip it
-        self.assertEquals(
+        self.assertEqual(
             WindTemplate.to_string(WindTemplate.to_dict(example)),
             example)
 
         example = 't3.y2007.sd21.cw3956.engl.fc.course:columbia.edu'
         # round-trip it
-        self.assertEquals(
+        self.assertEqual(
             WindTemplate.to_string(WindTemplate.to_dict(example)),
             example)
 
@@ -97,26 +99,26 @@ class ColumbiaSimpleTest(TestCase):
         class StubCourse(object):
             def __init__(self):
                 self.group = StubGroup()
-        self.assertEquals(
+        self.assertEqual(
             CourseStringMapper.course_slug(StubCourse()),
             'CUengl3956')
 
     def test_csmapper_widget(self):
-        self.assertEquals(
+        self.assertEqual(
             CourseStringMapper.widget().clean('20101SCNC1000F001'),
             '20101SCNC1000F001')
 
     def test_csmapper_get_groups(self):
         s, f = CourseStringMapper.get_groups('20101SCNC1000F001')
-        assert s is not None
-        assert f is not None
+        self.assertIsNotNone(s)
+        self.assertIsNotNone(f)
         s, f = CourseStringMapper.get_groups(WindTemplate.example)
-        assert s is not None
-        assert f is not None
+        self.assertIsNotNone(s)
+        self.assertIsNotNone(f)
 
         s, f = CourseStringMapper.get_groups("something completely invalid")
-        assert s is None
-        assert f is None
+        self.assertIsNone(s)
+        self.assertIsNone(f)
 
     def test_csmapper_get_course_info(self):
         # this one makes an HTTP request to the CU DOC site

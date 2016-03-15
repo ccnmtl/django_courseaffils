@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.test import TestCase
 from courseaffils.lib import (
     faculty_courses_for_user,
@@ -35,16 +37,16 @@ class LibsSimpleTest(TestCase):
         self.faculty.delete()
 
     def test_users_in_course(self):
-        assert self.student in users_in_course(self.c)
+        self.assertIn(self.student, users_in_course(self.c))
 
     def test_in_course(self):
-        assert in_course(self.student, self.c)
-        assert in_course(self.student, self.student_group)
-        assert not in_course(self.faculty, self.student_group)
+        self.assertTrue(in_course(self.student, self.c))
+        self.assertTrue(in_course(self.student, self.student_group))
+        self.assertFalse(in_course(self.faculty, self.student_group))
 
     def test_in_course_or_404(self):
-        assert in_course_or_404(self.student, self.c)
-        assert in_course_or_404(self.student, self.student_group)
+        self.assertTrue(in_course_or_404(self.student, self.c))
+        self.assertTrue(in_course_or_404(self.student, self.student_group))
         try:
             # expect it to raise an error
             in_course_or_404(self.faculty, self.student_group)
@@ -54,15 +56,16 @@ class LibsSimpleTest(TestCase):
 
     def test_handle_public_name(self):
         r = DummyRequest()
-        assert handle_public_name(self.student, r) == "student"
+        self.assertEqual(handle_public_name(self.student, r), "student")
         r.COOKIES['ANONYMIZE'] = True
-        assert handle_public_name(self.student, r).startswith("User Name_")
+        self.assertTrue(
+            handle_public_name(self.student, r).startswith("User Name_"))
 
     def test_get_public_name(self):
         r = DummyRequest()
-        assert get_public_name(self.student, r) == "student"
+        self.assertEqual(get_public_name(self.student, r), "student")
 
-        assert get_public_name([self.student, ], r) == "student"
+        self.assertEqual(get_public_name([self.student, ], r), "student")
 
     def test_faculty_courses_for_user(self):
         faculty_courses = faculty_courses_for_user(self.faculty)

@@ -1,14 +1,19 @@
+from __future__ import unicode_literals
+
 # we need to make sure that the registration code
 # gets imported, so we import it from models.py
 # which will definitely be imported if the app
 # is installed.
 
+from functools import reduce
 from django.db import models
 from django.contrib.auth.models import Group
+from django.utils.encoding import python_2_unicode_compatible
 import re
 from django.conf import settings
 
 
+@python_2_unicode_compatible
 class Course(models.Model):
     is_course = True
     group = models.OneToOneField(Group)
@@ -18,7 +23,7 @@ class Course(models.Model):
                                       blank=True,
                                       related_name='faculty_of')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def save(self, *args, **kw):
@@ -113,6 +118,7 @@ class Course(models.Model):
                 course=self, name=name, value=value)
 
 
+@python_2_unicode_compatible
 class CourseSettings(models.Model):
     course = models.OneToOneField(Course, related_name='settings')
     custom_headers = models.TextField(
@@ -123,8 +129,8 @@ class CourseSettings(models.Model):
                    """advantage is you can add custom javascript here, too.""")
     )
 
-    def __unicode__(self):
-        return u'Settings for %s' % self.course.title
+    def __str__(self):
+        return 'Settings for %s' % self.course.title
 
     class Meta:
         verbose_name_plural = 'Course Settings'
@@ -147,7 +153,7 @@ class CourseInfo(models.Model):
         help_text='e.g. "MTWRF"')
 
     def time(self):
-        return u'%s%s' % (
+        return '%s%s' % (
             self.days if self.days else '',
             ' %s-%s' % (self.starttime.strftime('%H:%M'),
                         self.endtime.strftime('%H:%M')
@@ -161,18 +167,19 @@ class CourseInfo(models.Model):
         return term
 
     def display(self):
-        return u'%s %s %s-%s' % (self.termyear(),
-                                 self.days, self.starttime, self.endtime)
+        return '%s %s %s-%s' % (self.termyear(),
+                                self.days, self.starttime, self.endtime)
 
-    def __unicode__(self):
-        return u'%s (%s) %s %s-%s' % (self.course.title,
-                                      self.termyear(),
-                                      self.days, self.starttime, self.endtime)
+    def __str__(self):
+        return '%s (%s) %s %s-%s' % (self.course.title,
+                                     self.termyear(),
+                                     self.days, self.starttime, self.endtime)
 
     class Meta:
         verbose_name_plural = 'Course Info'
 
 
+@python_2_unicode_compatible
 class CourseDetails(models.Model):
     """useful for storing info like 'semester', 'url' """
     course = models.ForeignKey(Course)
@@ -184,8 +191,8 @@ class CourseDetails(models.Model):
     value = models.CharField(max_length=1024,
                              help_text="""The name's value for the course.""")
 
-    def __unicode__(self):
-        return u'(%s) %s: %s' % (self.course.title, self.name, self.value)
+    def __str__(self):
+        return '(%s) %s: %s' % (self.course.title, self.name, self.value)
 
     class Meta:
         verbose_name_plural = 'Course Details'

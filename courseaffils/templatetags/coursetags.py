@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django import template
 from courseaffils.lib import get_public_name
 
@@ -40,21 +42,24 @@ Syntax: %s """ + parts + """ as <varname>"""
         words = words[:-2]
 
         if _as != 'as':
-            raise template.TemplateSyntaxError, \
-                cls.error_msg() % (token.contents, tag_name)
+            raise (
+                template.TemplateSyntaxError,
+                cls.error_msg() % (token.contents, tag_name))
 
         words = chunk(words)
         if len(words) != len(cls.noun_for):
-            raise template.TemplateSyntaxError, \
-                cls.error_msg() % (token.contents, tag_name)
+            raise (
+                template.TemplateSyntaxError,
+                cls.error_msg() % (token.contents, tag_name))
 
         kw = {}
         for phrase in words:
             preposition, noun = phrase
             if preposition not in cls.noun_for \
                     or cls.noun_for[preposition] in kw:
-                raise template.TemplateSyntaxError, \
-                    cls.error_msg() % (token.contents, tag_name)
+                raise (
+                    template.TemplateSyntaxError,
+                    cls.error_msg() % (token.contents, tag_name))
             kw[cls.noun_for[preposition]] = noun
 
         return cls(varname, **kw)

@@ -1,5 +1,8 @@
+from __future__ import unicode_literals
+
 from django.http import HttpResponseRedirect
 from django.conf import settings
+from django.utils.encoding import smart_text
 
 from courseaffils.models import Course, CourseAccess
 from courseaffils.views import CourseListView
@@ -58,10 +61,10 @@ class CourseManagerMiddleware(object):
         if 'ANONYMIZE' in request.COOKIES:
             for user, uid in getattr(request, 'scrub_names', {}).items():
                 if len(user.last_name) > 3:
-                    response.content = unicode(
+                    response.content = smart_text(
                         response.content,
                         errors='ignore').replace(
-                            user.get_full_name(), u'User Name_%d' % uid)
+                            user.get_full_name(), 'User Name_%d' % uid)
         return response
 
     def process_request(self, request):

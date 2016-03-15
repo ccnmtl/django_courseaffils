@@ -1,4 +1,7 @@
+from __future__ import unicode_literals
+
 from django.test import TestCase
+from django.utils.encoding import smart_text
 from courseaffils.models import Course, CourseSettings
 from courseaffils.models import CourseInfo, CourseAccess
 from courseaffils.tests.factories import CourseFactory, UserFactory
@@ -43,14 +46,14 @@ class ModelsSimpleTest(TestCase):
         self.student.delete()
         self.faculty.delete()
 
-    def test_unicode(self):
-        assert unicode(self.c) == "test course"
+    def test_str(self):
+        self.assertEqual(smart_text(self.c), "test course")
 
     def test_members(self):
-        assert self.student in self.c.members
+        self.assertIn(self.student, self.c.members)
 
     def test_students(self):
-        assert self.student in self.c.students
+        self.assertIn(self.student, self.c.students)
 
     def test_students_no_faculty(self):
         """ need this to get complete coverage on the .students()
@@ -60,12 +63,12 @@ class ModelsSimpleTest(TestCase):
         nf_course = Course.objects.create(
             group=second_student_group,
             title="course with no faculty group")
-        assert self.student in nf_course.students
+        self.assertIn(self.student, nf_course.students)
         nf_course.delete()
         second_student_group.delete()
 
     def test_faculty(self):
-        assert self.faculty in self.c.faculty
+        self.assertIn(self.faculty, self.c.faculty)
 
     def test_faculty_no_faculty(self):
         """ need this to get complete coverage on the .faculty()
@@ -75,28 +78,28 @@ class ModelsSimpleTest(TestCase):
         nf_course = Course.objects.create(
             group=second_student_group,
             title="course with no faculty group")
-        assert nf_course.faculty == ()
+        self.assertEqual(nf_course.faculty, ())
         nf_course.delete()
         second_student_group.delete()
 
     def test_user_set(self):
-        assert self.student in self.c.user_set.all()
+        self.assertIn(self.student, self.c.user_set.all())
 
     def test_is_faculty(self):
-        assert self.c.is_faculty(self.faculty)
-        assert not self.c.is_faculty(self.student)
+        self.assertTrue(self.c.is_faculty(self.faculty))
+        self.assertFalse(self.c.is_faculty(self.student))
 
     def test_is_member(self):
-        assert self.c.is_member(self.student)
+        self.assertTrue(self.c.is_member(self.student))
 
     def test_is_true_member(self):
-        assert self.c.is_true_member(self.student)
+        self.assertTrue(self.c.is_true_member(self.student))
 
     def test_is_true_member_nonexistant(self):
         class StubUser(object):
             id = -1
         u = StubUser()
-        assert not self.c.is_true_member(u)
+        self.assertFalse(self.c.is_true_member(u))
 
     def test_faculty_filter(self):
         # TODO: I don't actually know what to do with this
@@ -108,67 +111,66 @@ class ModelsSimpleTest(TestCase):
         # anywhere else in the courseaffils code
         # for now, just execute it to at least get coverage
         self.c.faculty_filter
-        assert True
 
     def test_default_slug(self):
-        assert self.c.default_slug() == "test_course"
+        self.assertEqual(self.c.default_slug(), "test_course")
 
     def test_slug(self):
         # TODO: mock out django settings for this one
         # since it actually can change the behavior
-        assert self.c.slug() == "test_course"
+        self.assertEqual(self.c.slug(), "test_course")
 
     def test_details(self):
         # shouldn't be any to start with
-        assert self.c.details() == dict()
+        self.assertEqual(self.c.details(), dict())
         self.c.add_detail("foo", "bar")
-        assert "foo" in self.c.details()
-        assert self.c.details()["foo"].value == "bar"
-        assert self.c.get_detail("foo", default="not bar") == "bar"
-        assert self.c.get_detail(
+        self.assertIn("foo", self.c.details())
+        self.assertEqual(self.c.details()["foo"].value, "bar")
+        self.assertEqual(self.c.get_detail("foo", default="not bar"), "bar")
+        self.assertEqual(self.c.get_detail(
             "nonexistant",
-            default="a default value") == "a default value"
+            default="a default value"), "a default value")
 
-        assert unicode(self.c.details()["foo"]) == "(test course) foo: bar"
+        self.assertEqual(smart_text(self.c.details()["foo"]),
+                         "(test course) foo: bar")
 
         # update
         self.c.add_detail("foo", "baz")
-        assert self.c.details()["foo"].value == "baz"
+        self.assertEqual(self.c.details()["foo"].value, "baz")
 
     def test_coursesettings(self):
         cs = CourseSettings.objects.create(
             course=self.c,
             custom_headers="some headers")
-        assert unicode(cs) == "Settings for test course"
+        self.assertEqual(smart_text(cs), "Settings for test course")
 
     def test_courseinfo(self):
         # current behavior is that a CourseInfo object
         # is created automatically for each course
         # by a hook elsewhere. so verify that.
-        assert CourseInfo.objects.all().count() != 0
+        self.assertNotEqual(CourseInfo.objects.all().count(), 0)
 
-        self.assertEqual(unicode(self.c.info),
-                         u'test course () None None-None')
+        self.assertEqual(smart_text(self.c.info),
+                         'test course () None None-None')
 
         self.c.info.year = 2013
         self.c.info.term = 1
         self.c.info.days = "MWF"
         self.c.info.save()
-        self.assertEqual(unicode(self.c.info),
-                         u'test course (Spring 2013) MWF None-None')
+        self.assertEqual(smart_text(self.c.info),
+                         'test course (Spring 2013) MWF None-None')
 
-        assert self.c.info.time() == 'MWF'
+        self.assertEqual(self.c.info.time(), 'MWF')
 
-        assert self.c.info.display() == "Spring 2013 MWF None-None"
+        self.assertEqual(self.c.info.display(), "Spring 2013 MWF None-None")
 
     def test_courseaccess(self):
         """ what is this? """
 
         # respond() should do nothing
         CourseAccess.respond("foo")
-        assert True
 
         class StubRequest(object):
             REQUEST = dict()
 
-        assert not CourseAccess.allowed(StubRequest())
+        self.assertFalse(CourseAccess.allowed(StubRequest()))

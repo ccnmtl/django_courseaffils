@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.contrib import admin
 from courseaffils.models import Course, CourseSettings
 from courseaffils.models import CourseInfo, CourseDetails
