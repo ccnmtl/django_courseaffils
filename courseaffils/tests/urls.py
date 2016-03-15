@@ -3,5 +3,7 @@ from courseaffils import views
 
 
 urlpatterns = [
-    url(r'^select_course/$', views.select_course, name='select_course'),
+    url(r'^select_course/$',
+        views.CourseListView.as_view(),
+        name='select_course'),
 ]
