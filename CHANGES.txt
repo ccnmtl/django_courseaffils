@@ -1,3 +1,9 @@
+2.0.7
+=====
+* There is a new view - CourseListView, which is a re-organization of
+  the select_course view.
+* Addressed a Django 1.9 compatibility problem.
+
 2.0.6
 =====
 Remove extraneous search criteria from admin course list view. The
