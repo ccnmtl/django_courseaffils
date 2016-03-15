@@ -80,12 +80,10 @@ class CourseListView(ListView):
             semester_view = 'current'
 
         # infoless_courses don't have an associated CourseInfo. These
-        # are our test courses, only visible to staff.
-        infoless_courses = Course.objects.none()
-        if self.request.user.is_staff:
-            infoless_courses = Course.objects.filter(
-                Q(info=None) | Q(info__term=None) | Q(info__year=None)
-            ).order_by('title')
+        # are our sandboxes.
+        infoless_courses = Course.objects.filter(
+            Q(info=None) | Q(info__term=None) | Q(info__year=None)
+        ).order_by('title')
 
         next_redirect = ''
         if 'QUERY_STRING' in self.request.META \

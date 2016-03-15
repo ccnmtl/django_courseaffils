@@ -15,7 +15,7 @@ class ViewTests(TestCase):
         self.assertEqual(len(response.context['infoless_courses']), 0)
 
     def test_select_course(self):
-        u = UserFactory(username='test', is_staff=True)
+        u = UserFactory(username='test')
         self.client.login(username='test', password='test')
 
         c = CourseFactory(title='My Course')
