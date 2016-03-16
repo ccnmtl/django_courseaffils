@@ -24,3 +24,4 @@ class CourseFactory(factory.DjangoModelFactory):
 
     title = factory.Sequence(lambda n: 'Example Course %d' % n)
     group = factory.SubFactory(GroupFactory)
+    faculty_group = factory.SubFactory(GroupFactory)

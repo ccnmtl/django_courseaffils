@@ -19,6 +19,7 @@ class CourseTests(TestCase):
 
     def test_is_valid_from_factory(self):
         self.c.full_clean()
+        self.c.info.full_clean()
 
 
 class ModelsSimpleTest(TestCase):
