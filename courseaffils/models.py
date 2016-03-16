@@ -141,7 +141,9 @@ class CourseInfo(models.Model):
     # for ability to query what courses are going on NOW
     starttime = models.TimeField(null=True, blank=True)
     endtime = models.TimeField(null=True, blank=True)
-    days = models.CharField(max_length=7, null=True, blank=True)  # e.g. 'MWF'
+    days = models.CharField(
+        max_length=7, null=True, blank=True,
+        help_text='e.g. "MTWRF"')
 
     def time(self):
         return u'%s%s' % (
