@@ -1,3 +1,7 @@
+2.0.9
+=====
+* Fixed bug where all sandbox courses were displaying for non-staff users.
+
 2.0.8
 =====
 * Added next_redirect to CourseListView
