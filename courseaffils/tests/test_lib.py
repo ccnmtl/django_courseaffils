@@ -1,9 +1,10 @@
 from django.test import TestCase
 from courseaffils.lib import users_in_course, in_course
-from courseaffils.lib import in_course_or_404
+from courseaffils.lib import in_course_or_404, get_current_term
 from courseaffils.lib import handle_public_name, get_public_name
 from courseaffils.models import Course
 from django.contrib.auth.models import Group, User
+from freezegun import freeze_time
 
 
 class DummyRequest(object):
@@ -59,3 +60,23 @@ class LibsSimpleTest(TestCase):
         assert get_public_name(self.student, r) == "student"
 
         assert get_public_name([self.student, ], r) == "student"
+
+
+class TestUtils(TestCase):
+    def test_get_current_term(self):
+        with freeze_time('2016-01-01'):
+            self.assertEqual(get_current_term(), 1)
+        with freeze_time('2016-03-16'):
+            self.assertEqual(get_current_term(), 1)
+        with freeze_time('2016-04-30'):
+            self.assertEqual(get_current_term(), 1)
+        with freeze_time('2016-05-01'):
+            self.assertEqual(get_current_term(), 1)
+        with freeze_time('2016-05-20'):
+            self.assertEqual(get_current_term(), 2)
+        with freeze_time('2016-08-20'):
+            self.assertEqual(get_current_term(), 2)
+        with freeze_time('2016-09-02'):
+            self.assertEqual(get_current_term(), 3)
+        with freeze_time('2016-12-12'):
+            self.assertEqual(get_current_term(), 3)

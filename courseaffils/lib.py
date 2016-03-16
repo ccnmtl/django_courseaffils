@@ -86,7 +86,7 @@ def get_current_term():
 
     # Assume that schools start summer semester in the second half
     # of May or later.
-    if today.month <= 5 and today.day <= 15:
+    if today.month <= 4 or (today.month == 5 and today.day <= 15):
         return SPRING
     elif today.month <= 8:
         return SUMMER
