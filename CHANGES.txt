@@ -1,3 +1,8 @@
+2.1.0
+=====
+* Fixed a bug where get_current_term() wasn't accurate for some dates.
+* Fixed an error that occured when a Course has no faculty_group.
+
 2.0.9
 =====
 * Fixed bug where all sandbox courses were displaying for non-staff users.
