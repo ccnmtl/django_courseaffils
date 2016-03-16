@@ -10,6 +10,7 @@ from django.conf import settings
 
 
 class Course(models.Model):
+    is_course = True
     group = models.OneToOneField(Group)
     title = models.CharField(max_length=1024)
     faculty_group = models.ForeignKey(Group,
@@ -76,8 +77,6 @@ class Course(models.Model):
 
     def is_true_faculty(self, user):
         return self.faculty_group.user_set.filter(id=user.id).count() > 0
-
-    is_course = True
 
     def default_slug(self, **kw):
         return re.sub('\W', '', re.sub(' ', '_', self.title))
