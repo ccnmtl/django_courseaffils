@@ -57,17 +57,20 @@ class CourseListView(ListView):
     model = Course
 
     def get_queryset(self):
-        courses = get_courses_for_user(self.request.user)
+        self.courses = get_courses_for_user(self.request.user)
         semester_view = self.request.GET.get('semester_view')
         current_term = get_current_term()
         current_year = timezone.now().year
 
         if semester_view == 'past':
-            qs = filter_past_courses(courses, current_term, current_year)
+            qs = filter_past_courses(
+                self.courses, current_term, current_year)
         elif semester_view == 'future':
-            qs = filter_future_courses(courses, current_term, current_year)
+            qs = filter_future_courses(
+                self.courses, current_term, current_year)
         else:
-            qs = filter_current_courses(courses, current_term, current_year)
+            qs = filter_current_courses(
+                self.courses, current_term, current_year)
         return qs
 
     def get_context_data(self, **kwargs):
@@ -81,9 +84,8 @@ class CourseListView(ListView):
 
         # infoless_courses don't have an associated CourseInfo. These
         # are our sandboxes.
-        infoless_courses = Course.objects.filter(
-            Q(info=None) | Q(info__term=None) | Q(info__year=None)
-        ).order_by('title')
+        infoless_courses = self.courses.filter(
+            Q(info=None) | Q(info__term=None) | Q(info__year=None))
 
         next_redirect = ''
         if 'QUERY_STRING' in self.request.META \
