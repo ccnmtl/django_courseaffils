@@ -6,4 +6,7 @@ urlpatterns = [
     url(r'^select_course/$',
         views.CourseListView.as_view(),
         name='select_course'),
+    url(r'^course/create/$',
+        views.CourseCreateView.as_view(),
+        name='create_course'),
 ]
