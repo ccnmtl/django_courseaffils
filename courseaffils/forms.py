@@ -127,3 +127,34 @@ class CourseAdminForm(forms.ModelForm):
                 if also_faculty and self.cleaned_data['faculty_group']:
                     user.groups.add(self.cleaned_data['faculty_group'])
         return usernames
+
+
+class CourseCreateForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = ['title', 'group', 'faculty_group']
+
+    term = forms.ChoiceField(
+        choices=((1, 'Spring'), (2, 'Summer'), (3, 'Fall')))
+    year = forms.CharField(min_length=4, max_length=4)
+    days = forms.CharField(max_length=7, help_text='e.g. "MWTRF"')
+    starttime = forms.TimeField()
+    endtime = forms.TimeField()
+
+    def save(self, *args, **kwargs):
+        r = super(CourseCreateForm, self).save(*args, **kwargs)
+        # Add CourseInfo from the fields
+        term = self.cleaned_data.get('term')
+        year = self.cleaned_data.get('year')
+        days = self.cleaned_data.get('days')
+        starttime = self.cleaned_data.get('starttime')
+        endtime = self.cleaned_data.get('endtime')
+
+        r.info.term = term
+        r.info.year = year
+        r.info.days = days
+        r.info.starttime = starttime
+        r.info.endtime = endtime
+        r.info.save()
+
+        return r

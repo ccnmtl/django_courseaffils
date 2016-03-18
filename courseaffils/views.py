@@ -1,8 +1,10 @@
 import json
 from courseaffils.lib import get_current_term
+from courseaffils.forms import CourseCreateForm
 from courseaffils.models import Course, CourseAccess
 from django.db.models import Q
 from django.shortcuts import render_to_response, get_object_or_404
+from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 from django.utils import timezone
 from django.utils.http import urlquote
@@ -153,3 +155,9 @@ def course_list_query(request):
     return HttpResponse(
         json.dumps(data, indent=2),
         content_type='application/json')
+
+
+class CourseCreateView(CreateView):
+    model = Course
+    form_class = CourseCreateForm
+    success_url = '/'
