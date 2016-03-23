@@ -3,7 +3,9 @@ from courseaffils.models import Course, CourseInfo
 from courseaffils.tests.factories import (
     CourseFactory, UserFactory, GroupFactory
 )
-from courseaffils.tests.mixins import LoggedInFacultyTestMixin
+from courseaffils.tests.mixins import (
+    LoggedInFacultyTestMixin, LoggedInSuperuserTestMixin
+)
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
@@ -62,9 +64,41 @@ class CourseListViewTests(TestCase):
             'My Course')
 
 
+class CourseCreateViewAnonymousTests(TestCase):
+    def test_get(self):
+        response = self.client.get(reverse('create_course'), follow=True)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.request['PATH_INFO'], '/accounts/login/')
+
+
 class CourseCreateViewFacultyTests(TestCase, LoggedInFacultyTestMixin):
     def test_get(self):
-        response = self.client.get(reverse('create_course'))
+        response = self.client.get(reverse('create_course'), follow=True)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.request['PATH_INFO'], '/accounts/login/')
+
+    def test_post(self):
+        group = GroupFactory()
+
+        self.assertEqual(Course.objects.count(), 0)
+        self.assertEqual(CourseInfo.objects.count(), 0)
+        response = self.client.post(reverse('create_course'), {
+            'title': 'My Title',
+            'group': group.pk,
+            'faculty_group': group.pk,
+            'term': 1,
+            'year': 2016,
+            'days': 'TR',
+            'starttime': time(hour=16),
+            'endtime': time(hour=18),
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Course.objects.count(), 0)
+
+
+class CourseCreateViewSuperuserTests(LoggedInSuperuserTestMixin, TestCase):
+    def test_get(self):
+        response = self.client.get(reverse('create_course'), follow=True)
         self.assertEqual(response.status_code, 200)
 
     def test_post(self):

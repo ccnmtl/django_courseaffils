@@ -1,6 +1,7 @@
 import json
 from courseaffils.lib import get_current_term
 from courseaffils.forms import CourseCreateForm
+from courseaffils.mixins import SuperuserRequiredMixin
 from courseaffils.models import Course, CourseAccess
 from django.db.models import Q
 from django.shortcuts import render_to_response, get_object_or_404
@@ -157,7 +158,7 @@ def course_list_query(request):
         content_type='application/json')
 
 
-class CourseCreateView(CreateView):
+class CourseCreateView(SuperuserRequiredMixin, CreateView):
     model = Course
     form_class = CourseCreateForm
     success_url = '/'
