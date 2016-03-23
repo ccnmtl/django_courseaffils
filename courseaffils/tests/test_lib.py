@@ -1,7 +1,10 @@
 from django.test import TestCase
-from courseaffils.lib import users_in_course, in_course
-from courseaffils.lib import in_course_or_404, get_current_term
-from courseaffils.lib import handle_public_name, get_public_name
+from courseaffils.lib import (
+    faculty_courses_for_user,
+    users_in_course, in_course,
+    in_course_or_404, get_current_term,
+    handle_public_name, get_public_name,
+)
 from courseaffils.models import Course
 from django.contrib.auth.models import Group, User
 from freezegun import freeze_time
@@ -60,6 +63,15 @@ class LibsSimpleTest(TestCase):
         assert get_public_name(self.student, r) == "student"
 
         assert get_public_name([self.student, ], r) == "student"
+
+    def test_faculty_courses_for_user(self):
+        faculty_courses = faculty_courses_for_user(self.faculty)
+        student_courses = faculty_courses_for_user(self.student)
+
+        self.assertEqual(faculty_courses.count(), 1)
+        self.assertEqual(faculty_courses.first(), self.c)
+        self.assertEqual(student_courses.count(), 0)
+        self.assertEqual(student_courses.first(), None)
 
 
 class TestUtils(TestCase):

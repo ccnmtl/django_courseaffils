@@ -3,11 +3,20 @@ from django.template.loader import get_template
 from django.template import Context
 from django.http import Http404
 from django.utils import timezone
+from courseaffils.models import Course
 
 
 SPRING = 1
 SUMMER = 2
 FALL = 3
+
+
+def faculty_courses_for_user(user):
+    """Return the Courses that the given user is an instructor for.
+
+    Returns a QuerySet.
+    """
+    return Course.objects.filter(faculty_group__in=user.groups.all())
 
 
 def users_in_course(course):
