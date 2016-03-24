@@ -1,3 +1,8 @@
+2.1.1
+=====
+* Added the faculty_courses_for_user function.
+* Added a basic course creation form and view.
+
 2.1.0
 =====
 * Fixed a bug where get_current_term() wasn't accurate for some dates.

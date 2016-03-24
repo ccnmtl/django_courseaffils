@@ -136,10 +136,11 @@ class CourseCreateForm(forms.ModelForm):
 
     term = forms.ChoiceField(
         choices=((1, 'Spring'), (2, 'Summer'), (3, 'Fall')))
-    year = forms.CharField(min_length=4, max_length=4)
-    days = forms.CharField(max_length=7, help_text='e.g. "MWTRF"')
-    starttime = forms.TimeField()
-    endtime = forms.TimeField()
+    year = forms.CharField(required=False, min_length=4, max_length=4)
+    days = forms.CharField(
+        required=False, max_length=7, help_text='e.g. "MTWRF"')
+    starttime = forms.TimeField(required=False, help_text='format: HH:MM')
+    endtime = forms.TimeField(required=False, help_text='format: HH:MM')
 
     def save(self, *args, **kwargs):
         r = super(CourseCreateForm, self).save(*args, **kwargs)
