@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.test import TestCase
 from courseaffils.forms import CourseAdminForm
 from django.contrib.auth.models import Group, User

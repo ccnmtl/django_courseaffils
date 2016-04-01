@@ -1,5 +1,10 @@
+from __future__ import unicode_literals
+
 import re
-import urllib2
+try:
+    from urllib.request import urlopen
+except ImportError:
+    from urllib2 import urlopen
 from time import strptime, strftime
 
 
@@ -74,7 +79,7 @@ class CourseStringMapper:
     @classmethod
     def get_course_info(cls, course_dict):
         directory_link = DirectoryLinkTemplate.to_string(course_dict)
-        response = urllib2.urlopen(directory_link).read()
+        response = urlopen(directory_link).read()
         return DirectoryPageTemplate.to_dict(response)
 
     @classmethod

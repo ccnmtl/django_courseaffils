@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.test import TestCase
 from courseaffils.middleware import is_anonymous_path
 from courseaffils.middleware import already_selected_course

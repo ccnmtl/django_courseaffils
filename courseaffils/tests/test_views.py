@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from datetime import time
 from courseaffils.models import Course, CourseInfo
 from courseaffils.tests.factories import (
