@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.test import TestCase
+from django.template import TemplateDoesNotExist
 from courseaffils.lib import (
     faculty_courses_for_user,
     users_in_course, in_course,
@@ -47,12 +48,9 @@ class LibsSimpleTest(TestCase):
     def test_in_course_or_404(self):
         self.assertTrue(in_course_or_404(self.student, self.c))
         self.assertTrue(in_course_or_404(self.student, self.student_group))
-        try:
+        with self.assertRaises(TemplateDoesNotExist):
             # expect it to raise an error
             in_course_or_404(self.faculty, self.student_group)
-            assert False
-        except:
-            assert True
 
     def test_handle_public_name(self):
         r = DummyRequest()
