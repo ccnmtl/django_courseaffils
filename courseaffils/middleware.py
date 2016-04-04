@@ -67,6 +67,32 @@ class CourseManagerMiddleware(object):
                             user.get_full_name(), 'User Name_%d' % uid)
         return response
 
+    @staticmethod
+    def decorate_request(request, course):
+        request.course = course
+        request.coursename = course.title
+
+        # these will show up in Error emails as part of WSGI object
+        request.environ['django_username'] = request.user.username
+        request.environ['django_course'] = course.title
+
+        if STRUCTURED_COLLABORATION_AVAILABLE:
+            (request.collaboration_context,
+                created) = Collaboration.objects.get_or_create(
+                    content_type=ContentType.objects.get_for_model(Course),
+                    object_pk=str(course.pk))
+            if created or request.collaboration_context.slug is None:
+                request.collaboration_context.title = course.title
+                request.collaboration_context.group = course.group
+
+                for i in range(2):
+                    slug_try = course.slug(attempt=i)
+                    if not Collaboration.objects.filter(
+                            slug=slug_try).exists():
+                        request.collaboration_context.slug = slug_try
+                        break
+                request.collaboration_context.save()
+
     def process_request(self, request):
         request.course = None  # must be present to be a caching key
 
@@ -81,31 +107,6 @@ class CourseManagerMiddleware(object):
             if SESSION_KEY in request.session:
                 del request.session[SESSION_KEY]
 
-        def decorate_request(request, course):
-            request.course = course
-            request.coursename = course.title
-
-            # these will show up in Error emails as part of WSGI object
-            request.environ['django_username'] = request.user.username
-            request.environ['django_course'] = course.title
-
-            if STRUCTURED_COLLABORATION_AVAILABLE:
-                (request.collaboration_context,
-                    created) = Collaboration.objects.get_or_create(
-                        content_type=ContentType.objects.get_for_model(Course),
-                        object_pk=str(course.pk))
-                if created or request.collaboration_context.slug is None:
-                    request.collaboration_context.title = course.title
-                    request.collaboration_context.group = course.group
-
-                    for i in range(2):
-                        slug_try = course.slug(attempt=i)
-                        if Collaboration.objects.filter(
-                                slug=slug_try).count() == 0:
-                            request.collaboration_context.slug = slug_try
-                            break
-                    request.collaboration_context.save()
-
         if 'set_course' in request.REQUEST:
             course = Course.objects.get(
                 group__name=request.REQUEST['set_course'])
@@ -113,7 +114,7 @@ class CourseManagerMiddleware(object):
                CourseAccess.allowed(request) or \
                (request.user in course.members):
                 request.session[SESSION_KEY] = course
-                decorate_request(request, course)
+                self.decorate_request(request, course)
 
                 if 'next' in request.GET:
                     return HttpResponseRedirect(request.GET['next'])
@@ -122,7 +123,7 @@ class CourseManagerMiddleware(object):
 
         if SESSION_KEY in request.session:
             course = request.session[SESSION_KEY]
-            decorate_request(request, course)
+            self.decorate_request(request, course)
             return None
 
         available_courses = Course.objects.filter(group__user=request.user)
@@ -143,7 +144,7 @@ class CourseManagerMiddleware(object):
         if (chosen_course and
                 (chosen_course in available_courses or request.user.is_staff)):
             request.session[SESSION_KEY] = chosen_course
-            decorate_request(request, chosen_course)
+            self.decorate_request(request, chosen_course)
             return None
 
         return CourseListView.as_view()(request)
