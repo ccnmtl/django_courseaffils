@@ -87,8 +87,8 @@ class CourseManagerMiddleware(object):
 
                 for i in range(2):
                     slug_try = course.slug(attempt=i)
-                    if Collaboration.objects.filter(
-                            slug=slug_try).count() == 0:
+                    if not Collaboration.objects.filter(
+                            slug=slug_try).exists():
                         request.collaboration_context.slug = slug_try
                         break
                 request.collaboration_context.save()
