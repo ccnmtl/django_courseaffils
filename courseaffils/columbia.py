@@ -9,8 +9,8 @@ from time import strptime, strftime
 
 
 class CourseStringMapper:
-    @classmethod
-    def widget(cls):
+    @staticmethod
+    def widget():
         from django import forms
         w = forms.CharField(
             required=False,
@@ -58,8 +58,8 @@ class CourseStringMapper:
         w.clean = clean
         return w
 
-    @classmethod
-    def get_groups(cls, sectionkey):
+    @staticmethod
+    def get_groups(sectionkey):
         from django.contrib.auth.models import Group
         section_dict = SectionkeyTemplate.to_dict(sectionkey)
         if not section_dict:
@@ -76,14 +76,14 @@ class CourseStringMapper:
         else:
             return None, None
 
-    @classmethod
-    def get_course_info(cls, course_dict):
+    @staticmethod
+    def get_course_info(course_dict):
         directory_link = DirectoryLinkTemplate.to_string(course_dict)
         response = urlopen(directory_link).read()
         return DirectoryPageTemplate.to_dict(response)
 
-    @classmethod
-    def on_create(cls, course):
+    @staticmethod
+    def on_create(course):
         course_dict = WindTemplate.to_dict(course.group.name)
         from courseaffils.models import CourseInfo
 
@@ -92,7 +92,7 @@ class CourseStringMapper:
             info.year = int(course_dict['year'])
             info.term = int(course_dict['term'])
         try:
-            info_from_web = cls.get_course_info(
+            info_from_web = CourseStringMapper.get_course_info(
                 WindTemplate.to_dict(course.group.name))
 
             for val in info_from_web:
@@ -112,8 +112,8 @@ class CourseStringMapper:
             pass
         info.save()
 
-    @classmethod
-    def course_slug(cls, course, attempt=0):
+    @staticmethod
+    def course_slug(course, attempt=0):
         "returns a slug for the course, with higher resolution for attempt > 0"
         class_info = WindTemplate.to_dict(course.group.name)
         slug = None
