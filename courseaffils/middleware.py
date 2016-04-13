@@ -27,20 +27,29 @@ def has_anonymous_path(current_path):
                 if current_path.startswith(path):
                     return True
 
+    return False
+
+
+def has_courseaffils_path(current_path):
+    if hasattr(settings, 'COURSEAFFILS_PATHS'):
+        for path in settings.COURSEAFFILS_PATHS:
+            if isinstance(path, str):
+                if current_path.startswith(path):
+                    return True
+            elif hasattr(path, 'match'):
+                # regex
+                if path.match(current_path):
+                    return True
+
+    return False
+
 
 def is_anonymous_path(current_path):
     if has_anonymous_path(current_path):
         return True
 
-    if hasattr(settings, 'COURSEAFFILS_PATHS'):
-        for path in settings.COURSEAFFILS_PATHS:
-            if isinstance(path, str):
-                if current_path.startswith(path):
-                    return False
-            elif hasattr(path, 'match'):
-                # regex
-                if path.match(current_path):
-                    return False
+    if has_courseaffils_path(current_path):
+        return False
 
     if not hasattr(settings, 'COURSEAFFILS_EXEMPT_PATHS'):
         return False
@@ -101,11 +110,11 @@ class CourseManagerMiddleware(object):
     def process_request(self, request):
         request.course = None  # must be present to be a caching key
 
-        if is_anonymous_path(request.path):
-            return None
-
-        if (not request.user.is_authenticated() and
-                not CourseAccess.allowed(request)):
+        if is_anonymous_path(request.path) or \
+           (
+               not request.user.is_authenticated() and
+               not CourseAccess.allowed(request)
+           ):
             return None
 
         if 'unset_course' in request.GET:
@@ -146,8 +155,8 @@ class CourseManagerMiddleware(object):
         elif available_courses.count() == 1 and not request.user.is_staff:
             chosen_course = available_courses.first()
 
-        if (chosen_course and
-                (chosen_course in available_courses or request.user.is_staff)):
+        if chosen_course and \
+           (chosen_course in available_courses or request.user.is_staff):
             request.session[SESSION_KEY] = chosen_course
             self.decorate_request(request, chosen_course)
             return None
