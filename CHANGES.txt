@@ -1,3 +1,7 @@
+2.1.2 (2016-04-13)
+====================
+* columbia.CourseStringMapper now has to_dict and to_string methods.
+
 2.1.1
 =====
 * Added the faculty_courses_for_user function.
