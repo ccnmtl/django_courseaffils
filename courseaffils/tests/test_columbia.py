@@ -91,6 +91,9 @@ class ColumbiaSimpleTest(TestCase):
         self.assertEqual(
             WindTemplate.to_string(WindTemplate.to_dict(example)),
             example)
+        self.assertEqual(
+            CourseStringMapper.to_string(CourseStringMapper.to_dict(example)),
+            example)
 
     def test_csmapper_course_slug(self):
         class StubGroup(object):

@@ -130,6 +130,14 @@ class CourseStringMapper:
             slug = re.sub(' ', '_', course.title)
         return re.sub('\W', '', slug)
 
+    @staticmethod
+    def to_string(cdict):
+        return WindTemplate.to_string(cdict)
+
+    @staticmethod
+    def to_dict(wind_string):
+        return WindTemplate.to_dict(wind_string)
+
 
 class WindTemplate:
     example = 't3.y2007.s001.cw3956.engl.fc.course:columbia.edu'
