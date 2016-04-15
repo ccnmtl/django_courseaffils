@@ -99,7 +99,7 @@ class Course(models.Model):
 
     def details(self):
         return dict(
-            [(i.name, i) for i in CourseDetails.objects.filter(course=self)]
+            [(i.name, i) for i in self.coursedetails_set.all()]
         )
 
     def get_detail(self, name, default):

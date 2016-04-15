@@ -10,7 +10,15 @@
         <td>{{course.info.termyear}}</td>
     {% endif %}
     <td>{% if course.details.instructor %}{{course.details.instructor.value}}{% endif %}</td>
-    <td>{% course_role for request.user in course as foo %}{{foo}}</td>
+    <td>
+        {% if course in as_instructor %}
+            Instructor
+        {% else %}{% if course in as_student %}
+            Student
+        {% else %}
+            Non-member
+        {% endif %}{% endif %}
+    </td>
     {% if add_privilege %}
         <td class="manage-course">
             <a class="project"
