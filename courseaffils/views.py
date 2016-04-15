@@ -76,12 +76,13 @@ class CourseListView(ListView):
             qs = filter_current_courses(
                 self.courses, current_term, current_year)
         return qs.select_related(
-            'info', 'group', 'faculty_group', 'settings').prefetch_related('coursedetails_set')
+            'info', 'group', 'faculty_group', 'settings').prefetch_related(
+                'coursedetails_set')
 
     def get_context_data(self, **kwargs):
         context = super(CourseListView, self).get_context_data(**kwargs)
         semester_view = self.request.GET.get('semester_view', 'current')
-        
+
         # query all the users's roles to speed rendering
         if self.request.user.is_anonymous():
             as_instructor = Course.objects.none()
