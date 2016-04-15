@@ -75,11 +75,23 @@ class CourseListView(ListView):
         else:
             qs = filter_current_courses(
                 self.courses, current_term, current_year)
-        return qs
+        return qs.select_related(
+            'info', 'group', 'faculty_group', 'settings').prefetch_related(
+                'coursedetails_set')
 
     def get_context_data(self, **kwargs):
         context = super(CourseListView, self).get_context_data(**kwargs)
         semester_view = self.request.GET.get('semester_view', 'current')
+
+        # query all the users's roles to speed rendering
+        if self.request.user.is_anonymous():
+            as_instructor = Course.objects.none()
+            as_student = Course.objects.none()
+        else:
+            as_instructor = Course.objects.filter(
+                faculty_group__user=self.request.user)
+            as_student = Course.objects.filter(
+                group__user=self.request.user).exclude(pk__in=as_instructor)
 
         # If semester_view isn't future or past, always fall back to
         # current.
@@ -90,6 +102,9 @@ class CourseListView(ListView):
         # are our sandboxes.
         infoless_courses = self.courses.filter(
             Q(info=None) | Q(info__term=None) | Q(info__year=None))
+        infoless_courses = infoless_courses.select_related(
+            'info', 'group', 'faculty_group', 'settings').prefetch_related(
+                'coursedetails_set')
 
         next_redirect = ''
         if 'QUERY_STRING' in self.request.META \
@@ -103,6 +118,8 @@ class CourseListView(ListView):
             'semester_view': semester_view,
             'infoless_courses': infoless_courses,
             'next_redirect': next_redirect,
+            'as_student': as_student,
+            'as_instructor': as_instructor
         })
         return context
 

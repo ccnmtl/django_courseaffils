@@ -1,3 +1,7 @@
+2.1.3 (2016-04-14)
+====================
+* optimize CourseListView rendering
+
 2.1.2 (2016-04-13)
 ====================
 * columbia.CourseStringMapper now has to_dict and to_string methods.
