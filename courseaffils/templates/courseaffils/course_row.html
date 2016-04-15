@@ -13,11 +13,11 @@
     <td>
         {% if course in as_instructor %}
             Instructor
-        {% else %}{% if course in as_student %}
+        {% elif course in as_student %}
             Student
         {% else %}
             Non-member
-        {% endif %}{% endif %}
+        {% endif %}
     </td>
     {% if add_privilege %}
         <td class="manage-course">
