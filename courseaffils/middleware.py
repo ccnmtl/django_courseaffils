@@ -117,9 +117,8 @@ class CourseManagerMiddleware(object):
            ):
             return None
 
-        if 'unset_course' in request.GET:
-            if SESSION_KEY in request.session:
-                del request.session[SESSION_KEY]
+        if 'unset_course' in request.GET and SESSION_KEY in request.session:
+            del request.session[SESSION_KEY]
 
         if 'set_course' in request.REQUEST:
             course = Course.objects.get(
