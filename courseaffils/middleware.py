@@ -107,7 +107,13 @@ class CourseManagerMiddleware(object):
                         break
                 request.collaboration_context.save()
 
-    def process_request(self, request):
+    def course_list_view(self, request, override_view=None):
+        if override_view is not None:
+            return override_view.as_view()(request)
+
+        return CourseListView.as_view()(request)
+
+    def process_request(self, request, override_view=None):
         request.course = None  # must be present to be a caching key
 
         if is_anonymous_path(request.path) or \
@@ -160,4 +166,4 @@ class CourseManagerMiddleware(object):
             self.decorate_request(request, chosen_course)
             return None
 
-        return CourseListView.as_view()(request)
+        return self.course_list_view(request, override_view)
