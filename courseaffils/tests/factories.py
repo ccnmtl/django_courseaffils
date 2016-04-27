@@ -11,6 +11,7 @@ class UserFactory(factory.DjangoModelFactory):
 
     username = factory.Sequence(lambda n: 'user%03d' % n)
     password = factory.PostGenerationMethodCall('set_password', 'test')
+    email = factory.LazyAttribute(lambda u: '%s@example.com' % u.username)
 
 
 class GroupFactory(factory.DjangoModelFactory):
