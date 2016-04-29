@@ -5,7 +5,7 @@ from django.template.loader import get_template
 from django.template import Context
 from django.http import Http404
 from django.utils import timezone
-from courseaffils.models import Course
+from courseaffils.models import Affil, Course
 
 
 SPRING = 1
@@ -19,6 +19,12 @@ def faculty_courses_for_user(user):
     Returns a QuerySet.
     """
     return Course.objects.filter(faculty_group__in=user.groups.all())
+
+
+def is_faculty(user):
+    """Return True if the given user is a faculty member on any courses."""
+    return Affil.objects.filter(user=user).exists() or \
+        faculty_courses_for_user(user).exists()
 
 
 def users_in_course(course):

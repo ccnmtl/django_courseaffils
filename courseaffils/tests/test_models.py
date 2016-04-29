@@ -1,10 +1,13 @@
 from __future__ import unicode_literals
 
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.utils.encoding import smart_text
+from courseaffils.columbia import CourseStringMapper
 from courseaffils.models import Course, CourseSettings
 from courseaffils.models import CourseInfo, CourseAccess
-from courseaffils.tests.factories import CourseFactory, UserFactory
+from courseaffils.tests.factories import (
+    AffilFactory, CourseFactory, UserFactory
+)
 from django.contrib.auth.models import Group, User
 
 
@@ -174,3 +177,26 @@ class ModelsSimpleTest(TestCase):
             REQUEST = dict()
 
         self.assertFalse(CourseAccess.allowed(StubRequest()))
+
+
+@override_settings(COURSEAFFILS_COURSESTRING_MAPPER=CourseStringMapper)
+class AffilTest(TestCase):
+    def setUp(self):
+        self.aa = AffilFactory(
+            name='t1.y2016.s001.cf1002.scnc.st.course:columbia.edu')
+
+    def test_is_valid_from_factory(self):
+        self.aa.full_clean()
+
+    def test_str(self):
+        self.assertEqual(smart_text(self.aa), self.aa.name)
+
+    def test_courseworks_name(self):
+        self.assertEqual(
+            self.aa.courseworks_name,
+            'CUcourse_SCNCf1002_001_2016_1')
+
+    def test_coursedirectory_name(self):
+        self.assertEqual(
+            self.aa.coursedirectory_name,
+            '20161SCNC1002F001')
