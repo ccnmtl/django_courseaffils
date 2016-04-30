@@ -6,7 +6,7 @@ from django.utils.encoding import smart_text
 
 from courseaffils.models import Course, CourseAccess
 from courseaffils.views import CourseListView
-from courseaffils.lib import AUTO_COURSE_SELECT
+from courseaffils.lib import AUTO_COURSE_SELECT, is_faculty
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import resolve, Resolver404
 
@@ -153,11 +153,14 @@ class CourseManagerMiddleware(object):
         except Resolver404:
             requested_view = None
 
-        # staff should always get the opportunity to pick a course
+        # Staff and instructors should always get the opportunity to
+        # pick a course.
         if requested_view in AUTO_COURSE_SELECT:
             chosen_course = AUTO_COURSE_SELECT[requested_view](
                 *view_args, **view_kwargs)
-        elif available_courses.count() == 1 and not request.user.is_staff:
+        elif (available_courses.count() == 1 and
+              not request.user.is_staff and
+              not is_faculty(request.user)):
             chosen_course = available_courses.first()
 
         if chosen_course and \

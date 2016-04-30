@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 import factory
-from courseaffils.models import Course
+from courseaffils.models import Affil, Course
 from django.contrib.auth.models import User, Group
 
 
@@ -28,3 +28,12 @@ class CourseFactory(factory.DjangoModelFactory):
     title = factory.Sequence(lambda n: 'Example Course %d' % n)
     group = factory.SubFactory(GroupFactory)
     faculty_group = factory.SubFactory(GroupFactory)
+
+
+class AffilFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Affil
+
+    name = factory.Sequence(
+        lambda n: 't1.y2016.s001.cf100%d.scnc.st.course:columbia.edu' % n)
+    user = factory.SubFactory(UserFactory)
