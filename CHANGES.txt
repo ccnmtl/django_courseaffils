@@ -1,3 +1,10 @@
+2.1.5 (2016-05-02)
+====================
+* Introduced the Affil model for storing affils from CAS that don't yet
+  have an associated Course.
+* Changed CourseManagerMiddleware so faculty always see the switch course
+  view, and are never automatically forwarded into a course.
+
 2.1.4 (2016-04-25)
 ====================
 * Allow CourseListView to be overridden in CourseManagerMiddleware.
