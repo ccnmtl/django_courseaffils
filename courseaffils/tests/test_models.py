@@ -9,6 +9,7 @@ from courseaffils.tests.factories import (
     AffilFactory, CourseFactory, UserFactory
 )
 from django.contrib.auth.models import Group, User
+from freezegun import freeze_time
 
 
 class UserTests(TestCase):
@@ -190,6 +191,55 @@ class AffilTest(TestCase):
 
     def test_str(self):
         self.assertEqual(smart_text(self.aa), self.aa.name)
+
+    def test_past_present_future(self):
+        with freeze_time('2012-01-14'):
+            self.assertEqual(self.aa.past_present_future, 1)
+        with freeze_time('2015-01-14'):
+            self.assertEqual(self.aa.past_present_future, 1)
+        with freeze_time('2015-08-15'):
+            self.assertEqual(self.aa.past_present_future, 1)
+        with freeze_time('2015-12-15'):
+            self.assertEqual(self.aa.past_present_future, 1)
+        with freeze_time('2016-01-14'):
+            self.assertEqual(self.aa.past_present_future, 0)
+        with freeze_time('2016-04-26'):
+            self.assertEqual(self.aa.past_present_future, 0)
+        with freeze_time('2016-06-04'):
+            self.assertEqual(self.aa.past_present_future, -1)
+        with freeze_time('2017-01-14'):
+            self.assertEqual(self.aa.past_present_future, -1)
+        with freeze_time('2017-03-30'):
+            self.assertEqual(self.aa.past_present_future, -1)
+        with freeze_time('2017-10-03'):
+            self.assertEqual(self.aa.past_present_future, -1)
+        with freeze_time('2017-12-03'):
+            self.assertEqual(self.aa.past_present_future, -1)
+
+        aa = AffilFactory(
+            name='t2.y2016.s001.cf1002.scnc.st.course:columbia.edu')
+        with freeze_time('2016-01-14'):
+            self.assertEqual(aa.past_present_future, 1)
+        with freeze_time('2016-04-26'):
+            self.assertEqual(aa.past_present_future, 1)
+        with freeze_time('2016-08-12'):
+            self.assertEqual(aa.past_present_future, 0)
+        with freeze_time('2017-12-03'):
+            self.assertEqual(aa.past_present_future, -1)
+
+        aa = AffilFactory(
+            name='t3.y2016.s001.cf1002.scnc.st.course:columbia.edu')
+        with freeze_time('2016-01-14'):
+            self.assertEqual(aa.past_present_future, 1)
+        with freeze_time('2016-04-26'):
+            self.assertEqual(aa.past_present_future, 1)
+        with freeze_time('2016-10-02'):
+            self.assertEqual(aa.past_present_future, 0)
+        with freeze_time('2017-12-03'):
+            self.assertEqual(aa.past_present_future, -1)
+
+        aa = AffilFactory(name='bogus affil string')
+        self.assertEqual(aa.past_present_future, None)
 
     def test_courseworks_name(self):
         self.assertEqual(
