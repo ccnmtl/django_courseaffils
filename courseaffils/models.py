@@ -8,9 +8,11 @@ from __future__ import unicode_literals
 from functools import reduce
 from django.db import models
 from django.contrib.auth.models import User, Group
+from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 import re
 from django.conf import settings
+from courseaffils.utils import get_current_term
 
 
 @python_2_unicode_compatible
@@ -229,6 +231,46 @@ class Affil(models.Model):
     def __str__(self):
         return self.name
 
+    def to_dict(self):
+        if hasattr(settings, 'COURSEAFFILS_COURSESTRING_MAPPER'):
+            return settings.COURSEAFFILS_COURSESTRING_MAPPER.to_dict(
+                self.name)
+        else:
+            return None
+
+    @property
+    def past_present_future(self):
+        """Find out if this Affil is in the past, present, or future.
+
+        Returns -1 if this Affil is in the past, 0 if in the present,
+        and 1 if in the future. If there was a parse error, returns None.
+        """
+        current_year = timezone.now().year
+        current_term = get_current_term()
+
+        affil_dict = self.to_dict()
+
+        if affil_dict is None:
+            return None
+
+        try:
+            year = int(affil_dict.get('year'))
+        except TypeError:
+            return None
+
+        try:
+            term = int(affil_dict.get('term'))
+        except TypeError:
+            return None
+
+        if year == current_year and term == current_term:
+            return 0
+        elif year < current_year or (
+                year == current_year and term < current_term):
+            return -1
+        else:
+            return 1
+
     @property
     def courseworks_name(self):
         """Returns the Courseworks formatted name.
@@ -239,8 +281,7 @@ class Affil(models.Model):
         """
         if hasattr(settings, 'COURSEAFFILS_COURSESTRING_MAPPER') and \
            settings.COURSEAFFILS_COURSESTRING_MAPPER is not None:
-            affil_dict = settings.COURSEAFFILS_COURSESTRING_MAPPER.to_dict(
-                self.name)
+            affil_dict = self.to_dict()
             return 'CUcourse_{}{}{}_{}_{}_{}'.format(
                 affil_dict['dept'].upper(),
                 affil_dict['letter'],
@@ -260,8 +301,7 @@ class Affil(models.Model):
         """
         if hasattr(settings, 'COURSEAFFILS_COURSESTRING_MAPPER') and \
            settings.COURSEAFFILS_COURSESTRING_MAPPER is not None:
-            affil_dict = settings.COURSEAFFILS_COURSESTRING_MAPPER.to_dict(
-                self.name)
+            affil_dict = self.to_dict()
             return '{}{}{}{}{}{}'.format(
                 affil_dict['year'],
                 affil_dict['term'],

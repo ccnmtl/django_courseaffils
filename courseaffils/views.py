@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 import json
-from courseaffils.lib import get_current_term
+from courseaffils.utils import get_current_term
 from courseaffils.forms import CourseCreateForm
 from courseaffils.models import Course, CourseAccess
 from django.db.models import Q
