@@ -310,3 +310,9 @@ class Affil(models.Model):
                 affil_dict['letter'].upper(),
                 affil_dict['section'])
         return None
+
+    @property
+    def shortname(self):
+        affil_dict = self.to_dict()
+        if affil_dict is not None:
+            return affil_dict['dept'].upper() + affil_dict['number']

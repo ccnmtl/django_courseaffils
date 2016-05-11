@@ -250,3 +250,6 @@ class AffilTest(TestCase):
         self.assertEqual(
             self.aa.coursedirectory_name,
             '20161SCNC1002F001')
+
+    def test_shortname(self):
+        self.assertEqual(self.aa.shortname, 'SCNC1002')
