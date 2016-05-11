@@ -1,3 +1,7 @@
+2.1.7 (2016-05-11)
+====================
+* Added Affil.shortname
+
 2.1.6 (2016-05-11)
 ====================
 * Added Affil.past_present_future
