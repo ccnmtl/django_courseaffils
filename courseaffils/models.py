@@ -222,6 +222,7 @@ class Affil(models.Model):
     class Meta:
         unique_together = ('name', 'user')
 
+    is_affil = True
     activated = models.BooleanField(default=False)
     name = models.TextField()
     user = models.ForeignKey(User)
