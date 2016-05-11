@@ -1,3 +1,7 @@
+2.1.6 (2016-05-11)
+====================
+* Added Affil.past_present_future
+
 2.1.5 (2016-05-02)
 ====================
 * Introduced the Affil model for storing affils from CAS that don't yet
