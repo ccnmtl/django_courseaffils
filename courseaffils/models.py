@@ -111,13 +111,8 @@ class Course(models.Model):
             return default
 
     def add_detail(self, name, value):
-        try:
-            detail = CourseDetails.objects.get(course=self, name=name)
-            detail.value = value
-            detail.save()
-        except CourseDetails.DoesNotExist:
-            detail = CourseDetails.objects.create(
-                course=self, name=name, value=value)
+        CourseDetails.objects.update_or_create(
+            course=self, name=name, defaults={'value': value})
 
 
 @python_2_unicode_compatible
