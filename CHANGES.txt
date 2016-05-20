@@ -1,3 +1,7 @@
+2.1.8 (2016-05-20)
+====================
+* Added Affil admin control
+
 2.1.7 (2016-05-11)
 ====================
 * Added Affil.shortname
