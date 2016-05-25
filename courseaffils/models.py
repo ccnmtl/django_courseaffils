@@ -133,6 +133,7 @@ class CourseSettings(models.Model):
         verbose_name_plural = 'Course Settings'
 
 
+@python_2_unicode_compatible
 class CourseInfo(models.Model):
     term_choices = {1: 'Spring', 2: 'Summer', 3: 'Fall'}
 
