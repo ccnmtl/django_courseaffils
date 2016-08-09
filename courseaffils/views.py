@@ -57,8 +57,23 @@ def filter_future_courses(all_courses, current_term, current_year):
         (Q(info__year=current_year) & Q(info__term__gt=current_term)))
 
 
+def filter_sandbox_courses(all_courses):
+    """
+    Return all sandbox courses.
+    Sandbox courses don't have an associated CourseInfo.
+    """
+    return all_courses.filter(
+        Q(info=None) | Q(info__term=None) | Q(info__year=None))
+
+
 class CourseListView(ListView):
     model = Course
+    view_options = [
+        'past',
+        'current',
+        'future',
+        'sandbox',
+    ]
 
     def get_queryset(self):
         self.courses = get_courses_for_user(self.request.user)
@@ -72,6 +87,8 @@ class CourseListView(ListView):
         elif semester_view == 'future':
             qs = filter_future_courses(
                 self.courses, current_term, current_year)
+        elif semester_view == 'sandbox':
+            qs = filter_sandbox_courses(self.courses)
         else:
             qs = filter_current_courses(
                 self.courses, current_term, current_year)
@@ -93,18 +110,9 @@ class CourseListView(ListView):
             as_student = Course.objects.filter(
                 group__user=self.request.user).exclude(pk__in=as_instructor)
 
-        # If semester_view isn't future or past, always fall back to
-        # current.
-        if semester_view != 'future' and semester_view != 'past':
+        # If semester_view isn't valid, always fall back to current.
+        if semester_view not in self.view_options:
             semester_view = 'current'
-
-        # infoless_courses don't have an associated CourseInfo. These
-        # are our sandboxes.
-        infoless_courses = self.courses.filter(
-            Q(info=None) | Q(info__term=None) | Q(info__year=None))
-        infoless_courses = infoless_courses.select_related(
-            'info', 'group', 'faculty_group', 'settings').prefetch_related(
-                'coursedetails_set')
 
         next_redirect = ''
         if 'QUERY_STRING' in self.request.META \
@@ -116,7 +124,6 @@ class CourseListView(ListView):
         context.update({
             'add_privilege': self.request.user.is_staff,
             'semester_view': semester_view,
-            'infoless_courses': infoless_courses,
             'next_redirect': next_redirect,
             'as_student': as_student,
             'as_instructor': as_instructor

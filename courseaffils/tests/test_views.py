@@ -21,7 +21,6 @@ class CourseListViewTests(TestCase):
         response = self.client.get(reverse('select_course'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['object_list']), 0)
-        self.assertEqual(len(response.context['infoless_courses']), 0)
 
     def test_select_course(self):
         u = UserFactory(username='test')
@@ -32,8 +31,11 @@ class CourseListViewTests(TestCase):
         response = self.client.get(reverse('select_course'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['object_list']), 0)
+        response = self.client.get(reverse('select_course'),
+                                   {'semester_view': 'sandbox'})
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(
-            len(response.context['infoless_courses']), 0,
+            len(response.context['object_list']), 0,
             'Non-staff users shouldn\'t see sandbox courses '
             'they aren\'t part of.')
 
@@ -41,12 +43,14 @@ class CourseListViewTests(TestCase):
         response = self.client.get(reverse('select_course'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['object_list']), 0)
+        response = self.client.get(reverse('select_course'),
+                                   {'semester_view': 'sandbox'})
         self.assertEqual(
-            len(response.context['infoless_courses']), 1,
+            len(response.context['object_list']), 1,
             'Non-staff users should see sandbox courses '
             'they are grouped with.')
         self.assertEqual(
-            response.context['infoless_courses'][0].title,
+            response.context['object_list'][0].title,
             'My Course')
 
     def test_select_course_staff(self):
@@ -58,9 +62,11 @@ class CourseListViewTests(TestCase):
         response = self.client.get(reverse('select_course'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['object_list']), 0)
-        self.assertEqual(len(response.context['infoless_courses']), 1)
+        response = self.client.get(reverse('select_course'),
+                                   {'semester_view': 'sandbox'})
+        self.assertEqual(len(response.context['object_list']), 1)
         self.assertEqual(
-            response.context['infoless_courses'][0].title,
+            response.context['object_list'][0].title,
             'My Course')
 
 
