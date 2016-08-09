@@ -27,6 +27,9 @@
                            href="?semester_view=future"
                            class="btn btn-default {% if semester_view == 'future' %}active{% endif %}"
                         >Future Semesters</a>
+                        <a href="?semester_view=future"
+                           class="btn btn-default {% if semester_view == 'sandbox' %}active{% endif %}"
+                        >Sandboxes</a>
                     </div>
                 </div>
 
@@ -58,29 +61,6 @@
                         {% endfor %}
                     </tbody>
                 </table>
-
-                {% if infoless_courses %}
-                    <h1>Sandboxes</h1>
-                    <table class="table course-choices tablesorter">
-                        <thead>
-                            <tr>
-                                <th>Course Titles</th>
-                                <th>Term</th>
-                                <th>Instructor</th>
-                                <th>Role</th>
-                                {% if add_privilege %}
-                                    <th class="nosort">Actions</th>
-                                {% endif %}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for course in infoless_courses %}
-                                {% include 'courseaffils/course_row.html' %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
-
             {% endwith %}
         {% endwith %}
     </div>

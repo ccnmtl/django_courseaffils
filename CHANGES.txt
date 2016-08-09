@@ -1,3 +1,7 @@
+2.1.9
+====================
+* Allow Sandbox courses to be queried for in CourseListView.
+
 2.1.8 (2016-05-20)
 ====================
 * Added Affil admin control
