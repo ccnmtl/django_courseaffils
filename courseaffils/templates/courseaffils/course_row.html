@@ -4,9 +4,11 @@
            href="?set_course={{course.group.name|urlencode}}{{next_redirect}}"
         >{{course.title}}</a>
     </td>
-    {% if course.info.termyear %}
-        <td>{{course.info.termyear}}</td>
-    {% endif %}
+    <td>
+        {% if course.info.termyear %}
+            {{course.info.termyear}}
+        {% endif %}
+    </td>
     <td>{% if course.details.instructor %}{{course.details.instructor.value}}{% endif %}</td>
     <td>
         {% if course in as_instructor %}
