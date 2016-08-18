@@ -1,3 +1,7 @@
+2.1.10 (2016-08-18)
+====================
+* Display each Affil's user in the admin section.
+
 2.1.9 (2016-08-09)
 ====================
 * Allow Sandbox courses to be queried for in CourseListView.
