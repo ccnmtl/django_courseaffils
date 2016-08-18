@@ -15,8 +15,14 @@ class CourseAdmin(admin.ModelAdmin):
     list_display = ('title', 'id',)
     change_form_template = "courseaffils/admin_change_form.html"
 
+
+class AffilAdmin(admin.ModelAdmin):
+    model = Affil
+    list_display = ['name', 'user']
+
+
 admin.site.register(Course, CourseAdmin)
-admin.site.register(Affil)
+admin.site.register(Affil, AffilAdmin)
 admin.site.register(CourseSettings)
 admin.site.register(CourseInfo)
 admin.site.register(CourseDetails)
