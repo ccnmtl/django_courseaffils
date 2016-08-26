@@ -1,11 +1,14 @@
 from __future__ import unicode_literals
 
-from django.test import TestCase
-from courseaffils.forms import CourseAdminForm
+from django import forms
+from django.test import TestCase, override_settings
 from django.contrib.auth.models import Group, User
+from courseaffils.columbia import CourseStringMapper
+from courseaffils.forms import CourseAdminForm
 from courseaffils.models import Course
 
 
+@override_settings(COURSEAFFILS_COURSESTRING_MAPPER=CourseStringMapper)
 class FormsSimpleTest(TestCase):
     def setUp(self):
         self.student_group = Group.objects.create(name="studentgroup")
@@ -48,6 +51,23 @@ class FormsSimpleTest(TestCase):
         self.assertIsNotNone(user)
         self.assertTrue(s2 in user.groups.all())
         self.assertTrue(self.faculty_group in user.groups.all())
+
+    def test_clean_no_group(self):
+        f = CourseAdminForm(
+            dict(title="foo",
+                 faculty_group=self.faculty_group.id,
+                 add_user='student\n*nonexistant:foo')
+        )
+
+        with self.assertRaisesRegexp(
+                ValueError,
+                'The Course could not be created'):
+            f.save(commit=False)
+
+        with self.assertRaisesRegexp(
+                forms.ValidationError,
+                'You must select a group or enter a course string'):
+            f.clean()
 
     def test_clean_remove(self):
         f = CourseAdminForm(instance=self.c)
