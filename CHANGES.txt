@@ -1,3 +1,8 @@
+2.1.11
+====================
+* Fixed a bug in CourseAdminForm.clean()
+* Added Affil.is_faculty
+
 2.1.10 (2016-08-18)
 ====================
 * Display each Affil's user in the admin section.

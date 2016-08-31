@@ -253,3 +253,10 @@ class AffilTest(TestCase):
 
     def test_shortname(self):
         self.assertEqual(self.aa.shortname, 'SCNC1002')
+
+    def test_is_faculty(self):
+        self.assertEqual(self.aa.is_faculty, False)
+
+        aa = AffilFactory(
+            name='t1.y2016.s002.cf1402.scnc.fc.course:columbia.edu')
+        self.assertEqual(aa.is_faculty, True)

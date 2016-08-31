@@ -236,6 +236,12 @@ class Affil(models.Model):
             return None
 
     @property
+    def is_faculty(self):
+        """Returns True if this affil is a faculty affil."""
+        d = self.to_dict()
+        return d.get('member') == 'fc'
+
+    @property
     def past_present_future(self):
         """Find out if this Affil is in the past, present, or future.
 
