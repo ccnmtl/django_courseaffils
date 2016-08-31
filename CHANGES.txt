@@ -1,4 +1,4 @@
-2.1.11
+2.1.11 (2016-08-31)
 ====================
 * Fixed a bug in CourseAdminForm.clean()
 * Added Affil.is_faculty
