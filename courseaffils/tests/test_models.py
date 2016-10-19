@@ -260,3 +260,6 @@ class AffilTest(TestCase):
         aa = AffilFactory(
             name='t1.y2016.s002.cf1402.scnc.fc.course:columbia.edu')
         self.assertEqual(aa.is_faculty, True)
+
+    def test_get_course(self):
+        self.assertIsNone(self.aa.get_course())
