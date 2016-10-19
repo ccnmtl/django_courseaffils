@@ -319,3 +319,16 @@ class Affil(models.Model):
         affil_dict = self.to_dict()
         if affil_dict is not None:
             return affil_dict['dept'].upper() + affil_dict['number']
+
+    def get_course(self):
+        """Returns an associated course for this affil, if it exists."""
+        fgroup = Group.objects.filter(name=self.name).first()
+        if Course.objects.filter(faculty_group=fgroup).exists():
+            return Course.objects.filter(faculty_group=fgroup).first()
+
+        studentaffil = re.sub(r'\.fc\.', '.st.', self.name)
+        sgroup = Group.objects.filter(name=studentaffil).first()
+        if Course.objects.filter(group=sgroup).exists():
+            return Course.objects.filter(group=sgroup).first()
+
+        return None
