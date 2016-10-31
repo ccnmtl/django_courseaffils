@@ -9,6 +9,7 @@ from courseaffils.views import CourseListView
 from courseaffils.lib import AUTO_COURSE_SELECT, is_faculty
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import resolve, Resolver404
+from django.shortcuts import get_object_or_404
 
 STRUCTURED_COLLABORATION_AVAILABLE = False
 try:
@@ -127,7 +128,7 @@ class CourseManagerMiddleware(object):
             del request.session[SESSION_KEY]
 
         if 'set_course' in request.REQUEST:
-            course = Course.objects.get(
+            course = get_object_or_404(Course,
                 group__name=request.REQUEST['set_course'])
             if request.user.is_staff or \
                CourseAccess.allowed(request) or \
