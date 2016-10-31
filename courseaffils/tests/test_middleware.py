@@ -1,11 +1,12 @@
 from __future__ import unicode_literals
 
-from django.test import TestCase
-from courseaffils.middleware import is_anonymous_path
-from courseaffils.middleware import already_selected_course
 from courseaffils.middleware import CourseManagerMiddleware
-from django.contrib.auth.models import Group, User
+from courseaffils.middleware import already_selected_course
+from courseaffils.middleware import is_anonymous_path
 from courseaffils.models import Course
+from django.contrib.auth.models import Group, User
+from django.http.response import Http404
+from django.test import TestCase
 
 
 class StubRequest(object):
@@ -98,6 +99,12 @@ class MiddlewareSimpleTest(TestCase):
         r.user = self.student
         r.REQUEST['set_course'] = 'studentgroup'
         assert c.process_request(r) is None
+
+        r = StubRequest(self.c)
+        r.user = self.student
+        r.REQUEST['set_course'] = 'foobarbaz'
+        with self.assertRaises(Http404):
+            c.process_request(r)
 
         r = StubRequest(self.c)
         r.user = self.student
