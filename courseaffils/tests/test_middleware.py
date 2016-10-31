@@ -104,7 +104,7 @@ class MiddlewareSimpleTest(TestCase):
         r.user = self.student
         r.REQUEST['set_course'] = 'foobarbaz'
         with self.assertRaises(Http404):
-            response = c.process_request(r) 
+            c.process_request(r)
 
         r = StubRequest(self.c)
         r.user = self.student

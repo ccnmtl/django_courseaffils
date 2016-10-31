@@ -128,7 +128,8 @@ class CourseManagerMiddleware(object):
             del request.session[SESSION_KEY]
 
         if 'set_course' in request.REQUEST:
-            course = get_object_or_404(Course,
+            course = get_object_or_404(
+                Course,
                 group__name=request.REQUEST['set_course'])
             if request.user.is_staff or \
                CourseAccess.allowed(request) or \
