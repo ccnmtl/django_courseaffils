@@ -1,6 +1,7 @@
-2.1.12
+2.1.12 (2016-11-02)
 ====================
 * Added Affil.get_course()
+* On set_course request, verify specified course is valid
 
 2.1.11 (2016-08-31)
 ====================
