@@ -89,9 +89,8 @@ class GetCourses(TemplateTagNode):
         TemplateTagNode.__init__(self, varname, user=user)
 
     def execute_query(self, user):
-        # import here, because it doesn't work above
-        from courseaffils.models import Course
-        return Course.objects.filter(group__in=user.groups.all())
+        from courseaffils.views import get_courses_for_user
+        return get_courses_for_user(user)
 
 register.tag('get_courses', GetCourses.process_tag)
 
