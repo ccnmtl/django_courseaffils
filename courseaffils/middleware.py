@@ -127,10 +127,12 @@ class CourseManagerMiddleware(object):
         if 'unset_course' in request.GET and SESSION_KEY in request.session:
             del request.session[SESSION_KEY]
 
-        if 'set_course' in request.REQUEST:
+        set_course = request.POST.get('set_course',
+                                      request.GET.get('set_course', None))
+        if set_course is not None:
             course = get_object_or_404(
                 Course,
-                group__name=request.REQUEST['set_course'])
+                group__name=set_course)
             if request.user.is_staff or \
                CourseAccess.allowed(request) or \
                (request.user in course.members):

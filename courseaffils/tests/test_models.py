@@ -175,7 +175,8 @@ class ModelsSimpleTest(TestCase):
         CourseAccess.respond("foo")
 
         class StubRequest(object):
-            REQUEST = dict()
+            POST = dict()
+            GET = dict()
 
         self.assertFalse(CourseAccess.allowed(StubRequest()))
 
