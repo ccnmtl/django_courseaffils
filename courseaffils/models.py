@@ -200,7 +200,8 @@ class CourseDetails(models.Model):
 class CourseAccess:
     @classmethod
     def allowed(cls, request):
-        return (request.REQUEST.get('secret', None)
+        secret = request.POST.get('secret', request.GET.get('secret', None))
+        return (secret
                 in getattr(settings, 'SERVER_ADMIN_SECRETKEYS', {}).values()
                 )
 

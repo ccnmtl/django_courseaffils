@@ -12,7 +12,7 @@ from django.test import TestCase
 class StubRequest(object):
     COOKIES = dict()
     GET = dict()
-    REQUEST = dict()
+    POST = dict()
     environ = dict()
 
     def __init__(self, c):
@@ -97,17 +97,17 @@ class MiddlewareSimpleTest(TestCase):
 
         r = StubRequest(self.c)
         r.user = self.student
-        r.REQUEST['set_course'] = 'studentgroup'
+        r.POST['set_course'] = 'studentgroup'
         assert c.process_request(r) is None
 
         r = StubRequest(self.c)
         r.user = self.student
-        r.REQUEST['set_course'] = 'foobarbaz'
+        r.POST['set_course'] = 'foobarbaz'
         with self.assertRaises(Http404):
             c.process_request(r)
 
         r = StubRequest(self.c)
         r.user = self.student
-        r.REQUEST['set_course'] = 'studentgroup'
+        r.POST['set_course'] = 'studentgroup'
         r.GET['next'] = "/foo"
         assert c.process_request(r) is not None
