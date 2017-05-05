@@ -27,6 +27,15 @@ def get_courses_for_user(user):
     return courses.order_by('-info__year', '-info__term', 'title')
 
 
+def get_courses_for_instructor(user):
+    courses = Course.objects.none()
+    if user.is_staff:
+        courses = Course.objects.all()
+    elif not user.is_anonymous():
+        courses = Course.objects.filter(faculty_group__user=user)
+    return courses.order_by('-info__year', '-info__term', 'title')
+
+
 def filter_past_courses(all_courses, current_term, current_year):
     """
     Given a queryset of courses, return only the ones in past
