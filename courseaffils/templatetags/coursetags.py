@@ -93,6 +93,7 @@ class GetCourses(TemplateTagNode):
         from courseaffils.views import get_courses_for_user
         return get_courses_for_user(user)
 
+
 register.tag('get_courses', GetCourses.process_tag)
 
 
@@ -142,4 +143,6 @@ class PublicName(TemplateTagNode):
             return cls(words[2], user=words[2])
         else:
             return cls(words[2], user=words[2], truncate=int(words[4]))
+
+
 register.tag('public_name', PublicName.process_tag)
