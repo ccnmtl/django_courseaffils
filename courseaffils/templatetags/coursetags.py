@@ -95,6 +95,19 @@ class GetCourses(TemplateTagNode):
 register.tag('get_courses', GetCourses.process_tag)
 
 
+class GetInstructorCourses(TemplateTagNode):
+    noun_for = {"for": "user"}
+
+    def __init__(self, varname, user):
+        TemplateTagNode.__init__(self, varname, user=user)
+
+    def execute_query(self, user):
+        from courseaffils.views import get_courses_for_instructor
+        return get_courses_for_instructor(user)
+
+register.tag('get_instructor_courses', GetInstructorCourses.process_tag)
+
+
 class CourseRole(TemplateTagNode):
     noun_for = {"for": "user", "in": "course"}
 
