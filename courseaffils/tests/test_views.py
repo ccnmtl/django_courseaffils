@@ -6,14 +6,52 @@ from courseaffils.tests.factories import (
     CourseFactory, UserFactory, GroupFactory
 )
 from courseaffils.tests.mixins import LoggedInFacultyTestMixin
+from courseaffils.views import get_courses_for_user, get_courses_for_instructor
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 
 class ViewTests(TestCase):
+
     def test_root(self):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 404)
+
+    def test_get_courses(self):
+        course = CourseFactory()
+        student = UserFactory()
+        instructor = UserFactory()
+        staff = UserFactory(is_staff=True)
+
+        course.group.user_set.add(student)
+        course.group.user_set.add(instructor)
+        course.faculty_group.user_set.add(instructor)
+
+        # as student
+        lst = get_courses_for_user(student)
+        self.assertEquals(len(lst), 1)
+        self.assertTrue(course in lst)
+
+        lst = get_courses_for_instructor(student)
+        self.assertEquals(len(lst), 0)
+
+        # as instructor
+        lst = get_courses_for_user(instructor)
+        self.assertEquals(len(lst), 1)
+        self.assertTrue(course in lst)
+
+        lst = get_courses_for_instructor(instructor)
+        self.assertEquals(len(lst), 1)
+        self.assertTrue(course in lst)
+
+        # as staff
+        lst = get_courses_for_user(staff)
+        self.assertEquals(len(lst), 1)
+        self.assertTrue(course in lst)
+
+        lst = get_courses_for_instructor(staff)
+        self.assertEquals(len(lst), 1)
+        self.assertTrue(course in lst)
 
 
 class CourseListViewTests(TestCase):

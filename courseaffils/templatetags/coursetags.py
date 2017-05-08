@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django import template
 from courseaffils.lib import get_public_name
+from courseaffils.views import get_courses_for_instructor
 
 register = template.Library()
 
@@ -94,6 +95,11 @@ class GetCourses(TemplateTagNode):
 
 
 register.tag('get_courses', GetCourses.process_tag)
+
+
+@register.assignment_tag
+def get_instructor_courses(user):
+    return get_courses_for_instructor(user)
 
 
 class CourseRole(TemplateTagNode):
