@@ -1,3 +1,9 @@
+2.1.13 (2017-05-08)
+====================
+* updates for Django 1.11
+* add courses_for_instructor utility method and templatetag
+* get_courses adds a sort order
+
 2.1.12 (2016-11-02)
 ====================
 * Added Affil.get_course()
