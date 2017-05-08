@@ -171,8 +171,10 @@ def select_course(request):
 def course_list_query(request):
     if not CourseAccess.allowed(request):
         return HttpResponseForbidden('{"error":"server not whitelisted"}')
-    user = get_object_or_404(
-        User, username=request.REQUEST.get('user', 'none'))
+
+    username = request.POST.get('user', request.GET.get('user', 'none'))
+    user = get_object_or_404(User, username=username)
+
     courses = get_courses_for_user(user)
     data = {'courses': dict(
             [(c.group.name, {'title': c.title, })
