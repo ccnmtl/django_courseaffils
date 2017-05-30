@@ -110,9 +110,14 @@ class CourseManagerMiddleware(object):
 
     def course_list_view(self, request, override_view=None):
         if override_view is not None:
-            return override_view.as_view()(request)
+            response = override_view.as_view()(request)
+        else:
+            response = CourseListView.as_view()(request)
 
-        return CourseListView.as_view()(request)
+        if response.status_code == 200:
+            response.render()
+
+        return response
 
     def process_request(self, request, override_view=None):
         request.course = None  # must be present to be a caching key

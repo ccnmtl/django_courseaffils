@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 
 from django.contrib.auth.models import User
 from django.template.loader import get_template
-from django.template import Context
 from django.http import Http404
 from courseaffils.models import Affil, Course
 
@@ -40,11 +39,10 @@ def in_course_or_404(username, group_or_course):
         return group.user_set.get(username=username)
     except User.DoesNotExist:
         template = get_template('not_in_course.html')
-        context = Context(
-            {
-                'user': username,
-                'course': group,
-            })
+        context = {
+            'user': username,
+            'course': group,
+        }
         response_body = template.render(context)
         raise Http404(response_body)
 
