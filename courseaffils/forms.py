@@ -74,9 +74,13 @@ class CourseAdminForm(forms.ModelForm):
                 self.cleaned_data["group"]
             raise forms.ValidationError(msg)
 
-        if Course.objects.filter(
-                group=self.cleaned_data['group']).exclude(pk=self.instance.pk):
-            msg = "The group you selected is already associated with a course."
+        group = self.cleaned_data['group']
+        if Course.objects.filter(group=group).exclude(pk=self.instance.pk):
+            c = Course.objects.filter(group=group).exclude(
+                pk=self.instance.pk).first()
+            msg = 'The group "{}" you selected is already associated ' + \
+                  'with another course: "{}"'
+            msg = msg.format(group.name, c.title)
             self._errors['group'] = forms.utils.ErrorList([msg])
             raise forms.ValidationError(msg)
 
