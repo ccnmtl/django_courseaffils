@@ -1,12 +1,12 @@
 from __future__ import unicode_literals
 
-from django.test import TestCase
-from courseaffils.columbia import HashTagTemplate
-from courseaffils.columbia import DirectoryPageTemplate
-from courseaffils.columbia import CourseStringMapper
-from courseaffils.columbia import WindTemplate
-from courseaffils.columbia import SectionkeyTemplate
 from courseaffils.columbia import AffilTemplate
+from courseaffils.columbia import CourseStringMapper
+from courseaffils.columbia import DirectoryPageTemplate
+from courseaffils.columbia import HashTagTemplate, CanvasTemplate
+from courseaffils.columbia import SectionkeyTemplate
+from courseaffils.columbia import WindTemplate
+from django.test import TestCase
 
 
 class DummyRequest(object):
@@ -127,3 +127,16 @@ class ColumbiaSimpleTest(TestCase):
         # this one makes an HTTP request to the CU DOC site
         # so it's not really appropriate for unit testing
         pass
+
+    def test_canvas_mapper(self):
+        d = CanvasTemplate.to_dict('SOCWT7113_010_2017_3')
+        self.assertEquals(d['term'], u'3')
+        self.assertEquals(d['section'], u'010')
+        self.assertEquals(d['number'], u'7113')
+        self.assertEquals(d['dept'], u'SOCW')
+        self.assertEquals(d['letter'], u'T')
+        self.assertEquals(d['year'], u'2017')
+
+        s = WindTemplate.to_string(d)
+        self.assertEquals(s,
+                          't3.y2017.s010.ct7113.socw.st.course:columbia.edu')
