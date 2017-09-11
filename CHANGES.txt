@@ -1,8 +1,9 @@
-2.1.15
+2.1.15 (09/11/2017)
 ====================
 * Added creation and modification time to Course model.
 * Add more detailed error on course creation with an already
   associated group.
+* Add Canvas affiliation mapper
 
 2.1.14 (2017-05-31)
 ====================
