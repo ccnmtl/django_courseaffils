@@ -24,9 +24,8 @@ SESSION_KEY = 'ccnmtl.courseaffils.course'
 def has_anonymous_path(current_path):
     if hasattr(settings, "ANONYMOUS_PATHS"):
         for path in settings.ANONYMOUS_PATHS:
-            if isinstance(path, str):
-                if current_path.startswith(path):
-                    return True
+            if isinstance(path, str) and current_path.startswith(path):
+                return True
 
     return False
 
@@ -34,13 +33,11 @@ def has_anonymous_path(current_path):
 def has_courseaffils_path(current_path):
     if hasattr(settings, 'COURSEAFFILS_PATHS'):
         for path in settings.COURSEAFFILS_PATHS:
-            if isinstance(path, str):
-                if current_path.startswith(path):
-                    return True
-            elif hasattr(path, 'match'):
+            if isinstance(path, str) and current_path.startswith(path):
+                return True
+            elif hasattr(path, 'match') and path.match(current_path):
                 # regex
-                if path.match(current_path):
-                    return True
+                return True
 
     return False
 
