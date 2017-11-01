@@ -106,7 +106,7 @@ class CourseStringMapper:
                         name=val,
                         value=info_from_web[val],
                         course=course)
-        except:
+        except (TypeError, KeyError, ValueError):
             # oh well, couldn't get extra data.
             # maybe because it's a fake course string or not a proper course
             pass
