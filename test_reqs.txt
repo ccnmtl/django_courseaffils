@@ -7,3 +7,5 @@ pyflakes==2.1.0
 django-markwhat==1.6.1
 factory_boy==2.11.1
 freezegun==0.3.11
+functools32==3.2.3-2
+entrypoints==0.3
