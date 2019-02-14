@@ -172,7 +172,7 @@ def select_course(request):
     response_dict['next_redirect'] = ''
     if 'QUERY_STRING' in request.META \
             and 'unset_course' not in request.GET:
-            # just GET (until someone complains)
+        # just GET (until someone complains)
         response_dict['next_redirect'] = '&next=%s' % (
             urlquote(request.get_full_path()))
 
