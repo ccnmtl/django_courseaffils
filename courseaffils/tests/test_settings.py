@@ -4,7 +4,7 @@ from courseaffils.columbia import CourseStringMapper
 
 
 SECRET_KEY = 'fake-key'
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

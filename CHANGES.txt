@@ -1,3 +1,8 @@
+2.2.0
+====================
+* Add django 2.2 support, remove django 1.8
+* Fix some flake8 regex issues
+
 2.1.15 (09/11/2017)
 ====================
 * Added creation and modification time to Course model.

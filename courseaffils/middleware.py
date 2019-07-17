@@ -8,7 +8,12 @@ from courseaffils.models import Course, CourseAccess
 from courseaffils.views import CourseListView
 from courseaffils.lib import AUTO_COURSE_SELECT, is_faculty
 from django.contrib.contenttypes.models import ContentType
-from django.core.urlresolvers import resolve, Resolver404
+
+try:
+    from django.urls import resolve, Resolver404
+except ImportError:
+    from django.core.urlresolvers import resolve, Resolver404
+
 from django.shortcuts import get_object_or_404
 
 STRUCTURED_COLLABORATION_AVAILABLE = False
@@ -121,7 +126,7 @@ class CourseManagerMiddleware(object):
 
         if is_anonymous_path(request.path) or \
            (
-               not request.user.is_authenticated() and
+               not request.user.is_authenticated and
                not CourseAccess.allowed(request)
            ):
             return None

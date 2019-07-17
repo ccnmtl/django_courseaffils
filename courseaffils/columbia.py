@@ -127,8 +127,8 @@ class CourseStringMapper:
             }
             slug = attempts[attempt]
         else:
-            slug = re.sub(' ', '_', course.title)
-        return re.sub('\W', '', slug)
+            slug = re.sub(r' ', '_', course.title)
+        return re.sub(r'\W', '', slug)
 
     @staticmethod
     def to_string(cdict):
@@ -158,9 +158,9 @@ class WindTemplate:
     @staticmethod
     def to_dict(wind_string):
         wind_match = re.match(
-            ('t(?P<term>\d).y(?P<year>\d{4}).s(?P<section>\w{3})'
-             '.c(?P<letter>\w)(?P<number>\w{4})'
-             '.(?P<dept>[\w&]{4}).(?P<member>\w\w).course:columbia.edu'),
+            (r't(?P<term>\d).y(?P<year>\d{4}).s(?P<section>\w{3})'
+             r'.c(?P<letter>\w)(?P<number>\w{4})'
+             r'.(?P<dept>[\w&]{4}).(?P<member>\w\w).course:columbia.edu'),
             wind_string)
         if wind_match:
             return wind_match.groupdict()
@@ -172,8 +172,8 @@ class SectionkeyTemplate:
     @staticmethod
     def to_dict(sectionkey):
         key_match = re.match(
-            ('(?P<year>\d{4})(?P<term>\d)(?P<dept>[\w&]{4})'
-             '(?P<number>\w{4})(?P<letter>\w)(?P<section>\w{3})'),
+            (r'(?P<year>\d{4})(?P<term>\d)(?P<dept>[\w&]{4})'
+             r'(?P<number>\w{4})(?P<letter>\w)(?P<section>\w{3})'),
             sectionkey)
         if key_match:
             return key_match.groupdict()
@@ -202,9 +202,9 @@ class CanvasTemplate:
     @staticmethod
     def to_dict(affil_string):
         affil_match = re.match(
-            ('(?P<dept>[\w&]{4})(?P<letter>\w)'
-             '(?P<number>\w{4})_(?P<section>\d{3})_'
-             '(?P<year>\d{4})_(?P<term>\d)'),
+            (r'(?P<dept>[\w&]{4})(?P<letter>\w)'
+             r'(?P<number>\w{4})_(?P<section>\d{3})_'
+             r'(?P<year>\d{4})_(?P<term>\d)'),
             affil_string)
         if affil_match:
             return affil_match.groupdict()
@@ -216,9 +216,9 @@ class AffilTemplate:
     @staticmethod
     def to_dict(affil_string):
         affil_match = re.match(
-            ('CUcourse_(?P<dept>[\w&]{4})(?P<letter>\w)'
-             '(?P<number>\w{4})_(?P<section>\d{3})_'
-             '(?P<year>\d{4})_(?P<term>\d)'),
+            (r'CUcourse_(?P<dept>[\w&]{4})(?P<letter>\w)'
+             r'(?P<number>\w{4})_(?P<section>\d{3})_'
+             r'(?P<year>\d{4})_(?P<term>\d)'),
             affil_string)
         if affil_match:
             return affil_match.groupdict()
@@ -229,11 +229,11 @@ class DirectoryPageTemplate:
     def to_dict(html_page):
         ret_val = {}
         look_for = (
-            'Call Number</td>[^>]*>(?P<call_number>\d*)</td>',
-            'Location</td>[^>]*>(?P<times>[^<]*)<br>(?P<location>[^<]*)</td>',
-            'Points</td>[^>]*>(?P<points>[\d\-.]*)</td>',
-            'Campus</td>[^>]*>(?P<campus>[\w\s]*)</td>',
-            'Instructor</td>[^>]*>(?P<instructor>[^<]*)</td>',
+            r'Call Number</td>[^>]*>(?P<call_number>\d*)</td>',
+            r'Location</td>[^>]*>(?P<times>[^<]*)<br>(?P<location>[^<]*)</td>',
+            r'Points</td>[^>]*>(?P<points>[\d\-.]*)</td>',
+            r'Campus</td>[^>]*>(?P<campus>[\w\s]*)</td>',
+            r'Instructor</td>[^>]*>(?P<instructor>[^<]*)</td>',
             # 'approvals_required', 'type', 'enrollment',
             # 'max_enrollment', 'status',
             # 'title', 'open_to', 'note', 'sectionkey',
@@ -245,8 +245,8 @@ class DirectoryPageTemplate:
 
         if 'times' in ret_val:
             m = re.match(
-                ('(?P<days>\w*)\s*(?P<starttime>[\d:apm]*)\-'
-                 '(?P<endtime>[\d:apm]*)'),
+                (r'(?P<days>\w*)\s*(?P<starttime>[\d:apm]*)\-'
+                 r'(?P<endtime>[\d:apm]*)'),
                 ret_val['times'])
             if m:
                 ret_val.update(m.groupdict())
