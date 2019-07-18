@@ -18,12 +18,13 @@ from courseaffils.utils import get_current_term
 @python_2_unicode_compatible
 class Course(models.Model):
     is_course = True
-    group = models.OneToOneField(Group)
+    group = models.OneToOneField(Group, on_delete=models.CASCADE)
     title = models.CharField(max_length=1024)
-    faculty_group = models.ForeignKey(Group,
-                                      null=True,
-                                      blank=True,
-                                      related_name='faculty_of')
+    faculty_group = models.ForeignKey(
+        Group,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='faculty_of')
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
@@ -90,7 +91,7 @@ class Course(models.Model):
             self.faculty_group.user_set.filter(id=user.id).exists())
 
     def default_slug(self, **kw):
-        return re.sub('\W', '', re.sub(' ', '_', self.title))
+        return re.sub(r'\W', '', re.sub(' ', '_', self.title))
 
     def slug(self, **kw):
         if hasattr(settings, 'COURSEAFFILS_COURSESTRING_MAPPER'):
@@ -119,7 +120,10 @@ class Course(models.Model):
 
 @python_2_unicode_compatible
 class CourseSettings(models.Model):
-    course = models.OneToOneField(Course, related_name='settings')
+    course = models.OneToOneField(
+        Course,
+        on_delete=models.CASCADE,
+        related_name='settings')
     custom_headers = models.TextField(
         blank=True, null=True,
         help_text=("""Replaces main.css link in header.  """
@@ -139,7 +143,10 @@ class CourseSettings(models.Model):
 class CourseInfo(models.Model):
     term_choices = {1: 'Spring', 2: 'Summer', 3: 'Fall'}
 
-    course = models.OneToOneField(Course, related_name='info')
+    course = models.OneToOneField(
+        Course,
+        on_delete=models.CASCADE,
+        related_name='info')
 
     year = models.IntegerField(null=True, blank=True)
     term = models.IntegerField(
@@ -182,7 +189,7 @@ class CourseInfo(models.Model):
 @python_2_unicode_compatible
 class CourseDetails(models.Model):
     """useful for storing info like 'semester', 'url' """
-    course = models.ForeignKey(Course)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     name = models.CharField(
         max_length=64,
         help_text=("""type of data. Useful ones are """
@@ -224,7 +231,7 @@ class Affil(models.Model):
     is_affil = True
     activated = models.BooleanField(default=False)
     name = models.TextField()
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 

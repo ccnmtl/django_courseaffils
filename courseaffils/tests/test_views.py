@@ -7,7 +7,10 @@ from courseaffils.tests.factories import (
 )
 from courseaffils.tests.mixins import LoggedInFacultyTestMixin
 from courseaffils.views import get_courses_for_user, get_courses_for_instructor
-from django.core.urlresolvers import reverse
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 

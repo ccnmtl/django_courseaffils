@@ -22,7 +22,7 @@ def get_courses_for_user(user):
     courses = Course.objects.none()
     if user.is_staff:
         courses = Course.objects.all()
-    elif not user.is_anonymous():
+    elif not user.is_anonymous:
         courses = Course.objects.filter(group__user=user)
     return courses.order_by('-info__year', '-info__term', 'title')
 
@@ -31,7 +31,7 @@ def get_courses_for_instructor(user):
     courses = Course.objects.none()
     if user.is_staff:
         courses = Course.objects.all()
-    elif not user.is_anonymous():
+    elif not user.is_anonymous:
         courses = Course.objects.filter(faculty_group__user=user)
 
     courses = courses.order_by('-info__year', '-info__term', 'title')
@@ -114,7 +114,7 @@ class CourseListView(ListView):
         semester_view = self.request.GET.get('semester_view', 'current')
 
         # query all the users's roles to speed rendering
-        if self.request.user.is_anonymous():
+        if self.request.user.is_anonymous:
             as_instructor = Course.objects.none()
             as_student = Course.objects.none()
         else:

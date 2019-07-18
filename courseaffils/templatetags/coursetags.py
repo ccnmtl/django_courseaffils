@@ -97,7 +97,7 @@ class GetCourses(TemplateTagNode):
 register.tag('get_courses', GetCourses.process_tag)
 
 
-@register.assignment_tag
+@register.simple_tag
 def get_instructor_courses(user):
     return get_courses_for_instructor(user)
 
