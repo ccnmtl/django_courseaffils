@@ -8,6 +8,7 @@ from courseaffils.models import Course, CourseAccess
 from courseaffils.views import CourseListView
 from courseaffils.lib import AUTO_COURSE_SELECT, is_faculty
 from django.contrib.contenttypes.models import ContentType
+from django.utils.deprecation import MiddlewareMixin
 
 try:
     from django.urls import resolve, Resolver404
@@ -73,7 +74,7 @@ def already_selected_course(request):
     return SESSION_KEY in request.session
 
 
-class CourseManagerMiddleware(object):
+class CourseManagerMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
         if 'ANONYMIZE' in request.COOKIES:
             for user, uid in getattr(request, 'scrub_names', {}).items():
