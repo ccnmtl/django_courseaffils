@@ -2,9 +2,10 @@ from __future__ import unicode_literals
 
 import re
 try:
+    from urllib.error import HTTPError
     from urllib.request import urlopen
 except ImportError:
-    from urllib2 import urlopen
+    from urllib2 import urlopen, HTTPError
 from time import strptime, strftime
 
 
@@ -80,6 +81,7 @@ class CourseStringMapper:
     def get_course_info(course_dict):
         directory_link = DirectoryLinkTemplate.to_string(course_dict)
         response = urlopen(directory_link).read()
+
         return DirectoryPageTemplate.to_dict(response)
 
     @staticmethod
@@ -106,7 +108,7 @@ class CourseStringMapper:
                         name=val,
                         value=info_from_web[val],
                         course=course)
-        except (TypeError, KeyError, ValueError):
+        except (TypeError, KeyError, ValueError, HTTPError):
             # oh well, couldn't get extra data.
             # maybe because it's a fake course string or not a proper course
             pass
