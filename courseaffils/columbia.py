@@ -150,7 +150,7 @@ class WindTemplate:
         return 't%s.y%s.s%s.c%s%s.%s.%s.course:columbia.edu' % (
             cdict['term'],
             cdict['year'],
-            cdict['section'],
+            cdict['section'].lower(),
             cdict['letter'].lower(),
             cdict['number'],
             cdict['dept'].lower(),
@@ -205,7 +205,7 @@ class CanvasTemplate:
     def to_dict(affil_string):
         affil_match = re.match(
             (r'(?P<dept>[\w&]{4})(?P<letter>\w)'
-             r'(?P<number>\w{4})_(?P<section>\d{3})_'
+             r'(?P<number>\w{4})_(?P<section>\w{3})_'
              r'(?P<year>\d{4})_(?P<term>\d)'),
             affil_string)
         if affil_match:
