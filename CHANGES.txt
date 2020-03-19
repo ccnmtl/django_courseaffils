@@ -1,7 +1,10 @@
+2.2.3 (2020-03-19)
+====================
+* Add missing migration file, to fix py3 unicode problem.
+
 2.2.2 (2019-09-23)
 ====================
 * Allow alpha characters in the course section field
-
 
 2.2.1 (2019-07-24)
 ====================
