@@ -9,7 +9,7 @@ from courseaffils.lib import (
     handle_public_name, get_public_name,
 )
 from courseaffils.models import Course
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import AnonymousUser, Group, User
 
 
 class DummyRequest(object):
@@ -57,6 +57,13 @@ class LibsSimpleTest(TestCase):
         r.COOKIES['ANONYMIZE'] = True
         self.assertTrue(
             handle_public_name(self.student, r).startswith("User Name_"))
+
+        anon_user = AnonymousUser()
+        self.assertEqual(
+            handle_public_name(anon_user, r),
+            'Anonymous User',
+            'Handles anonymous users.'
+        )
 
     def test_get_public_name(self):
         r = DummyRequest()

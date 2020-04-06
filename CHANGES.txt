@@ -1,3 +1,7 @@
+2.2.4
+====================
+* Add fix to handle_public_name() to handle anonymous users.
+
 2.2.3 (2020-03-19)
 ====================
 * Add missing migration file, to fix py3 unicode problem.
