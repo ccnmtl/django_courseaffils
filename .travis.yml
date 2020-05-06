@@ -18,14 +18,3 @@ install:
 script:
 - flake8 courseaffils runtests.py --max-complexity=12 --exclude=*/migrations/*.py
 - python runtests.py
-notifications:
-  slack: ccnmtl:GizSNscLWJLldjQrffB8mwgm
-deploy:
-  provider: pypi
-  distributions: "sdist bdist_wheel"
-  user: ctlpypi
-  password:
-    secure: Z41N0hpU0ouHT5CIA6ksao9NlR48PUFpPOjgVGNcXKBhgOAuM6ec/Zsnu/pGmHqs207pdQXYTbNcTLCoqW0kJ423yAbN8pqWNcPEL95U3d6Sie1wIJZAJ8YZ38lcFxrWEP6I6mAn5G1ghsxacHASu9fbdtqCzUWqyRUCXO2Ro9I=
-  on:
-    tags: true
-    repo: ccnmtl/django_courseaffils
