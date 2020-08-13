@@ -9,13 +9,11 @@ from functools import reduce
 from django.db import models
 from django.contrib.auth.models import User, Group
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
 import re
 from django.conf import settings
 from courseaffils.utils import get_current_term
 
 
-@python_2_unicode_compatible
 class Course(models.Model):
     is_course = True
     group = models.OneToOneField(Group, on_delete=models.CASCADE)
@@ -118,7 +116,6 @@ class Course(models.Model):
             course=self, name=name, defaults={'value': value})
 
 
-@python_2_unicode_compatible
 class CourseSettings(models.Model):
     course = models.OneToOneField(
         Course,
@@ -139,7 +136,6 @@ class CourseSettings(models.Model):
         verbose_name_plural = 'Course Settings'
 
 
-@python_2_unicode_compatible
 class CourseInfo(models.Model):
     term_choices = {1: 'Spring', 2: 'Summer', 3: 'Fall'}
 
@@ -186,7 +182,6 @@ class CourseInfo(models.Model):
         verbose_name_plural = 'Course Info'
 
 
-@python_2_unicode_compatible
 class CourseDetails(models.Model):
     """useful for storing info like 'semester', 'url' """
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -219,7 +214,6 @@ class CourseAccess:
         pass
 
 
-@python_2_unicode_compatible
 class Affil(models.Model):
     """Model for storing activatable affiliations.
 
