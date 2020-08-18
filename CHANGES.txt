@@ -1,3 +1,5 @@
+* Removed Python 2 support
+
 2.2.4 (2020-04-06)
 ====================
 * Add fix to handle_public_name() to handle anonymous users.
