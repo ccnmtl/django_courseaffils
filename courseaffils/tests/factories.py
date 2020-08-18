@@ -1,11 +1,12 @@
 from __future__ import unicode_literals
 
 import factory
+from factory.django import DjangoModelFactory
 from courseaffils.models import Affil, Course
 from django.contrib.auth.models import User, Group
 
 
-class UserFactory(factory.DjangoModelFactory):
+class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
 
@@ -14,14 +15,14 @@ class UserFactory(factory.DjangoModelFactory):
     email = factory.LazyAttribute(lambda u: '%s@example.com' % u.username)
 
 
-class GroupFactory(factory.DjangoModelFactory):
+class GroupFactory(DjangoModelFactory):
     class Meta:
         model = Group
 
     name = factory.Sequence(lambda n: 'Example Group %d' % n)
 
 
-class CourseFactory(factory.DjangoModelFactory):
+class CourseFactory(DjangoModelFactory):
     class Meta:
         model = Course
 
@@ -30,7 +31,7 @@ class CourseFactory(factory.DjangoModelFactory):
     faculty_group = factory.SubFactory(GroupFactory)
 
 
-class AffilFactory(factory.DjangoModelFactory):
+class AffilFactory(DjangoModelFactory):
     class Meta:
         model = Affil
 
