@@ -1,7 +1,7 @@
 django-courseaffils
 ===================
 
-[![Build Status](https://travis-ci.org/ccnmtl/django_courseaffils.svg?branch=master)](https://travis-ci.org/ccnmtl/django_courseaffils)
+[![Actions Status](https://github.com/ccnmtl/django_courseaffils/workflows/build-and-test/badge.svg)](https://github.com/ccnmtl/django_courseaffils/actions)
 
 courseaffils is a django app which manages course information and can
 force course-selection after login so to make which course is selected
