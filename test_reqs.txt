@@ -1,7 +1,7 @@
 Markdown==3.3.4  # pyup: <3.2
 coverage==6.1.2
 importlib-metadata==4.8.2  # for flake8
-typing_extensions==3.10.0.2
+typing_extensions==4.0.0
 zipp==3.6.0  # for flake8
 flake8==4.0.1
 django-jenkins==0.110.0
