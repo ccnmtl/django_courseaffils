@@ -5,14 +5,13 @@ from courseaffils.utils import get_current_term
 from courseaffils.forms import CourseCreateForm
 from courseaffils.models import Course, CourseAccess
 from django.db.models import Q
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 from django.utils import timezone
 from django.utils.http import urlquote
 from django.http import HttpResponseForbidden, HttpResponse
 from django.contrib.auth.models import User
-from django.template import RequestContext
 
 
 SESSION_KEY = 'ccnmtl.courseaffils.course'
@@ -166,8 +165,8 @@ def select_course(request):
     }
 
     if len(available_courses) == 0 and not request.user.is_staff:
-        return render_to_response('courseaffils/no_courses.html',
-                                  response_dict)
+        return render(request, 'courseaffils/no_courses.html',
+                      response_dict)
 
     response_dict['next_redirect'] = ''
     if 'QUERY_STRING' in request.META \
@@ -176,9 +175,8 @@ def select_course(request):
         response_dict['next_redirect'] = '&next=%s' % (
             urlquote(request.get_full_path()))
 
-    return render_to_response('courseaffils/select_course.html',
-                              response_dict,
-                              context_instance=RequestContext(request))
+    return render(request, 'courseaffils/select_course.html',
+                  response_dict)
 
 
 def course_list_query(request):
