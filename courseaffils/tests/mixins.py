@@ -10,7 +10,7 @@ class LoggedInSuperuserTestMixin(object):
         self.u = User.objects.create_superuser(
             'superuser', 'admin@example.com', 'test')
         login = self.client.login(username='superuser', password='test')
-        assert(login is True)
+        assert (login is True)
 
 
 class LoggedInFacultyTestMixin(object):
@@ -20,7 +20,7 @@ class LoggedInFacultyTestMixin(object):
         self.u.save()
         login = self.client.login(username='test_faculty',
                                   password='test')
-        assert(login is True)
+        assert (login is True)
 
 
 class LoggedInStudentTestMixin(object):
@@ -30,4 +30,4 @@ class LoggedInStudentTestMixin(object):
         self.u.save()
         login = self.client.login(username='test_student',
                                   password='test')
-        assert(login is True)
+        assert (login is True)
