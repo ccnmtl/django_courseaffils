@@ -3,11 +3,10 @@ django-courseaffils
 
 [![Actions Status](https://github.com/ccnmtl/django_courseaffils/workflows/build-and-test/badge.svg)](https://github.com/ccnmtl/django_courseaffils/actions)
 
-courseaffils is a django app which manages course information and can
-force course-selection after login so to make which course is selected
-part of session state.
+`django_courseaffils` is a django app which manages course information, parsing
+course info out of CAS affiliations.
 
-The selected course is available in request.course .
+The selected course is available in `request.course`.
 
 Several settings are available to be added to a django project's
 `settings.py`:
