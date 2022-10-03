@@ -1,6 +1,6 @@
 Markdown==3.4.1  # pyup: <3.2
 coverage==6.5.0
-importlib_metadata<4.13
+importlib_metadata<5.1
 typing_extensions==4.3.0
 zipp==3.8.1  # for flake8
 flake8==5.0.4
