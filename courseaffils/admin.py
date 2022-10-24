@@ -21,8 +21,14 @@ class AffilAdmin(admin.ModelAdmin):
     list_display = ['name', 'user']
 
 
+class CourseDetailsAdmin(admin.ModelAdmin):
+    model = CourseDetails
+    search_fields = ['course__title', 'name']
+    list_display = ['course', 'name', 'value']
+
+
 admin.site.register(Course, CourseAdmin)
 admin.site.register(Affil, AffilAdmin)
 admin.site.register(CourseSettings)
 admin.site.register(CourseInfo)
-admin.site.register(CourseDetails)
+admin.site.register(CourseDetails, CourseDetailsAdmin)
