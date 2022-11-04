@@ -64,11 +64,11 @@ class CourseStringMapper:
         from django.contrib.auth.models import Group
         section_dict = SectionkeyTemplate.to_dict(sectionkey)
         if not section_dict:
-            section_dict = WindTemplate.to_dict(sectionkey)
+            section_dict = CourseStringTemplate.to_dict(sectionkey)
 
         if section_dict:
-            stud_grp_name = WindTemplate.to_string(section_dict)
-            fac_grp_name = WindTemplate.to_string(
+            stud_grp_name = CourseStringTemplate.to_string(section_dict)
+            fac_grp_name = CourseStringTemplate.to_string(
                 dict(section_dict, member='fc'))
 
             stud_grp, created = Group.objects.get_or_create(name=stud_grp_name)
@@ -86,7 +86,7 @@ class CourseStringMapper:
 
     @staticmethod
     def on_create(course):
-        course_dict = WindTemplate.to_dict(course.group.name)
+        course_dict = CourseStringTemplate.to_dict(course.group.name)
         from courseaffils.models import CourseInfo
 
         info, created = CourseInfo.objects.get_or_create(course=course)
@@ -95,7 +95,7 @@ class CourseStringMapper:
             info.term = int(course_dict['term'])
         try:
             info_from_web = CourseStringMapper.get_course_info(
-                WindTemplate.to_dict(course.group.name))
+                CourseStringTemplate.to_dict(course.group.name))
 
             for val in info_from_web:
                 if val == 'days':
@@ -117,7 +117,7 @@ class CourseStringMapper:
     @staticmethod
     def course_slug(course, attempt=0):
         "returns a slug for the course, with higher resolution for attempt > 0"
-        class_info = WindTemplate.to_dict(course.group.name)
+        class_info = CourseStringTemplate.to_dict(course.group.name)
         slug = None
         if class_info and 'number' in class_info:
             attempts = {
@@ -134,14 +134,14 @@ class CourseStringMapper:
 
     @staticmethod
     def to_string(cdict):
-        return WindTemplate.to_string(cdict)
+        return CourseStringTemplate.to_string(cdict)
 
     @staticmethod
-    def to_dict(wind_string):
-        return WindTemplate.to_dict(wind_string)
+    def to_dict(course_string):
+        return CourseStringTemplate.to_dict(course_string)
 
 
-class WindTemplate:
+class CourseStringTemplate:
     example = 't3.y2007.s001.cw3956.engl.fc.course:columbia.edu'
 
     @staticmethod
@@ -158,14 +158,14 @@ class WindTemplate:
         )
 
     @staticmethod
-    def to_dict(wind_string):
-        wind_match = re.match(
+    def to_dict(course_string):
+        course_match = re.match(
             (r't(?P<term>\d).y(?P<year>\d{4}).s(?P<section>\w{3})'
              r'.c(?P<letter>\w)(?P<number>\w{4})'
              r'.(?P<dept>[\w&]{4}).(?P<member>\w\w).course:columbia.edu'),
-            wind_string)
-        if wind_match:
-            return wind_match.groupdict()
+            course_string)
+        if course_match:
+            return course_match.groupdict()
 
 
 class SectionkeyTemplate:
