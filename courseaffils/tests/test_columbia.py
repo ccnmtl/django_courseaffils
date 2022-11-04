@@ -5,7 +5,7 @@ from courseaffils.columbia import CourseStringMapper
 from courseaffils.columbia import DirectoryPageTemplate
 from courseaffils.columbia import HashTagTemplate, CanvasTemplate
 from courseaffils.columbia import SectionkeyTemplate
-from courseaffils.columbia import WindTemplate
+from courseaffils.columbia import CourseStringTemplate
 from django.test import TestCase
 
 
@@ -79,20 +79,23 @@ class ColumbiaSimpleTest(TestCase):
                 letter="T",
                 section="D21",))
 
-    def test_windtemplate(self):
+    def test_coursetemplate(self):
         example = 't3.y2007.s001.cw3956.engl.fc.course:columbia.edu'
         # round-trip it
         self.assertEqual(
-            WindTemplate.to_string(WindTemplate.to_dict(example)),
+            CourseStringTemplate.to_string(
+                CourseStringTemplate.to_dict(example)),
             example)
 
         example = 't3.y2007.sd21.cw3956.engl.fc.course:columbia.edu'
         # round-trip it
         self.assertEqual(
-            WindTemplate.to_string(WindTemplate.to_dict(example)),
+            CourseStringTemplate.to_string(
+                CourseStringTemplate.to_dict(example)),
             example)
         self.assertEqual(
-            CourseStringMapper.to_string(CourseStringMapper.to_dict(example)),
+            CourseStringMapper.to_string(
+                CourseStringMapper.to_dict(example)),
             example)
 
     def test_csmapper_course_slug(self):
@@ -115,7 +118,7 @@ class ColumbiaSimpleTest(TestCase):
         s, f = CourseStringMapper.get_groups('20101SCNC1000F001')
         self.assertIsNotNone(s)
         self.assertIsNotNone(f)
-        s, f = CourseStringMapper.get_groups(WindTemplate.example)
+        s, f = CourseStringMapper.get_groups(CourseStringTemplate.example)
         self.assertIsNotNone(s)
         self.assertIsNotNone(f)
 
@@ -137,9 +140,10 @@ class ColumbiaSimpleTest(TestCase):
         self.assertEquals(d['letter'], u'T')
         self.assertEquals(d['year'], u'2017')
 
-        s = WindTemplate.to_string(d)
-        self.assertEquals(s,
-                          't3.y2017.s010.ct7113.socw.st.course:columbia.edu')
+        s = CourseStringTemplate.to_string(d)
+        self.assertEquals(
+            s,
+            't3.y2017.s010.ct7113.socw.st.course:columbia.edu')
 
     def test_canvas_mapper_section_letter(self):
         d = CanvasTemplate.to_dict('SOCWT7100_D23_2018_3')
@@ -150,6 +154,7 @@ class ColumbiaSimpleTest(TestCase):
         self.assertEquals(d['letter'], u'T')
         self.assertEquals(d['year'], u'2018')
 
-        s = WindTemplate.to_string(d)
-        self.assertEquals(s,
-                          't3.y2018.sd23.ct7100.socw.st.course:columbia.edu')
+        s = CourseStringTemplate.to_string(d)
+        self.assertEquals(
+            s,
+            't3.y2018.sd23.ct7100.socw.st.course:columbia.edu')
