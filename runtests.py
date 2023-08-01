@@ -15,7 +15,7 @@ def main():
     os.environ['DJANGO_SETTINGS_MODULE'] = 'courseaffils.tests.test_settings'
     django.setup()
     # Fire off the tests
-    call_command('jenkins')
+    call_command('test')
 
 
 if __name__ == '__main__':
