@@ -38,7 +38,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'courseaffils',
     'django_markwhat',
-    'django_jenkins',
 )
 
 PROJECT_APPS = [
