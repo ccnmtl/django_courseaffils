@@ -1,13 +1,13 @@
 from setuptools import setup, find_packages
 
-version = '2.3.0'
+version = '2.4.0'
 
 
 setup(
     name='django-courseaffils',
     version=version,
     description="course affiliations",
-    long_description="a django app which manages course information",
+    long_description="A django app which manages course information.",
     classifiers=[],
     keywords='',
     author='Columbia University\'s Center for Teaching and Learning',

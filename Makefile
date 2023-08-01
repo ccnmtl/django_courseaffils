@@ -7,7 +7,7 @@ WHEEL_VERSION ?= 0.37.1
 PIP_VERSION ?= 22.3
 MAX_COMPLEXITY ?= 12
 PY_DIRS ?= $(APP)
-DJANGO ?= "Django==3.2.16"
+DJANGO ?= "Django==4.2.3"
 
 FLAKE8 ?= $(VE)/bin/flake8
 PIP ?= $(VE)/bin/pip
