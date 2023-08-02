@@ -66,11 +66,11 @@ class MiddlewareSimpleTest(TestCase):
         assert not already_selected_course(StubRequest(False))
 
     def test_cmm_process_response(self):
-        c = CourseManagerMiddleware()
+        c = CourseManagerMiddleware(self)
         assert c.process_response(StubRequest(True), "foo") == "foo"
 
     def test_cmm_process_response_anon(self):
-        c = CourseManagerMiddleware()
+        c = CourseManagerMiddleware(self)
         r = StubRequest(self.c)
         r.user = self.student
         r.COOKIES['ANONYMIZE'] = True
@@ -82,7 +82,7 @@ class MiddlewareSimpleTest(TestCase):
         assert "long enough" not in c.process_response(r, resp).content
 
     def test_cmm_process_request(self):
-        c = CourseManagerMiddleware()
+        c = CourseManagerMiddleware(self)
         r = StubRequest(self.c)
         r.user = self.student
         assert c.process_request(r) is None

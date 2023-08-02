@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.test import TestCase, override_settings
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from courseaffils.columbia import CourseStringMapper
 from courseaffils.models import Course, CourseSettings
 from courseaffils.models import CourseInfo, CourseAccess
@@ -51,7 +51,7 @@ class ModelsSimpleTest(TestCase):
         self.faculty.delete()
 
     def test_str(self):
-        self.assertEqual(smart_text(self.c), "test course")
+        self.assertEqual(smart_str(self.c), "test course")
 
     def test_members(self):
         self.assertIn(self.student, self.c.members)
@@ -135,7 +135,7 @@ class ModelsSimpleTest(TestCase):
             "nonexistant",
             default="a default value"), "a default value")
 
-        self.assertEqual(smart_text(self.c.details()["foo"]),
+        self.assertEqual(smart_str(self.c.details()["foo"]),
                          "(test course) foo: bar")
 
         # update
@@ -146,7 +146,7 @@ class ModelsSimpleTest(TestCase):
         cs = CourseSettings.objects.create(
             course=self.c,
             custom_headers="some headers")
-        self.assertEqual(smart_text(cs), "Settings for test course")
+        self.assertEqual(smart_str(cs), "Settings for test course")
 
     def test_courseinfo(self):
         # current behavior is that a CourseInfo object
@@ -154,14 +154,14 @@ class ModelsSimpleTest(TestCase):
         # by a hook elsewhere. so verify that.
         self.assertNotEqual(CourseInfo.objects.all().count(), 0)
 
-        self.assertEqual(smart_text(self.c.info),
+        self.assertEqual(smart_str(self.c.info),
                          'test course () None None-None')
 
         self.c.info.year = 2013
         self.c.info.term = 1
         self.c.info.days = "MWF"
         self.c.info.save()
-        self.assertEqual(smart_text(self.c.info),
+        self.assertEqual(smart_str(self.c.info),
                          'test course (Spring 2013) MWF None-None')
 
         self.assertEqual(self.c.info.time(), 'MWF')
@@ -191,7 +191,7 @@ class AffilTest(TestCase):
         self.aa.full_clean()
 
     def test_str(self):
-        self.assertEqual(smart_text(self.aa), self.aa.name)
+        self.assertEqual(smart_str(self.aa), self.aa.name)
 
     def test_past_present_future(self):
         with freeze_time('2012-01-14'):

@@ -1,6 +1,8 @@
-2.4.0
+2.4.0 (2023-08-01)
 ====================
 * Removed django-jenkins
+* Prioritize urllib.parse.quote import over deprecated django.utils.http.urlquote
+* Adds compatibility with Django 4.2
 
 2.3.0 (2023-02-17)
 ====================

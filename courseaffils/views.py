@@ -9,9 +9,13 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 from django.utils import timezone
-from django.utils.http import urlquote
 from django.http import HttpResponseForbidden, HttpResponse
 from django.contrib.auth.models import User
+
+try:
+    from urllib.parse import quote
+except ImportError:
+    from django.utils.http import urlquote as quote
 
 
 SESSION_KEY = 'ccnmtl.courseaffils.course'
@@ -130,7 +134,7 @@ class CourseListView(ListView):
         if 'QUERY_STRING' in self.request.META \
            and 'unset_course' not in self.request.GET:
             # just GET (until someone complains)
-            escaped_path = urlquote(self.request.get_full_path())
+            escaped_path = quote(self.request.get_full_path())
             next_redirect = '&next=' + escaped_path
 
         context.update({
@@ -173,7 +177,7 @@ def select_course(request):
             and 'unset_course' not in request.GET:
         # just GET (until someone complains)
         response_dict['next_redirect'] = '&next=%s' % (
-            urlquote(request.get_full_path()))
+            quote(request.get_full_path()))
 
     return render(request, 'courseaffils/select_course.html',
                   response_dict)

@@ -37,7 +37,6 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'courseaffils',
-    'django_markwhat',
 )
 
 PROJECT_APPS = [
