@@ -1,4 +1,4 @@
-Markdown==3.5  # pyup: <3.2
+Markdown==3.5.1  # pyup: <3.2
 coverage==7.3.2
 importlib_metadata<6.9
 typing_extensions==4.8.0
