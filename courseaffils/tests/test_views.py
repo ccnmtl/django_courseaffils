@@ -32,28 +32,28 @@ class ViewTests(TestCase):
 
         # as student
         lst = get_courses_for_user(student)
-        self.assertEquals(len(lst), 1)
+        self.assertEqual(len(lst), 1)
         self.assertTrue(course in lst)
 
         lst = get_courses_for_instructor(student)
-        self.assertEquals(len(lst), 0)
+        self.assertEqual(len(lst), 0)
 
         # as instructor
         lst = get_courses_for_user(instructor)
-        self.assertEquals(len(lst), 1)
+        self.assertEqual(len(lst), 1)
         self.assertTrue(course in lst)
 
         lst = get_courses_for_instructor(instructor)
-        self.assertEquals(len(lst), 1)
+        self.assertEqual(len(lst), 1)
         self.assertTrue(course in lst)
 
         # as staff
         lst = get_courses_for_user(staff)
-        self.assertEquals(len(lst), 1)
+        self.assertEqual(len(lst), 1)
         self.assertTrue(course in lst)
 
         lst = get_courses_for_instructor(staff)
-        self.assertEquals(len(lst), 1)
+        self.assertEqual(len(lst), 1)
         self.assertTrue(course in lst)
 
 
