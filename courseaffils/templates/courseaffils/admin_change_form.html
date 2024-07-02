@@ -74,14 +74,15 @@
        (custom headers for style and javascript) <a href="{%url 'admin:courseaffils_coursesettings_add' %}?course={{adminform.form.instance.id}}">[Create]</a>
     {% endif %}
     </li>
-
+    {% if adminform.form.instance.id %}
     <li>Metadata (instructor, etc.): <a href="{%url 'admin:courseaffils_coursedetails_add' %}?course={{adminform.form.instance.id}}">[Add]</a>
-      <ul>
-        {% for d in adminform.form.instance.coursedetails_set.all %}
-        <li><a href="{%url 'admin:courseaffils_coursedetails_change' d.id %}">{{d.name}}: {{d.value}}</a></li>
-        {% endfor %}
-      </ul>
-    </li>
+        <ul>
+          {% for d in adminform.form.instance.coursedetails_set.all %}
+          <li><a href="{%url 'admin:courseaffils_coursedetails_change' d.id %}">{{d.name}}: {{d.value}}</a></li>
+          {% endfor %}
+        </ul>
+      </li>
+    {% endif %}
 
   </ul>
 {% endif %}
