@@ -133,28 +133,28 @@ class ColumbiaSimpleTest(TestCase):
 
     def test_canvas_mapper(self):
         d = CanvasTemplate.to_dict('SOCWT7113_010_2017_3')
-        self.assertEquals(d['term'], u'3')
-        self.assertEquals(d['section'], u'010')
-        self.assertEquals(d['number'], u'7113')
-        self.assertEquals(d['dept'], u'SOCW')
-        self.assertEquals(d['letter'], u'T')
-        self.assertEquals(d['year'], u'2017')
+        self.assertEqual(d['term'], u'3')
+        self.assertEqual(d['section'], u'010')
+        self.assertEqual(d['number'], u'7113')
+        self.assertEqual(d['dept'], u'SOCW')
+        self.assertEqual(d['letter'], u'T')
+        self.assertEqual(d['year'], u'2017')
 
         s = CourseStringTemplate.to_string(d)
-        self.assertEquals(
+        self.assertEqual(
             s,
             't3.y2017.s010.ct7113.socw.st.course:columbia.edu')
 
     def test_canvas_mapper_section_letter(self):
         d = CanvasTemplate.to_dict('SOCWT7100_D23_2018_3')
-        self.assertEquals(d['term'], u'3')
-        self.assertEquals(d['section'], u'D23')
-        self.assertEquals(d['number'], u'7100')
-        self.assertEquals(d['dept'], u'SOCW')
-        self.assertEquals(d['letter'], u'T')
-        self.assertEquals(d['year'], u'2018')
+        self.assertEqual(d['term'], u'3')
+        self.assertEqual(d['section'], u'D23')
+        self.assertEqual(d['number'], u'7100')
+        self.assertEqual(d['dept'], u'SOCW')
+        self.assertEqual(d['letter'], u'T')
+        self.assertEqual(d['year'], u'2018')
 
         s = CourseStringTemplate.to_string(d)
-        self.assertEquals(
+        self.assertEqual(
             s,
             't3.y2018.sd23.ct7100.socw.st.course:columbia.edu')
