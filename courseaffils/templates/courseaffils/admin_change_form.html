@@ -75,13 +75,13 @@
     {% endif %}
     </li>
 
-    <li>Metadata (instructor, etc.): <a href="{%url 'admin:courseaffils_coursedetails_add' %}?course={{adminform.form.instance.id}}">[Add]</a>
+<!--     <li>Metadata (instructor, etc.): <a href="{%url 'admin:courseaffils_coursedetails_add' %}?course={{adminform.form.instance.id}}">[Add]</a>
       <ul>
         {% for d in adminform.form.instance.coursedetails_set.all %}
         <li><a href="{%url 'admin:courseaffils_coursedetails_change' d.id %}">{{d.name}}: {{d.value}}</a></li>
         {% endfor %}
       </ul>
-    </li>
+    </li> -->
 
   </ul>
 {% endif %}
