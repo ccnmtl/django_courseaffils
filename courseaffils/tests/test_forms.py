@@ -59,12 +59,12 @@ class FormsSimpleTest(TestCase):
                  add_user='student\n*nonexistant:foo')
         )
 
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValueError,
                 'The Course could not be created'):
             f.save(commit=False)
 
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 forms.ValidationError,
                 'You must select a group or enter a course string'):
             f.clean()
