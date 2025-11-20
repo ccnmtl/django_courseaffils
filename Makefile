@@ -3,17 +3,16 @@ VE ?= ./ve
 REQUIREMENTS ?= test_reqs.txt
 SYS_PYTHON ?= python3
 PY_SENTINAL ?= $(VE)/sentinal
-WHEEL_VERSION ?= 0.43.0
-PIP_VERSION ?= 24.1.1
+WHEEL_VERSION ?= 0.45.1
+PIP_VERSION ?= 25.3
 MAX_COMPLEXITY ?= 12
 PY_DIRS ?= $(APP)
 DJANGO ?= "Django==4.2.13"
 
 FLAKE8 ?= $(VE)/bin/flake8
 PIP ?= $(VE)/bin/pip
-COVERAGE ?=$(VE)/bin/coverage
 
-all: flake8 coverage
+all: flake8
 
 clean:
 	rm -rf $(VE)
@@ -34,8 +33,5 @@ test: $(REQUIREMENTS) $(PY_SENTINAL)
 
 flake8: $(PY_SENTINAL)
 	$(FLAKE8) $(PY_DIRS) --max-complexity=$(MAX_COMPLEXITY) --exclude=*/migrations/*.py
-
-coverage: $(PY_SENTINAL)
-	$(COVERAGE) run --source=courseaffils runtests.py
 
 .PHONY: flake8 test jshint jscs clean
