@@ -1,3 +1,7 @@
+2.5.0
+====================
+* Adds compatibility with Django 5.2
+
 2.4.0 (2023-08-01)
 ====================
 * Removed django-jenkins

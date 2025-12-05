@@ -144,7 +144,7 @@ class CourseManagerMiddleware(MiddlewareMixin):
             if request.user.is_staff or \
                CourseAccess.allowed(request) or \
                (request.user in course.members):
-                request.session[SESSION_KEY] = course
+                request.session[SESSION_KEY] = course.pk
                 self.decorate_request(request, course)
 
                 if 'next' in request.GET:
@@ -153,7 +153,8 @@ class CourseManagerMiddleware(MiddlewareMixin):
                 return None
 
         if SESSION_KEY in request.session:
-            course = request.session[SESSION_KEY]
+            course_pk = request.session[SESSION_KEY]
+            course = get_object_or_404(Course, pk=course_pk)
             self.decorate_request(request, course)
             return None
 
