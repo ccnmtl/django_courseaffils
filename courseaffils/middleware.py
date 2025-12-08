@@ -24,7 +24,7 @@ try:
 except ImportError:
     pass
 
-SESSION_KEY = 'ccnmtl.courseaffils.course'
+SESSION_KEY = 'ctl.courseaffils.course'
 
 
 def has_anonymous_path(current_path):
@@ -178,7 +178,7 @@ class CourseManagerMiddleware(MiddlewareMixin):
 
         if chosen_course and \
            (chosen_course in available_courses or request.user.is_staff):
-            request.session[SESSION_KEY] = chosen_course
+            request.session[SESSION_KEY] = chosen_course.pk
             self.decorate_request(request, chosen_course)
             return None
 

@@ -9,24 +9,30 @@ from django.http.response import Http404
 from django.test import TestCase
 
 
-class StubRequest(object):
-    COOKIES = dict()
-    GET = dict()
-    POST = dict()
-    environ = dict()
+class StubRequest:
+    def __init__(self, c=None, path='/foo/bar', method='GET'):
+        self.path = path
+        self.method = method
+        self.COOKIES = {}
+        self.GET = {}
+        self.POST = {}
+        self.environ = {}
+        self.session = {}
 
-    def __init__(self, c):
-        self.path = "/foo/bar"
         if c:
-            self.session = {'ccnmtl.courseaffils.course': c}
-        else:
-            self.session = dict()
+            if hasattr(c, 'pk'):
+                self.session = {'ctl.courseaffils.course': c.pk}
+            else:
+                self.session = {'ctl.courseaffils.course': c}
 
     def get_full_path(self):
         return self.path
 
+    def is_secure(self):
+        return False
 
-class StubResponse(object):
+
+class StubResponse:
     content = ""
 
 
@@ -62,12 +68,12 @@ class MiddlewareSimpleTest(TestCase):
         assert is_anonymous_path("/static/")
 
     def test_already_selected_course(self):
-        assert already_selected_course(StubRequest(True))
-        assert not already_selected_course(StubRequest(False))
+        assert already_selected_course(StubRequest(1))
+        assert not already_selected_course(StubRequest(0))
 
     def test_cmm_process_response(self):
         c = CourseManagerMiddleware(self)
-        assert c.process_response(StubRequest(True), "foo") == "foo"
+        assert c.process_response(StubRequest(1), "foo") == "foo"
 
     def test_cmm_process_response_anon(self):
         c = CourseManagerMiddleware(self)

@@ -18,7 +18,7 @@ except ImportError:
     from django.utils.http import urlquote as quote
 
 
-SESSION_KEY = 'ccnmtl.courseaffils.course'
+SESSION_KEY = 'ctl.courseaffils.course'
 
 
 def get_courses_for_user(user):
