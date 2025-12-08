@@ -47,7 +47,7 @@ def in_course_or_404(username, group_or_course):
         raise Http404(response_body)
 
 
-ANONYMIZE_KEY = 'ccnmtl.courseaffils.anonymize'
+ANONYMIZE_KEY = 'ctl.courseaffils.anonymize'
 
 
 def handle_public_name(user, request):
