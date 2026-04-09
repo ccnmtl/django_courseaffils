@@ -11,6 +11,7 @@ from courseaffils.forms import CourseAdminForm
 class CourseAdmin(admin.ModelAdmin):
     form = CourseAdminForm
 
+    readonly_fields = ['group', 'faculty_group']
     search_fields = ('title',)
     list_display = ('title', 'id',)
     change_form_template = "courseaffils/admin_change_form.html"

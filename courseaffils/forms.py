@@ -38,10 +38,12 @@ class CourseAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(forms.ModelForm, self).__init__(*args, **kwargs)
         if hasattr(settings, 'COURSEAFFILS_COURSESTRING_MAPPER'):
-            self.fields['group'].required = False
+            group = self.fields.get('group')
+            if group:
+                group.required = False
         if self.instance.user_set:
             faculty = self.instance.faculty
-            ruf = self.fields['users_to_remove']
+            ruf = self.fields.get('users_to_remove')
             ruf.queryset = self.instance.user_set
             ruf.choices = [
                 (u.pk,
@@ -56,33 +58,22 @@ class CourseAdminForm(forms.ModelForm):
                 and self.cleaned_data.get('course_string', False):
             m = settings.COURSEAFFILS_COURSESTRING_MAPPER
             stud_grp, fac_grp = m.get_groups(
-                self.cleaned_data['course_string'])
+                self.cleaned_data.get('course_string'))
             if fac_grp:
                 self.cleaned_data['faculty_group'] = fac_grp
-            self.cleaned_data['group'] = stud_grp
-        elif not self.cleaned_data['group']:
-            msg = 'You must select a group'
-            if hasattr(settings, 'COURSEAFFILS_COURSESTRING_MAPPER'):
-                msg = msg + ' or enter a course string'
-                if 'course_string' not in self._errors:
-                    self._errors['course_string'] = forms.utils.ErrorList()
-                self._errors['course_string'].append(msg)
-                if 'course_string' in self.cleaned_data:
-                    del self.cleaned_data["course_string"]
-            self._errors['group'] = forms.utils.ErrorList([msg])
-            if 'group' in self.cleaned_data:
-                self.cleaned_data["group"]
-            raise forms.ValidationError(msg)
 
-        group = self.cleaned_data['group']
-        if Course.objects.filter(group=group).exclude(pk=self.instance.pk):
-            c = Course.objects.filter(group=group).exclude(
-                pk=self.instance.pk).first()
-            msg = 'The group "{}" you selected is already associated ' + \
-                  'with another course: "{}"'
-            msg = msg.format(group.name, c.title)
-            self._errors['group'] = forms.utils.ErrorList([msg])
-            raise forms.ValidationError(msg)
+            self.cleaned_data['group'] = stud_grp
+
+            group = self.cleaned_data.get('group')
+
+            if Course.objects.filter(group=group).exclude(pk=self.instance.pk):
+                c = Course.objects.filter(group=group).exclude(
+                    pk=self.instance.pk).first()
+                msg = 'The group "{}" you selected is already associated ' + \
+                      'with another course: "{}"'
+                msg = msg.format(group.name, c.title)
+                self._errors['group'] = forms.utils.ErrorList([msg])
+                raise forms.ValidationError(msg)
 
         # run here, so the cleaned group from above can be used
         self._clean_add_user()
@@ -90,7 +81,7 @@ class CourseAdminForm(forms.ModelForm):
         return self.cleaned_data
 
     def clean_users_to_remove(self):
-        users = self.cleaned_data['users_to_remove']
+        users = self.cleaned_data.get('users_to_remove')
         if self.instance.group_id:
             group = self.instance.group
             fgroup = self.instance.faculty_group
@@ -105,12 +96,12 @@ class CourseAdminForm(forms.ModelForm):
         """run in clean() so we can process users after course is created
         from course-string
         """
-        usernames = self.cleaned_data['add_user']
+        usernames = self.cleaned_data.get('add_user')
         if not usernames:
             return
 
         # take it from here, in case instance is not yet created
-        group = self.cleaned_data['group']
+        group = self.cleaned_data.get('group') or self.instance.group
         for line in usernames.split('\n'):
             clean_line = line.strip().rstrip().split(':')
             username = clean_line[0]
@@ -130,8 +121,15 @@ class CourseAdminForm(forms.ModelForm):
                         user.set_unusable_password()
                     user.save()
                 user.groups.add(group)
-                if also_faculty and self.cleaned_data['faculty_group']:
-                    user.groups.add(self.cleaned_data['faculty_group'])
+
+                if also_faculty and \
+                   self.cleaned_data.get('faculty_group') or \
+                   self.instance.faculty_group:
+                    user.groups.add(
+                        self.cleaned_data.get('faculty_group') or
+                        self.instance.faculty_group
+                    )
+
         return usernames
 
 

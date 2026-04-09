@@ -1,3 +1,12 @@
+2.5.2
+====================
+* Course admin: Make groups readonly.
+  These groups dropdowns can actually take a long time to load on
+  sites with hundreds of groups, such as Mediathread. In practice, I
+  don't think we ever really need to change a course's group. Let's
+  make this read-only for now - to just display the course's current
+  groups.
+
 2.5.1 (2025-12-09)
 ====================
 * Add another Django 5.2 fix
