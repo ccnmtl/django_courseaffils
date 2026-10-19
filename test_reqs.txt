@@ -10,7 +10,7 @@ factory_boy==3.3.3
 freezegun==1.5.5
 
 typing==3.7.4.1; python_version < '3.5'
-entrypoints==0.4
+entrypoints==0.4.2
 functools32==3.2.3-2; python_version < '3'
 pycodestyle==2.15.0
 mccabe==0.7.0
