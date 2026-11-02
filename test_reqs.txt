@@ -2,7 +2,7 @@ Markdown==3.11.2  # pyup: <3.2
 importlib_metadata<10.2
 typing_extensions==4.16.0
 zipp==4.1.2  # for flake8
-flake8==7.4.1
+flake8==7.5.0
 pep8==1.7.1
 pyflakes==4.1.0
 Faker==40.44.0
